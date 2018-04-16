@@ -20,21 +20,13 @@ import Queue     ## acr 2018-02-21
 import os        ## acr 2018-02-21
 import datetime
 
-<<<<<<< HEAD
 
-=======
-global num
-num=0
->>>>>>> 74a8afc069c8a83a15af28cdaf9a64578d6a6340
 default_arg_needed = 0
 TARGET_GEMROC_ID_param = 0
 TARGET_FEB_PWR_PATTERN_param = 0
 IVT_LOG_PERIOD_SECONDS = 20
 IVT_LOG_ENABLE = 1
-<<<<<<< HEAD
 
-=======
->>>>>>> 74a8afc069c8a83a15af28cdaf9a64578d6a6340
 if (len(sys.argv) < 3):
     print"\n GEMROC_TIGER_CFG argument list: <Target_GEMROC: 1 thru 22> <Target_FEB_PWR_EN_pattern(Hex):0x0 thru 0xF>"
 ##    exit()
@@ -56,25 +48,12 @@ def send_GEMROC_CFG_CMD_PKT( TARGET_GEMROC_ID_param, COMMAND_STRING_PARAM, array
     log_file.write(cmd_message)
     log_file.write(binascii.b2a_hex(buffer_to_send))
     command_echo_f = receiveSock.recv(BUFSIZE)
-<<<<<<< HEAD
-=======
-    global num
-    num=num+1
-    cmd_message="\nnum:%02d,send_GEMROC_CFG_CMD_PKT,Target GEMROC:%d\n" %(num,TARGET_GEMROC_ID_param)
-    my_log.write(cmd_message)
-    my_log.write(binascii.b2a_hex(buffer_to_send))
->>>>>>> 74a8afc069c8a83a15af28cdaf9a64578d6a6340
 ##    (command_echo_f, source_IPADDR) = receiveSock.recvfrom(BUFSIZE) #S.C. 2018-03-08
 ##    cmd_message = "\nTarget GEMROC: %d; Target GEMROC IP_ADDR_LOWER_BYTE: %s; \nCMD echo (%s): \n" %(TARGET_GEMROC_ID_param, source_IPADDR, COMMAND_STRING_PARAM)
 ##    print (cmd_message) 
 ##    time.sleep(5)
     log_file.write(cmd_message)
     log_file.write(binascii.b2a_hex(command_echo_f))
-<<<<<<< HEAD
-=======
-#    my_log.write(cmd_message)
-#    my_log.write(binascii.b2a_hex(command_echo_f))
->>>>>>> 74a8afc069c8a83a15af28cdaf9a64578d6a6340
     return command_echo_f
 
 ## acr 2018-02-19 BEGIN definining a function to call within the display loop
@@ -362,24 +341,10 @@ def send_TIGER_GCFG_Reg_CMD_PKT( TIGER_ID_param, COMMAND_STRING_PARAM, array_to_
     cmd_message = '\nTIGER%d Global Cfg Reg CMD %s sent:\n' %(TIGER_ID_param, COMMAND_STRING_PARAM)
     log_fname_param.write(cmd_message)
     log_fname_param.write(binascii.b2a_hex(buffer_to_send))
-<<<<<<< HEAD
     cmd_message = '\nTIGER%d Global Cfg Reg CMD %s command echo:\n' %(TIGER_ID_param, COMMAND_STRING_PARAM)
     log_fname_param.write(cmd_message)
     command_echo_f = receiveSock.recv(BUFSIZE)
     log_fname_param.write(binascii.b2a_hex(command_echo_f))
-=======
-    global num
-    num=num+1
-    cmd_message="\nnum:%02d,send_TIGER_GCFG_Reg_CMD_PKT,TIGER_ID:%d\n" % (num,TIGER_ID_param)
-    my_log.write(cmd_message)
-    my_log.write(binascii.b2a_hex(buffer_to_send))
-    cmd_message = '\nTIGER%d Global Cfg Reg CMD %s command echo:\n' %(TIGER_ID_param, COMMAND_STRING_PARAM)
-    log_fname_param.write(cmd_message)
-#    my_log.write(cmd_message)
-    command_echo_f = receiveSock.recv(BUFSIZE)
-    log_fname_param.write(binascii.b2a_hex(command_echo_f))
-#    my_log.write(binascii.b2a_hex(command_echo_f))
->>>>>>> 74a8afc069c8a83a15af28cdaf9a64578d6a6340
     return command_echo_f
 
 def send_TIGER_Ch_CFG_Reg_CMD_PKT( TIGER_ID_param, COMMAND_STRING_PARAM, array_to_send_param, DEST_IP_ADDRESS_PARAM, DEST_PORT_NO_PARAM, log_fname_param): #acr 2018-03-04
@@ -390,24 +355,10 @@ def send_TIGER_Ch_CFG_Reg_CMD_PKT( TIGER_ID_param, COMMAND_STRING_PARAM, array_t
     cmd_message = '\nTIGER% d; TOALL = % d; Channel% s Cfg Reg CMD %s sent\n' %(TIGER_ID_param, Target_Ch_ToALL_f, Target_Ch_ID_f, COMMAND_STRING_PARAM) 
     log_fname_param.write(cmd_message)
     log_fname_param.write(binascii.b2a_hex(buffer_to_send))
-<<<<<<< HEAD
     cmd_message = '\nTIGER% d; TOALL = % d; Channel% s Cfg Reg CMD %s echo\n' %(TIGER_ID_param, Target_Ch_ToALL_f, Target_Ch_ID_f, COMMAND_STRING_PARAM) 
     log_fname_param.write(cmd_message)
     command_echo_f = receiveSock.recv(BUFSIZE)
     log_fname_param.write(binascii.b2a_hex(command_echo_f))
-=======
-    global num
-    num=num+1
-    cmd_message="\nnum:%02d,send_TIGER_Ch_CFG_Reg_CMD_PKT,TIGER_ch:%d\n" % (num,TIGER_ID_param)
-    my_log.write(cmd_message)
-    my_log.write(binascii.b2a_hex(buffer_to_send))
-    cmd_message = '\nTIGER% d; TOALL = % d; Channel% s Cfg Reg CMD %s echo\n' %(TIGER_ID_param, Target_Ch_ToALL_f, Target_Ch_ID_f, COMMAND_STRING_PARAM) 
-    log_fname_param.write(cmd_message)
-#    my_log.write(cmd_message)
-    command_echo_f = receiveSock.recv(BUFSIZE)
-    log_fname_param.write(binascii.b2a_hex(command_echo_f))
-#    my_log.write(binascii.b2a_hex(command_echo_f))
->>>>>>> 74a8afc069c8a83a15af28cdaf9a64578d6a6340
     return command_echo_f
 
 def GEMROC_IVT_read_and_log(GEMROC_ID_param, display_enable_param, log_enable_param, log_filename_param):
@@ -961,12 +912,6 @@ def Read_GEMROC_DAQ_CfgReg(gemroc_inst_param, GEMROC_ID_param, log_file_param):
     command_echo = send_GEMROC_DAQ_CMD (GEMROC_ID_param, gemroc_inst_param, COMMAND_STRING)
     return command_echo
 
-<<<<<<< HEAD
-=======
-data_file = 'my_log.txt'
-my_log = open(data_file, 'w')
-
->>>>>>> 74a8afc069c8a83a15af28cdaf9a64578d6a6340
 log_fname = 'GEMROC%d_interactive_cfg_log.txt' %GEMROC_ID
 log_file = open(log_fname, 'w')
 IVT_log_fname = 'GEMROC%d_IVT_log.txt' %GEMROC_ID
@@ -976,23 +921,13 @@ IVT_log_file = open(IVT_log_fname, 'w')
 ## NOTE: STEFANO CHIOZZI - 2018-03-08 A SECOND IP ADDRESS (E.G. 192.168.1.201) CAN BE ASSIGNED TO THE NIC
 ##                                    AND A SECOND SET OF INSTANCES OF THIS CODE (WITH DIFFERENT PORTS) CAN ACCESS THE SECOND SET OF GEMROC BOARDS (12 to 22) THROUGH IT
 ##HOST_IP = "192.168.1.200" # FOR  GEMROC 1 - 11
-<<<<<<< HEAD
-HOST_IP = "192.168.1.200" # 2018-04-2
+HOST_IP = "192.168.1.200" # FOR  GEMROC 1 - 11
 #HOST_IP = "127.0.0.1" # uncomment for test only
-=======
-#HOST_IP = "192.168.1.200" # FOR  GEMROC 1 - 11
-HOST_IP = "127.0.0.1" # uncomment for test only
->>>>>>> 74a8afc069c8a83a15af28cdaf9a64578d6a6340
 
 HOST_PORT = 54816+1+GEMROC_ID
 HOST_PORT_RECEIVE = 58912+1+GEMROC_ID
 
-<<<<<<< HEAD
 DEST_IP_ADDRESS = "192.168.1.%d" %(GEMROC_ID+16) # offset 16 is determined by Stefano's MAC
-=======
-DEST_IP_ADDRESS = "127.0.0.1" 
-#DEST_IP_ADDRESS = "192.168.1.%d" %(GEMROC_ID+16) # offset 16 is determined by Stefano's MAC
->>>>>>> 74a8afc069c8a83a15af28cdaf9a64578d6a6340
 DEST_PORT_NO = 58912+1 # STEFANO CHIOZZI - 2018-03-08 offset 0 is reserved by the MAC for a custom protocol; offset 3 is also a special debug port
 
 # BEGIN uncomment for test only
@@ -1113,11 +1048,7 @@ def Menu_and_prompt():
             #os.system('cls')
             IVT_DISPLAY_ENABLE = 0
             IVT_log_file.write('\n%s' %datetime.datetime.now().strftime(fmt) )
-<<<<<<< HEAD
             GEMROC_IVT_read_and_log(GEMROC_ID, IVT_DISPLAY_ENABLE, IVT_LOG_ENABLE, IVT_log_file)
-=======
-#            GEMROC_IVT_read_and_log(GEMROC_ID, IVT_DISPLAY_ENABLE, IVT_LOG_ENABLE, IVT_log_file)
->>>>>>> 74a8afc069c8a83a15af28cdaf9a64578d6a6340
             last_update = time.time()
             #sys.stdout.write(menu_string)
         else:
@@ -1363,10 +1294,6 @@ def Menu_and_prompt():
 Menu_and_prompt()
 print "\nExit debug. Bye!"
 log_file.close()
-<<<<<<< HEAD
-=======
-my_log.close()
->>>>>>> 74a8afc069c8a83a15af28cdaf9a64578d6a6340
 IVT_log_file.close()
 exit()
 

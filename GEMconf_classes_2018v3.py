@@ -219,10 +219,6 @@ class g_reg_settings: # purpose: organize the Global Configuration Register Sett
          self.cmd_word7 =  ((self.Vcasp_Vth & 0x3f) << 24)        + ((self.TAC_I_LSB & 0x1F) << 16)       + ((self.TDCcompVbias & 0x1F) << 8)    + ((self.Vref_Integ & 0x3F))  
          self.cmd_word6 =  ((self.IBiasTPcal & 0x1f) << 24)       + ((self.TP_Vcal & 0x1F) << 16)         + ((self.ShaperIbias & 0xF) << 8)      + ((self.IPostamp & 0x1F))  
          self.cmd_word5 =  ((self.TP_Vcal_ref & 0x1f) << 24)      + ((self.Vref_integ_diff & 0x3F) << 16) + ((self.Sig_pol & 0x1) << 8)          + ((self.FE_TPEnable & 0x1))
-<<<<<<< HEAD
-         # acr 2018-01-25 removing unused parameter self.cmd_word4 = ((self.CompactDataFormat & 0x1) << 24) + ((self.DataClkDiv & 0x3) << 16) + ((self.TACrefreshPeriod & 0xf) << 8) + ((self.TACrefreshEnable & 0x1))
-=======
->>>>>>> 74a8afc069c8a83a15af28cdaf9a64578d6a6340
          self.cmd_word4 =                                           ((self.DataClkDiv & 0x3) << 16) + ((self.TACrefreshPeriod & 0xf) << 8) + ((self.TACrefreshEnable & 0x1))        
          self.cmd_word3 =  ((self.CounterPeriod & 0x7) << 24)     + ((self.CounterEnable & 0x1) << 16)    + ((self.StopRampEnable & 0x3) << 8)   + ((self.RClkEnable & 0x1F))  
          self.cmd_word2 =  ((self.TDCClkdiv & 0x1) << 24)         + ((self.VetoMode & 0x3F) << 16)        + ((self.Ch_DebugMode & 0x1) << 8)     + ((self.TxMode & 0x3))  
