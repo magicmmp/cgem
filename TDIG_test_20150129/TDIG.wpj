@@ -1,0 +1,241 @@
+Document file - DO NOT EDIT
+
+<BEGIN> BUILD_PPC604gnu_MACRO_AR
+arppc
+<END>
+
+<BEGIN> BUILD_PPC604gnu_MACRO_ARCHIVE
+$(PRJ_DIR)/PPC604gnu/TDIG.a
+<END>
+
+<BEGIN> BUILD_PPC604gnu_MACRO_AS
+ccppc
+<END>
+
+<BEGIN> BUILD_PPC604gnu_MACRO_CC
+ccppc
+<END>
+
+<BEGIN> BUILD_PPC604gnu_MACRO_CFLAGS
+-g \
+	-mstrict-align \
+	-ansi \
+	-nostdinc \
+	-DRW_MULTI_THREAD \
+	-D_REENTRANT \
+	-fvolatile \
+	-fno-builtin \
+	-fno-for-scope \
+	-I. \
+	-I$(WIND_BASE)/target/h \
+	-DCPU=PPC604
+<END>
+
+<BEGIN> BUILD_PPC604gnu_MACRO_CFLAGS_AS
+-g \
+	-mstrict-align \
+	-ansi \
+	-nostdinc \
+	-fvolatile \
+	-fno-builtin \
+	-fno-for-scope \
+	-P \
+	-x \
+	assembler-with-cpp \
+	-I. \
+	-I$(WIND_BASE)/target/h \
+	-DCPU=PPC604
+<END>
+
+<BEGIN> BUILD_PPC604gnu_MACRO_CPP
+ccppc -E -P -xc
+<END>
+
+<BEGIN> BUILD_PPC604gnu_MACRO_LD
+ldppc
+<END>
+
+<BEGIN> BUILD_PPC604gnu_MACRO_LDFLAGS
+-X -N
+<END>
+
+<BEGIN> BUILD_PPC604gnu_MACRO_LD_PARTIAL_FLAGS
+-X -r
+<END>
+
+<BEGIN> BUILD_PPC604gnu_MACRO_NM
+nmppc
+<END>
+
+<BEGIN> BUILD_PPC604gnu_MACRO_OPTION_DEFINE_MACRO
+-D
+<END>
+
+<BEGIN> BUILD_PPC604gnu_MACRO_OPTION_INCLUDE_DIR
+-I
+<END>
+
+<BEGIN> BUILD_PPC604gnu_MACRO_SIZE
+sizeppc
+<END>
+
+<BEGIN> BUILD_PPC604gnu_RO_DEPEND_PATH
+{$(WIND_BASE)/target/h/} {$(WIND_BASE)/target/src/} {$(WIND_BASE)/target/config/}
+<END>
+
+<BEGIN> BUILD_PPC604gnu_TC
+::tc_PPC604gnu
+<END>
+
+<BEGIN> BUILD__CURRENT
+PPC604gnu
+<END>
+
+<BEGIN> BUILD__LIST
+PPC604gnu
+<END>
+
+<BEGIN> CORE_INFO_TYPE
+::prj_vxApp
+<END>
+
+<BEGIN> CORE_INFO_VERSION
+2.0
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/5100_CBLT.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/5100_CBLT.c_dependencies
+$(PRJ_DIR)/5100_CBLT.h \
+	$(PRJ_DIR)/config.h \
+	$(PRJ_DIR)/mv5100.h \
+	$(PRJ_DIR)/universe.h
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/5100_CBLT.c_objects
+5100_CBLT.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/5100_CBLT.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/BasicRW.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/BasicRW.c_dependencies
+$(PRJ_DIR)/BasicRW.h \
+	$(PRJ_DIR)/vmerw.h
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/BasicRW.c_objects
+BasicRW.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/BasicRW.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/CLK.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/CLK.c_dependencies
+$(PRJ_DIR)/5100_test.h \
+	$(PRJ_DIR)/CLK.h
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/CLK.c_objects
+CLK.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/CLK.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/ROC.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/ROC.c_dependencies
+$(PRJ_DIR)/5100_test.h \
+	$(PRJ_DIR)/ROC.h
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/ROC.c_objects
+ROC.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/ROC.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/TDIG.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/TDIG.c_dependencies
+$(PRJ_DIR)/5100_test.h \
+	$(PRJ_DIR)/interrupt.h \
+	$(PRJ_DIR)/TDIG.h \
+	$(PRJ_DIR)/ROC.h
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/TDIG.c_objects
+TDIG.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/TDIG.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/interrupt.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/interrupt.c_dependencies
+$(PRJ_DIR)/interrupt.h
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/interrupt.c_objects
+interrupt.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/interrupt.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/vmerw.c_dependDone
+TRUE
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/vmerw.c_dependencies
+$(PRJ_DIR)/5100_test.h \
+	$(PRJ_DIR)/vmerw.h
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/vmerw.c_objects
+vmerw.o
+<END>
+
+<BEGIN> FILE_$(PRJ_DIR)/vmerw.c_tool
+C/C++ compiler
+<END>
+
+<BEGIN> PROJECT_FILES
+$(PRJ_DIR)/5100_CBLT.c \
+	$(PRJ_DIR)/BasicRW.c \
+	$(PRJ_DIR)/interrupt.c \
+	$(PRJ_DIR)/vmerw.c \
+	$(PRJ_DIR)/TDIG.c \
+	$(PRJ_DIR)/CLK.c \
+	$(PRJ_DIR)/ROC.c
+<END>
+
+<BEGIN> userComments
+<Enter description here>
+<END>
+
