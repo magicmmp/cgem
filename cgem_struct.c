@@ -338,7 +338,7 @@ void GEMROC_IVT_read_and_log(unsigned int GEMROC_ID_param, unsigned int display_
     gemroc_set_target_GEMROC(GEMROC_ID_param);
     gemroc_set_gemroc_cmd_code("CMD_GEMROC_LV_IVT_READ",1);
     gemroc_update_command_words();
-    send_GEMROC_CFG_CMD_PKT( GEMROC_ID_param,info,gemroc_command_words,sizeof(gemroc_command_words), DEST_IP_ADDRESS, DEST_PORT_NO );
+    send_GEMROC_CFG_CMD_PKT( GEMROC_ID_param,info,gemroc.command_words,sizeof(gemroc.command_words), DEST_IP_ADDRESS, DEST_PORT_NO );
 }
 
 void send_GEMROC_LV_CMD (unsigned int GEMROC_ID_param, char*COMMAND_STRING_PARAM,char*info)
@@ -346,7 +346,7 @@ void send_GEMROC_LV_CMD (unsigned int GEMROC_ID_param, char*COMMAND_STRING_PARAM
     gemroc_set_target_GEMROC(GEMROC_ID_param);
     gemroc_set_gemroc_cmd_code(COMMAND_STRING_PARAM,1);
     gemroc_update_command_words();
-    send_GEMROC_CFG_CMD_PKT( GEMROC_ID_param, info,gemroc_command_words,sizeof(gemroc_command_words), DEST_IP_ADDRESS, DEST_PORT_NO );  }
+    send_GEMROC_CFG_CMD_PKT( GEMROC_ID_param, info,gemroc.command_words,sizeof(gemroc.command_words), DEST_IP_ADDRESS, DEST_PORT_NO );  }
 
 void FEBPwrEnPattern_set(unsigned int GEMROC_ID_param, unsigned int FEB_PWREN_pattern_param,char*info)
 {
@@ -366,7 +366,7 @@ void send_GEMROC_DAQ_CMD(unsigned int GEMROC_ID_param,char*info, char*COMMAND_ST
     DAQ_set_target_GEMROC(GEMROC_ID_param);
     DAQ_set_gemroc_cmd_code(COMMAND_STRING_PARAM,1);
     DAQ_update_command_words();
-    send_GEMROC_CFG_CMD_PKT( GEMROC_ID_param, info, DAQ_command_words,sizeof(DAQ_command_words), DEST_IP_ADDRESS, DEST_PORT_NO );}
+    send_GEMROC_CFG_CMD_PKT( GEMROC_ID_param, info, DAQ.command_words,sizeof(DAQ.command_words), DEST_IP_ADDRESS, DEST_PORT_NO );}
 
 void  ResetTgtGEMROC_ALL_TIGER_GCfgReg(unsigned int GEMROC_ID_param, char*info)
 {
@@ -383,7 +383,7 @@ void WriteTgtGEMROC_TIGER_GCfgReg_fromfile(char*GCFGReg_setting_inst, unsigned i
     g_reg_set_target_TIGER(TIGER_ID_param);
     g_reg_set_command_code("WR");
     g_reg_update_command_words();
-    send_TIGER_GCFG_Reg_CMD_PKT( TIGER_ID_param, info, g_reg_command_words,sizeof(g_reg_command_words),DEST_IP_ADDRESS, DEST_PORT_NO, info);
+    send_TIGER_GCFG_Reg_CMD_PKT( TIGER_ID_param, info, g_reg.command_words,sizeof(g_reg.command_words),DEST_IP_ADDRESS, DEST_PORT_NO, info);
 }
 
 void set_FE_TPEnable(char*GCFGReg_setting_inst, unsigned int GEMROC_ID_param, unsigned int TIGER_ID_param,
@@ -395,7 +395,7 @@ void set_FE_TPEnable(char*GCFGReg_setting_inst, unsigned int GEMROC_ID_param, un
     char*COMMAND_STRING = "WR";
     g_reg_set_command_code(COMMAND_STRING);
     g_reg_update_command_words();
-    send_TIGER_GCFG_Reg_CMD_PKT( TIGER_ID_param,info,g_reg_command_words,sizeof(g_reg_command_words),DEST_IP_ADDRESS, DEST_PORT_NO, info);
+    send_TIGER_GCFG_Reg_CMD_PKT( TIGER_ID_param,info,g_reg.command_words,sizeof(g_reg.command_words),DEST_IP_ADDRESS, DEST_PORT_NO, info);
 }
 
 void ReadTgtGEMROC_TIGER_GCfgReg (char*GCFGReg_setting_inst,unsigned int  GEMROC_ID_param, 
@@ -406,36 +406,36 @@ void ReadTgtGEMROC_TIGER_GCfgReg (char*GCFGReg_setting_inst,unsigned int  GEMROC
     char*COMMAND_STRING = "RD";
     g_reg_set_command_code(COMMAND_STRING);
     g_reg_update_command_words();
-    send_TIGER_GCFG_Reg_CMD_PKT( TIGER_ID_param,info, g_reg_command_words,sizeof(g_reg_command_words), DEST_IP_ADDRESS, DEST_PORT_NO,info);   }
-
+    send_TIGER_GCFG_Reg_CMD_PKT( TIGER_ID_param,info, g_reg.command_words,sizeof(g_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO,info);   }
+//4-16 17:09
 void WriteTgtGEMROC_TIGER_ChCfgReg_fromfile (char*ChCFGReg_setting_inst,unsigned int  GEMROC_ID_param, 
           unsigned int TIGER_ID_param, unsigned int channel_ID_param, char*ChCFGReg_def_fname_param, char*info)
 {   int i;
     ch_reg_reload_chcfg_settings_from_file(ChCFGReg_def_fname_param);
-    print_cmd("1576,ch_reg_reload_chcfg_settings_from_file",ch_reg_command_words,sizeof(ch_reg_command_words));
+    print_cmd("1576,ch_reg_reload_chcfg_settings_from_file",ch_reg.command_words,sizeof(ch_reg.command_words));
     ch_reg_set_target_GEMROC(GEMROC_ID_param);
-    print_cmd("1576,ch_reg_set_target_GEMROC",ch_reg_command_words,sizeof(ch_reg_command_words));
+    print_cmd("1576,ch_reg_set_target_GEMROC",ch_reg.command_words,sizeof(ch_reg.command_words));
     ch_reg_set_target_TIGER(TIGER_ID_param);
-    print_cmd("1576,ch_reg_set_target_TIGER",ch_reg_command_words,sizeof(ch_reg_command_words));
+    print_cmd("1576,ch_reg_set_target_TIGER",ch_reg.command_words,sizeof(ch_reg.command_words));
     ch_reg_set_to_ALL_param (0);
-    print_cmd("1576,ch_reg_set_to_ALL_param",ch_reg_command_words,sizeof(ch_reg_command_words));
+    print_cmd("1576,ch_reg_set_to_ALL_param",ch_reg.command_words,sizeof(ch_reg.command_words));
     char*COMMAND_STRING = "WR";
     ch_reg_set_command_code(COMMAND_STRING);
-    print_cmd("1576,ch_reg_set_command_code",ch_reg_command_words,sizeof(ch_reg_command_words));
+    print_cmd("1576,ch_reg_set_command_code",ch_reg.command_words,sizeof(ch_reg.command_words));
     if (channel_ID_param < 64)  {
         ch_reg_set_target_channel(channel_ID_param);
         ch_reg_update_command_words();
-        send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,info,ch_reg_command_words,sizeof(ch_reg_command_words),DEST_IP_ADDRESS,DEST_PORT_NO,info) ; }
+        send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,info,ch_reg.command_words,sizeof(ch_reg.command_words),DEST_IP_ADDRESS,DEST_PORT_NO,info) ; }
     else {
         for(i=0;i<64;i++)
        {
             ch_reg_set_target_channel(i);
             ch_reg_update_command_words();
             if(i==0)
-               print_cmd("1576,ch_reg_update_command_words",ch_reg_command_words,sizeof(ch_reg_command_words));
-            send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,info,ch_reg_command_words,sizeof(ch_reg_command_words),DEST_IP_ADDRESS,DEST_PORT_NO,info);  }  }  }
+               print_cmd("1576,ch_reg_update_command_words",ch_reg.command_words,sizeof(ch_reg.command_words));
+            send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,info,ch_reg.command_words,sizeof(ch_reg.command_words),DEST_IP_ADDRESS,DEST_PORT_NO,info);  }  }  }
 
-
+//4-16 17:15
 void ReadTgtGEMROC_TIGER_ChCfgReg (char*ChCFGReg_setting_inst, unsigned int GEMROC_ID_param, unsigned int TIGER_ID_param, 
                                     unsigned int channel_ID_param, unsigned int verbose_mode, char*info)
 {   int i;
