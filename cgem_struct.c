@@ -32,7 +32,7 @@
 #define GEMROC_CMD_DAQ_Num_of_params 15
 #define GEMROC_CMD_DAQ_Num_Of_PktWords 5
 
-typedef struct{
+typedef struct {
       unsigned int TARGET_GEMROC_ID;
       char*        cfg_filename;
       unsigned int parameter_array[37];
@@ -78,7 +78,7 @@ typedef struct{
       unsigned int command_code;
       unsigned int command_words[12];}g_reg_para;
 
-typedef struct{
+typedef struct  {
       unsigned int TARGET_GEMROC_ID;
       char*        cfg_filename;
       unsigned int DisableHyst ;
@@ -119,7 +119,7 @@ typedef struct{
       unsigned int command_words[10];
       unsigned int parameter_array[30];}ch_reg_para;
 
-typedef struct{
+typedef struct {
       unsigned int number_of_repetitions;
       unsigned int TARGET_GEMROC_ID;
       char*        cfg_filename;
@@ -156,16 +156,17 @@ typedef struct{
       unsigned int D_OVV_LIMIT_FEB3; 
       unsigned int OVT_LIMIT_FEB3; 
       char*        command_string; 
-      char         command_list[6][32] = {"NONE",
+      unsigned int is_a_write;
+      unsigned int gemroc_cmd_code;
+      unsigned int command_words[12]; }gemroc_para;
+      char         gemroc_command_list[6][32] = {"NONE",
                             "CMD_GEMROC_LV_CFG_WR",
                             "CMD_GEMROC_LV_CFG_RD",
                             "CMD_GEMROC_LV_IVT_UPDATE",
                             "CMD_GEMROC_LV_IVT_READ",
-                            "CMD_GEMROC_TIMING_DELAYS_UPDATE"};
-      unsigned int is_a_write;
-      unsigned int gemroc_cmd_code;
-      unsigned int command_words[12]; }gemroc_para;
-typedef struct{
+                            "CMD_GEMROC_TIMING_DELAYS_UPDATE"};      
+
+typedef struct {
       unsigned int TARGET_GEMROC_ID;
       char*        cfg_filename;
       unsigned int parameter_array[15];
@@ -188,7 +189,11 @@ typedef struct{
       unsigned int target_TCAM_ID;
       unsigned int to_ALL_TCAM_enable;
       unsigned int number_of_repetitions;
-      char         command_list[10][35] ={"NONE",
+     
+      unsigned int is_a_write;
+      unsigned int gemroc_cmd_code;
+      unsigned int command_words[5];  } DAQ_para;
+      char         DAQ_command_list[10][35] ={"NONE",
                             "CMD_GEMROC_DAQ_CFG_WR",
                             "CMD_GEMROC_DAQ_CFG_RD",
                             "CMD_GEMROC_DAQ_TIGER_GCFGREG_RESET",
@@ -198,12 +203,14 @@ typedef struct{
                             "CMD_GEMROC_DAQ_L1_GEN",
                             "CMD_GEMROC_DAQ_ACK_SEQ_ERROR",
                             "CMD_GEMROC_DAQ_XCVR_LPBCK_TEST"};
-      unsigned int is_a_write;
-      unsigned int gemroc_cmd_code;
-      unsigned int command_words[5];  }DAQ_para;
+
+
 
       unsigned int num=0;//count send times
-
+g_reg_para g_reg;
+ch_reg_para ch_reg;
+gemroc_para gemroc;
+DAQ_para DAQ; 
 FILE *file_name = NULL;
 FILE *fd_cmd=NULL;
 
@@ -468,14 +475,14 @@ void Set_GEMROC_TIGER_ch_TPEn (char*ChCFGReg_setting_inst, unsigned int GEMROC_I
     if (Channel_ID_param < 64){
         ch_reg_set_target_channel(Channel_ID_param);
         ch_reg_set_TP_disable_FE(TP_disable_FE_param);
-        ch_reg_TriggerMode = TriggerMode_param;
+        ch_reg.TriggerMode = TriggerMode_param;
         ch_reg_update_command_words();
         send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,info,ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO,info) ;}
     else
         for(i=0;i<64;i++){
             ch_reg_set_target_channel(i);
             ch_reg_set_TP_disable_FE(TP_disable_FE_param);
-            ch_reg_TriggerMode = TriggerMode_param;
+            ch_reg.TriggerMode = TriggerMode_param;
             ch_reg_update_command_words();
             send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param, info,ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO,info );}
 }
@@ -715,7 +722,7 @@ void Set_OVTF_LIMIT(char*gemroc_inst_param, int GEMROC_ID_param, int FEB3_OVTF_t
     float T_ref_PT1000 = 25.0;
     float V_ADC_at_25C = 247.2;
     float ADC_res_mV_1LSB = 0.305;
-    int T_ADC_data_shift = 2;
+    int   T_ADC_data_shift = 2;
     float calibration_offset_mV_FEB3 = 1.0;
     float calibration_offset_mV_FEB2 = 1.0;
     float calibration_offset_mV_FEB1 = 1.0;
@@ -746,10 +753,10 @@ void Set_OVTF_LIMIT(char*gemroc_inst_param, int GEMROC_ID_param, int FEB3_OVTF_t
         FEB0_OVTF_thr_Unsigned8 = FEB0_OVTF_thr_int;
     else
         FEB0_OVTF_thr_Unsigned8 = 255;
-    gemroc_OVT_LIMIT_FEB3 = FEB3_OVTF_thr_Unsigned8;
-    gemroc_OVT_LIMIT_FEB2 = FEB2_OVTF_thr_Unsigned8;
-    gemroc_OVT_LIMIT_FEB1 = FEB1_OVTF_thr_Unsigned8;
-    gemroc_OVT_LIMIT_FEB0 = FEB0_OVTF_thr_Unsigned8;
+    gemroc.OVT_LIMIT_FEB3 = FEB3_OVTF_thr_Unsigned8;
+    gemroc.OVT_LIMIT_FEB2 = FEB2_OVTF_thr_Unsigned8;
+    gemroc.OVT_LIMIT_FEB1 = FEB1_OVTF_thr_Unsigned8;
+    gemroc.OVT_LIMIT_FEB0 = FEB0_OVTF_thr_Unsigned8;
     char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
     send_GEMROC_LV_CMD (GEMROC_ID_param, COMMAND_STRING,info);
 }
@@ -760,7 +767,7 @@ void set_ROC_OVT_LIMIT(char*gemroc_inst_param, int GEMROC_ID_param, int ROC_OVT_
         ROC_OVT_thr_Unsigned6 = ROC_OVT_thr_param;
     else
         ROC_OVT_thr_Unsigned6 = 63;
-    gemroc_ROC_OVT_LIMIT = ROC_OVT_thr_Unsigned6;
+    gemroc.ROC_OVT_LIMIT = ROC_OVT_thr_Unsigned6;
     char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
     send_GEMROC_LV_CMD (GEMROC_ID_param,COMMAND_STRING, info);
 }
@@ -793,43 +800,43 @@ void DAQ_init(  unsigned int TARGET_GEMROC_ID_param,
       unsigned int gemroc_cmd_ID ;
       unsigned int gemroc_cmd_tag;
       unsigned int gemroc_cmd_word_count;
-      DAQ_TARGET_GEMROC_ID = TARGET_GEMROC_ID_param ;
-      DAQ_cfg_filename = cfg_filename_param;
-      readfromtxt(DAQ_cfg_filename,DAQ_parameter_array,15);
-      write_array_to_txt("DAQ_init",DAQ_parameter_array,15);
-      DAQ_EN_TM_TCAM_pattern = DAQ_parameter_array [GEMROC_CMD_DAQ_Num_of_params-1];
-      DAQ_TP_Pos_nNeg = DAQ_parameter_array [GEMROC_CMD_DAQ_Num_of_params-2];
-      DAQ_AUTO_TP_EN_pattern = DAQ_parameter_array [GEMROC_CMD_DAQ_Num_of_params-3];
-      DAQ_AUTO_L1_EN_pattern = DAQ_parameter_array [GEMROC_CMD_DAQ_Num_of_params-4];
-      DAQ_TL_nTM_ACQ = DAQ_parameter_array [GEMROC_CMD_DAQ_Num_of_params-5];
-      DAQ_Periodic_TP_EN_pattern = DAQ_parameter_array [GEMROC_CMD_DAQ_Num_of_params-6];
-      DAQ_TP_period = DAQ_parameter_array [GEMROC_CMD_DAQ_Num_of_params-7] ;
-      DAQ_LowerDataScanWindowOffset = DAQ_parameter_array [GEMROC_CMD_DAQ_Num_of_params-8];
-      DAQ_Periodic_L1_EN_pattern = DAQ_parameter_array [GEMROC_CMD_DAQ_Num_of_params-9] ;
-      DAQ_L1_period = DAQ_parameter_array [GEMROC_CMD_DAQ_Num_of_params-10] ;
-      DAQ_UpperDataScanWindowOffset = DAQ_parameter_array [GEMROC_CMD_DAQ_Num_of_params-11];
-      DAQ_TP_width = DAQ_parameter_array [GEMROC_CMD_DAQ_Num_of_params-12]; 
-      DAQ_L1_latency = DAQ_parameter_array [GEMROC_CMD_DAQ_Num_of_params-13];
-      DAQ_UDP_DATA_DESTINATION_IPPORT = DAQ_parameter_array [GEMROC_CMD_DAQ_Num_of_params-14];
-      DAQ_UDP_DATA_DESTINATION_IPADDR = DAQ_parameter_array [GEMROC_CMD_DAQ_Num_of_params-15];
-      DAQ_command_string = command_string_param;
-      DAQ_target_TCAM_ID = TCAM_ID_param;
-      DAQ_to_ALL_TCAM_enable = to_ALL_TCAM_enable_param;
-      DAQ_number_of_repetitions = number_of_repetitions_param;
-      DAQ_is_a_write = 0x1;
+      DAQ.TARGET_GEMROC_ID = TARGET_GEMROC_ID_param ;
+      DAQ.cfg_filename = cfg_filename_param;
+      readfromtxt(DAQ.cfg_filename,DAQ.parameter_array,15);
+      write_array_to_txt("DAQ_init",DAQ.parameter_array,15);
+      DAQ.EN_TM_TCAM_pattern = DAQ.parameter_array [GEMROC_CMD_DAQ_Num_of_params-1];
+      DAQ.TP_Pos_nNeg = DAQ.parameter_array [GEMROC_CMD_DAQ_Num_of_params-2];
+      DAQ.AUTO_TP_EN_pattern = DAQ.parameter_array [GEMROC_CMD_DAQ_Num_of_params-3];
+      DAQ.AUTO_L1_EN_pattern = DAQ.parameter_array [GEMROC_CMD_DAQ_Num_of_params-4];
+      DAQ.TL_nTM_ACQ = DAQ.parameter_array [GEMROC_CMD_DAQ_Num_of_params-5];
+      DAQ.Periodic_TP_EN_pattern = DAQ.parameter_array [GEMROC_CMD_DAQ_Num_of_params-6];
+      DAQ.TP_period = DAQ.parameter_array [GEMROC_CMD_DAQ_Num_of_params-7] ;
+      DAQ.LowerDataScanWindowOffset = DAQ.parameter_array [GEMROC_CMD_DAQ_Num_of_params-8];
+      DAQ.Periodic_L1_EN_pattern = DAQ.parameter_array [GEMROC_CMD_DAQ_Num_of_params-9] ;
+      DAQ.L1_period = DAQ.parameter_array [GEMROC_CMD_DAQ_Num_of_params-10] ;
+      DAQ.UpperDataScanWindowOffset = DAQ.parameter_array [GEMROC_CMD_DAQ_Num_of_params-11];
+      DAQ.TP_width = DAQ.parameter_array [GEMROC_CMD_DAQ_Num_of_params-12]; 
+      DAQ.L1_latency = DAQ.parameter_array [GEMROC_CMD_DAQ_Num_of_params-13];
+      DAQ.UDP_DATA_DESTINATION_IPPORT = DAQ.parameter_array [GEMROC_CMD_DAQ_Num_of_params-14];
+      DAQ.UDP_DATA_DESTINATION_IPADDR = DAQ.parameter_array [GEMROC_CMD_DAQ_Num_of_params-15];
+      DAQ.command_string = command_string_param;
+      DAQ.target_TCAM_ID = TCAM_ID_param;
+      DAQ.to_ALL_TCAM_enable = to_ALL_TCAM_enable_param;
+      DAQ.number_of_repetitions = number_of_repetitions_param;
+      DAQ.is_a_write = 0x1;
 
       for(i=0;i<10;i++)
-        if(strcmp(DAQ_command_string,DAQ_command_list[i])==0)
-          DAQ_gemroc_cmd_code = i;
+        if(strcmp(DAQ.command_string,DAQ_command_list[i])==0)
+          DAQ.gemroc_cmd_code = i;
       header_tag = 0x8 << 28;
       gemroc_cmd_ID = 0xD;
       gemroc_cmd_tag = gemroc_cmd_ID << 24;
       gemroc_cmd_word_count = GEMROC_CMD_DAQ_Num_Of_PktWords - 1;
-      DAQ_command_words[0]= header_tag + (DAQ_TARGET_GEMROC_ID << 16) + gemroc_cmd_tag + ((DAQ_UDP_DATA_DESTINATION_IPADDR & 0xFF)<<8) + gemroc_cmd_word_count;
-      DAQ_command_words[4] = ((DAQ_UDP_DATA_DESTINATION_IPPORT & 0xF)<<26) + ((DAQ_number_of_repetitions & 0x3FF) << 16) + ((DAQ_gemroc_cmd_code & 0xF) << 11) + ((DAQ_target_TCAM_ID & 0x3) << 8) + ((DAQ_to_ALL_TCAM_enable & 0x1) << 6);
-      DAQ_command_words[1] = ((DAQ_L1_latency & 0x3FF) << 20) + ((DAQ_TP_width & 0xF) << 16) + (DAQ_UpperDataScanWindowOffset & 0xFFFF);
-      DAQ_command_words[2] = ((DAQ_L1_period  & 0x3FF) << 20) + ((DAQ_Periodic_L1_EN_pattern  & 0xF) << 16) + (DAQ_LowerDataScanWindowOffset & 0xFFFF);
-      DAQ_command_words[3] = ((DAQ_TP_period & 0x3FF) << 20) + ((DAQ_Periodic_TP_EN_pattern & 0xF) << 16) + ((DAQ_TL_nTM_ACQ & 0x1) << 11) + ((DAQ_AUTO_L1_EN_pattern & 0x1) << 10) + ((DAQ_AUTO_TP_EN_pattern & 0x1) << 9) + ((DAQ_TP_Pos_nNeg & 0x1) << 8)  + (DAQ_EN_TM_TCAM_pattern & 0xFF);   }
+      DAQ.command_words[0]= header_tag + (DAQ.TARGET_GEMROC_ID << 16) + gemroc_cmd_tag + ((DAQ.UDP_DATA_DESTINATION_IPADDR & 0xFF)<<8) + gemroc_cmd_word_count;
+      DAQ.command_words[4] = ((DAQ.UDP_DATA_DESTINATION_IPPORT & 0xF)<<26) + ((DAQ.number_of_repetitions & 0x3FF) << 16) + ((DAQ.gemroc_cmd_code & 0xF) << 11) + ((DAQ.target_TCAM_ID & 0x3) << 8) + ((DAQ.to_ALL_TCAM_enable & 0x1) << 6);
+      DAQ.command_words[1] = ((DAQ.L1_latency & 0x3FF) << 20) + ((DAQ.TP_width & 0xF) << 16) + (DAQ.UpperDataScanWindowOffset & 0xFFFF);
+      DAQ.command_words[2] = ((DAQ.L1_period  & 0x3FF) << 20) + ((DAQ.Periodic_L1_EN_pattern  & 0xF) << 16) + (DAQ.LowerDataScanWindowOffset & 0xFFFF);
+      DAQ.command_words[3] = ((DAQ.TP_period & 0x3FF) << 20) + ((DAQ.Periodic_TP_EN_pattern & 0xF) << 16) + ((DAQ.TL_nTM_ACQ & 0x1) << 11) + ((DAQ.AUTO_L1_EN_pattern & 0x1) << 10) + ((DAQ.AUTO_TP_EN_pattern & 0x1) << 9) + ((DAQ.TP_Pos_nNeg & 0x1) << 8)  + (DAQ.EN_TM_TCAM_pattern & 0xFF);   }
 
 
 unsigned int DAQ_cmd_words_array_size()
@@ -839,92 +846,92 @@ unsigned int DAQ_cmd_words_array_size()
 void DAQ_print_command_words()
 {    int i;
    for(i=0;i<5;i++)
-     printf("%08X\n",DAQ_command_words[i]);  }
+     printf("%08X\n",DAQ.command_words[i]);  }
 
 void DAQ_set_target_GEMROC (unsigned int GEMROC_ID_param)
 {     
-      DAQ_TARGET_GEMROC_ID = GEMROC_ID_param & 0x1F;
-      DAQ_command_words[0] = (DAQ_command_words[0] & 0xFF00FFFF) + (DAQ_TARGET_GEMROC_ID << 16);  }
+      DAQ.TARGET_GEMROC_ID = GEMROC_ID_param & 0x1F;
+      DAQ.command_words[0] = (DAQ.command_words[0] & 0xFF00FFFF) + (DAQ.TARGET_GEMROC_ID << 16);  }
 
 void DAQ_set_target_TCAM_ID(unsigned int target_TA_param,unsigned int to_ALL_TCAM_EN_param)
 {
-      DAQ_target_TCAM_ID = target_TA_param & 0x3;
-      DAQ_to_ALL_TCAM_enable = to_ALL_TCAM_EN_param & 0x1;  }
+      DAQ.target_TCAM_ID = target_TA_param & 0x3;
+      DAQ.to_ALL_TCAM_enable = to_ALL_TCAM_EN_param & 0x1;  }
 
 void DAQ_set_TP_width(unsigned int target_TP_width_param)
 {
-      DAQ_TP_width = target_TP_width_param & 0xF;}
+      DAQ.TP_width = target_TP_width_param & 0xF;}
 
 void DAQ_set_TP_period(unsigned int TP_period_param)
 {
-      DAQ_TP_period = TP_period_param & 0x3FF;}
+      DAQ.TP_period = TP_period_param & 0x3FF;}
 
 void DAQ_set_AUTO_TP_EN_pattern(unsigned int target_AUTO_TP_EN_param)
 {
-      DAQ_AUTO_TP_EN_pattern = target_AUTO_TP_EN_param & 0xF;  }
+      DAQ.AUTO_TP_EN_pattern = target_AUTO_TP_EN_param & 0xF;  }
 
 void DAQ_set_Periodic_TP_EN_pattern(unsigned int Periodic_TP_EN_pattern_param)
 {
-      DAQ_Periodic_TP_EN_pattern = Periodic_TP_EN_pattern_param & 0xF;  }
+      DAQ.Periodic_TP_EN_pattern = Periodic_TP_EN_pattern_param & 0xF;  }
 
 void DAQ_set_TL_nTM_ACQ(unsigned int TL_nTM_ACQ_param)
 {
-      DAQ_TL_nTM_ACQ = TL_nTM_ACQ_param & 0x1;  }
+      DAQ.TL_nTM_ACQ = TL_nTM_ACQ_param & 0x1;  }
 
 void DAQ_set_EN_TM_TCAM_pattern(unsigned int EN_TM_TCAM_pattern_param)
 {
-      DAQ_EN_TM_TCAM_pattern = EN_TM_TCAM_pattern_param & 0xFF;  }
+      DAQ.EN_TM_TCAM_pattern = EN_TM_TCAM_pattern_param & 0xFF;  }
 
 void DAQ_set_TP_Pos_nNeg(unsigned int TP_Pos_nNeg_param)
 {
-      DAQ_TP_Pos_nNeg = TP_Pos_nNeg_param & 0x1;}
+      DAQ.TP_Pos_nNeg = TP_Pos_nNeg_param & 0x1;}
 
 void DAQ_set_gemroc_cmd_code( char* command_string_param,unsigned int no_of_executions_param)
 {    int i;
-      DAQ_number_of_repetitions = no_of_executions_param;
-      DAQ_command_string = command_string_param;
+      DAQ.number_of_repetitions = no_of_executions_param;
+      DAQ.command_string = command_string_param;
       for(i=0;i<10;i++)
-        if(strcmp(DAQ_command_string,DAQ_command_list[i])==0)
-            DAQ_gemroc_cmd_code = i;   }
+        if(strcmp(DAQ.command_string,DAQ_command_list[i])==0)
+            DAQ.gemroc_cmd_code = i;   }
 
 void DAQ_update_command_words()
 {
-       if ( ((DAQ_gemroc_cmd_code & 0xF) != 0x0)&&((DAQ_gemroc_cmd_code & 0xF) != 0x1) )
+       if ( ((DAQ.gemroc_cmd_code & 0xF) != 0x0)&&((DAQ.gemroc_cmd_code & 0xF) != 0x1) )
        {
-           DAQ_command_words[0] &= ~(0xFF << 8);
-           DAQ_command_words[1]= 0;
-           DAQ_command_words[2]= 0;
-           DAQ_command_words[3]= 0;
-           DAQ_command_words[4]= ((DAQ_number_of_repetitions & 0x3FF) << 16) + ((DAQ_gemroc_cmd_code & 0xF) << 11) + ((DAQ_target_TCAM_ID & 0x3) << 8) + ((DAQ_to_ALL_TCAM_enable & 0x1) << 6);  }
+           DAQ.command_words[0] &= ~(0xFF << 8);
+           DAQ.command_words[1]= 0;
+           DAQ.command_words[2]= 0;
+           DAQ.command_words[3]= 0;
+           DAQ.command_words[4]= ((DAQ.number_of_repetitions & 0x3FF) << 16) + ((DAQ.gemroc_cmd_code & 0xF) << 11) + ((DAQ.target_TCAM_ID & 0x3) << 8) + ((DAQ.to_ALL_TCAM_enable & 0x1) << 6);  }
        else{
-           DAQ_command_words[0]&= ~(0xFF << 8);
-           DAQ_command_words[0]+= ((DAQ_UDP_DATA_DESTINATION_IPADDR & 0xFF)<<8);
-           DAQ_command_words[1]= ((DAQ_L1_latency & 0x3FF) << 20) + ((DAQ_TP_width & 0xF) << 16) + (DAQ_UpperDataScanWindowOffset & 0xFFFF);
-           DAQ_command_words[2]= ((DAQ_L1_period  & 0x3FF) << 20) + ((DAQ_Periodic_L1_EN_pattern  & 0xF) << 16) + (DAQ_LowerDataScanWindowOffset & 0xFFFF);
-           DAQ_command_words[3]= ((DAQ_TP_period & 0x3FF) << 20) + ((DAQ_Periodic_TP_EN_pattern & 0xF) << 16) + ((DAQ_TL_nTM_ACQ & 0x1) << 11) + ((DAQ_AUTO_L1_EN_pattern & 0x1) << 10) + ((DAQ_AUTO_TP_EN_pattern & 0x1) << 9) + ((DAQ_TP_Pos_nNeg & 0x1) << 8)  + (DAQ_EN_TM_TCAM_pattern & 0xFF);
-           DAQ_command_words[4]= ((DAQ_UDP_DATA_DESTINATION_IPPORT & 0xF)<<26) + ((DAQ_number_of_repetitions & 0x3FF) << 16) + ((DAQ_gemroc_cmd_code & 0xF) << 11) + ((DAQ_target_TCAM_ID & 0x3) << 8) + ((DAQ_to_ALL_TCAM_enable & 0x1) << 6);}  }
+           DAQ.command_words[0]&= ~(0xFF << 8);
+           DAQ.command_words[0]+= ((DAQ.UDP_DATA_DESTINATION_IPADDR & 0xFF)<<8);
+           DAQ.command_words[1]= ((DAQ.L1_latency & 0x3FF) << 20) + ((DAQ.TP_width & 0xF) << 16) + (DAQ.UpperDataScanWindowOffset & 0xFFFF);
+           DAQ.command_words[2]= ((DAQ.L1_period  & 0x3FF) << 20) + ((DAQ.Periodic_L1_EN_pattern  & 0xF) << 16) + (DAQ.LowerDataScanWindowOffset & 0xFFFF);
+           DAQ.command_words[3]= ((DAQ.TP_period & 0x3FF) << 20) + ((DAQ.Periodic_TP_EN_pattern & 0xF) << 16) + ((DAQ.TL_nTM_ACQ & 0x1) << 11) + ((DAQ.AUTO_L1_EN_pattern & 0x1) << 10) + ((DAQ.AUTO_TP_EN_pattern & 0x1) << 9) + ((DAQ.TP_Pos_nNeg & 0x1) << 8)  + (DAQ.EN_TM_TCAM_pattern & 0xFF);
+           DAQ.command_words[4]= ((DAQ.UDP_DATA_DESTINATION_IPPORT & 0xF)<<26) + ((DAQ.number_of_repetitions & 0x3FF) << 16) + ((DAQ.gemroc_cmd_code & 0xF) << 11) + ((DAQ.target_TCAM_ID & 0x3) << 8) + ((DAQ.to_ALL_TCAM_enable & 0x1) << 6);}  }
 
 
 void DAQ_extract_parameters_from_UDP_packet()
 {
-      printf( "\n DATA_DESTINATION_IPadr  = %X %d",((DAQ_command_words[0] >>  8) &  0xFF) , ((DAQ_command_words[0] >>  8) &  0xFF) );
-      printf( "\n DATA_DESTINATION_IPport = %X %d",((DAQ_command_words[4] >> 26) &  0xF)   , ((DAQ_command_words[4] >> 26) &  0xF) );
-      printf( "\n L1_latency = %X %d",((DAQ_command_words[1] >> 20) &  0x3FF) , ((DAQ_command_words[1] >> 20) &  0x3FF) );
-      printf( "\n TP_width = %X %d",((DAQ_command_words[1] >> 16) &  0xF)   , ((DAQ_command_words[1] >> 16) &  0xF) );
-      printf( "\n UpperDataScanWindowOffset = %X %d",((DAQ_command_words[1] >> 0)  &  0xFFFF), ((DAQ_command_words[1] >> 0)  &  0xFFFF) );
-      printf( "\n L1_period = %X %d",((DAQ_command_words[2] >> 20) &  0x3FF) , ((DAQ_command_words[2] >> 20) &  0x3FF) );
-      printf( "\n Periodic_L1_EN_pattern = %X %d",((DAQ_command_words[2] >> 16) &  0xF)   , ((DAQ_command_words[2] >> 16) &  0xF) );
-      printf( "\n LowerDataScanWindowOffset = %X %d",((DAQ_command_words[2] >> 0)  &  0xFFFF), ((DAQ_command_words[2] >> 0)  &  0xFFFF) );
-      printf( "\n TP_period = %X %d",((DAQ_command_words[3] >> 20)  &  0x3FF), ((DAQ_command_words[3] >> 20)  &  0x3FF) );
-      printf( "\n Periodic_TP_EN_pattern = %X %d",((DAQ_command_words[3] >> 16)  &  0xF)  , ((DAQ_command_words[3] >> 16)  &  0xF) );
-      printf( "\n TL_nTM_ACQ = %X %d",((DAQ_command_words[3] >> 11)  &  0x1)  , ((DAQ_command_words[3] >> 11)  &  0x1) );
-      printf( "\n AUTO_L1_EN_pattern = %X %d",((DAQ_command_words[3] >> 10)  &  0x1)  , ((DAQ_command_words[3] >> 10)  &  0x1) );
-      printf( "\n AUTO_TP_EN_pattern = %X %d",((DAQ_command_words[3] >>  9)  &  0x1)  , ((DAQ_command_words[3] >>  9)  &  0x1) );
-      printf( "\n TP_Pos_nNeg = %X %d",((DAQ_command_words[3] >>  8)  &  0x1)  , ((DAQ_command_words[3] >>  8)  &  0x1) );
-      printf( "\n EN_TM_TCAM_pattern = %X %d",((DAQ_command_words[3] >>  0)  &  0xFF) , ((DAQ_command_words[3] >>  0)  &  0xFF) );
-      printf( "\n number_of_repetitions = %X %d",((DAQ_command_words[4] >> 16)  & 0x3FF)  , ((DAQ_command_words[4] >> 16)  & 0x3FF) );
-      printf( "\n target_TCAM_ID = %X %d",((DAQ_command_words[4] >>  8)  &  0x3)  , ((DAQ_command_words[4] >>  8)  &  0x3) );
-      printf( "\n to_ALL_TCAM_enable = %X %d",((DAQ_command_words[4] >>  6)  &  0x1)  , ((DAQ_command_words[4] >>  6)  &  0x1) );  }
+      printf( "\n DATA_DESTINATION_IPadr  = %X %d",((DAQ.command_words[0] >>  8) &  0xFF) , ((DAQ.command_words[0] >>  8) &  0xFF) );
+      printf( "\n DATA_DESTINATION_IPport = %X %d",((DAQ.command_words[4] >> 26) &  0xF)   , ((DAQ.command_words[4] >> 26) &  0xF) );
+      printf( "\n L1_latency = %X %d",((DAQ.command_words[1] >> 20) &  0x3FF) , ((DAQ.command_words[1] >> 20) &  0x3FF) );
+      printf( "\n TP_width = %X %d",((DAQ.command_words[1] >> 16) &  0xF)   , ((DAQ.command_words[1] >> 16) &  0xF) );
+      printf( "\n UpperDataScanWindowOffset = %X %d",((DAQ.command_words[1] >> 0)  &  0xFFFF), ((DAQ.command_words[1] >> 0)  &  0xFFFF) );
+      printf( "\n L1_period = %X %d",((DAQ.command_words[2] >> 20) &  0x3FF) , ((DAQ.command_words[2] >> 20) &  0x3FF) );
+      printf( "\n Periodic_L1_EN_pattern = %X %d",((DAQ.command_words[2] >> 16) &  0xF)   , ((DAQ.command_words[2] >> 16) &  0xF) );
+      printf( "\n LowerDataScanWindowOffset = %X %d",((DAQ.command_words[2] >> 0)  &  0xFFFF), ((DAQ.command_words[2] >> 0)  &  0xFFFF) );
+      printf( "\n TP_period = %X %d",((DAQ.command_words[3] >> 20)  &  0x3FF), ((DAQ.command_words[3] >> 20)  &  0x3FF) );
+      printf( "\n Periodic_TP_EN_pattern = %X %d",((DAQ.command_words[3] >> 16)  &  0xF)  , ((DAQ.command_words[3] >> 16)  &  0xF) );
+      printf( "\n TL_nTM_ACQ = %X %d",((DAQ.command_words[3] >> 11)  &  0x1)  , ((DAQ.command_words[3] >> 11)  &  0x1) );
+      printf( "\n AUTO_L1_EN_pattern = %X %d",((DAQ.command_words[3] >> 10)  &  0x1)  , ((DAQ.command_words[3] >> 10)  &  0x1) );
+      printf( "\n AUTO_TP_EN_pattern = %X %d",((DAQ.command_words[3] >>  9)  &  0x1)  , ((DAQ.command_words[3] >>  9)  &  0x1) );
+      printf( "\n TP_Pos_nNeg = %X %d",((DAQ.command_words[3] >>  8)  &  0x1)  , ((DAQ.command_words[3] >>  8)  &  0x1) );
+      printf( "\n EN_TM_TCAM_pattern = %X %d",((DAQ.command_words[3] >>  0)  &  0xFF) , ((DAQ.command_words[3] >>  0)  &  0xFF) );
+      printf( "\n number_of_repetitions = %X %d",((DAQ.command_words[4] >> 16)  & 0x3FF)  , ((DAQ.command_words[4] >> 16)  & 0x3FF) );
+      printf( "\n target_TCAM_ID = %X %d",((DAQ.command_words[4] >>  8)  &  0x3)  , ((DAQ.command_words[4] >>  8)  &  0x3) );
+      printf( "\n to_ALL_TCAM_enable = %X %d",((DAQ.command_words[4] >>  6)  &  0x1)  , ((DAQ.command_words[4] >>  6)  &  0x1) );  }
 
 
 
@@ -935,62 +942,62 @@ void gemroc_init(unsigned int TARGET_GEMROC_ID_param,char*command_string_param,u
       unsigned int gemroc_cmd_ID;
       unsigned int gemroc_cmd_tag;
       unsigned int gemroc_cmd_word_count;
-      gemroc_TARGET_GEMROC_ID = TARGET_GEMROC_ID_param;
-      gemroc_cfg_filename = cfg_filename_param;
-      readfromtxt(gemroc_cfg_filename,gemroc_parameter_array,31);
-      write_array_to_txt("gemroc_init",gemroc_parameter_array,31);
-      gemroc_TIMING_DLY_FEB0 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-1];
-      gemroc_TIMING_DLY_FEB1 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-2];
-      gemroc_TIMING_DLY_FEB2 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-3];
-      gemroc_TIMING_DLY_FEB3 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-4];
-      gemroc_FEB_PWR_EN_pattern = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-5];
-      gemroc_FEB_OVC_EN_pattern = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-6];
-      gemroc_FEB_OVV_EN_pattern = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-7];
-      gemroc_FEB_OVT_EN_pattern = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-8];
-      gemroc_ROC_OVT_EN  = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-9];
-      gemroc_XCVR_LPBCK_TST_EN  = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-10]; 
-      gemroc_ROC_OVT_LIMIT = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-11];
-      gemroc_A_OVC_LIMIT_FEB0 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-12];
-      gemroc_A_OVV_LIMIT_FEB0 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-13];
-      gemroc_A_OVC_LIMIT_FEB1 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-14];
-      gemroc_A_OVV_LIMIT_FEB1 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-15];
-      gemroc_A_OVC_LIMIT_FEB2 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-16];
-      gemroc_A_OVV_LIMIT_FEB2 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-17];
-      gemroc_A_OVC_LIMIT_FEB3 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-18];
-      gemroc_A_OVV_LIMIT_FEB3 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-19];
-      gemroc_D_OVC_LIMIT_FEB0 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-20];
-      gemroc_D_OVV_LIMIT_FEB0 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-21];
-      gemroc_OVT_LIMIT_FEB0 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-22] ;
-      gemroc_D_OVC_LIMIT_FEB1 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-23];
-      gemroc_D_OVV_LIMIT_FEB1 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-24];
-      gemroc_OVT_LIMIT_FEB1 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-25];
-      gemroc_D_OVC_LIMIT_FEB2 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-26];
-      gemroc_D_OVV_LIMIT_FEB2 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-27];
-      gemroc_OVT_LIMIT_FEB2 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-28];
-      gemroc_D_OVC_LIMIT_FEB3 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-29];
-      gemroc_D_OVV_LIMIT_FEB3 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-30];
-      gemroc_OVT_LIMIT_FEB3 = gemroc_parameter_array [GEMROC_CMD_LV_Num_of_params-31];
-      gemroc_command_string = command_string_param;
-      gemroc_is_a_write = 0x1;
+      gemroc.TARGET_GEMROC_ID = TARGET_GEMROC_ID_param;
+      gemroc.cfg_filename = cfg_filename_param;
+      readfromtxt(gemroc.cfg_filename,gemroc.parameter_array,31);
+      write_array_to_txt("gemroc.init",gemroc.parameter_array,31);
+      gemroc.TIMING_DLY_FEB0 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-1];
+      gemroc.TIMING_DLY_FEB1 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-2];
+      gemroc.TIMING_DLY_FEB2 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-3];
+      gemroc.TIMING_DLY_FEB3 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-4];
+      gemroc.FEB_PWR_EN_pattern = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-5];
+      gemroc.FEB_OVC_EN_pattern = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-6];
+      gemroc.FEB_OVV_EN_pattern = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-7];
+      gemroc.FEB_OVT_EN_pattern = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-8];
+      gemroc.ROC_OVT_EN  = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-9];
+      gemroc.XCVR_LPBCK_TST_EN  = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-10]; 
+      gemroc.ROC_OVT_LIMIT = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-11];
+      gemroc.A_OVC_LIMIT_FEB0 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-12];
+      gemroc.A_OVV_LIMIT_FEB0 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-13];
+      gemroc.A_OVC_LIMIT_FEB1 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-14];
+      gemroc.A_OVV_LIMIT_FEB1 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-15];
+      gemroc.A_OVC_LIMIT_FEB2 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-16];
+      gemroc.A_OVV_LIMIT_FEB2 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-17];
+      gemroc.A_OVC_LIMIT_FEB3 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-18];
+      gemroc.A_OVV_LIMIT_FEB3 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-19];
+      gemroc.D_OVC_LIMIT_FEB0 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-20];
+      gemroc.D_OVV_LIMIT_FEB0 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-21];
+      gemroc.OVT_LIMIT_FEB0 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-22] ;
+      gemroc.D_OVC_LIMIT_FEB1 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-23];
+      gemroc.D_OVV_LIMIT_FEB1 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-24];
+      gemroc.OVT_LIMIT_FEB1 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-25];
+      gemroc.D_OVC_LIMIT_FEB2 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-26];
+      gemroc.D_OVV_LIMIT_FEB2 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-27];
+      gemroc.OVT_LIMIT_FEB2 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-28];
+      gemroc.D_OVC_LIMIT_FEB3 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-29];
+      gemroc.D_OVV_LIMIT_FEB3 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-30];
+      gemroc.OVT_LIMIT_FEB3 = gemroc.parameter_array [GEMROC_CMD_LV_Num_of_params-31];
+      gemroc.command_string = command_string_param;
+      gemroc.is_a_write = 0x1;
       for(i=0;i<6;i++)
-       if(strcmp(gemroc_command_string,gemroc_command_list[i])==0)
-          gemroc_gemroc_cmd_code = i;
+       if(strcmp(gemroc.command_string,gemroc_command_list[i])==0)
+          gemroc.gemroc_cmd_code = i;
       header_tag = 0x8 << 28;
       gemroc_cmd_ID = 0xC;
       gemroc_cmd_tag = gemroc_cmd_ID << 24;
       gemroc_cmd_word_count = GEMROC_CMD_LV_Num_Of_PktWords - 1; 
-      gemroc_command_words[0] = header_tag + (gemroc_TARGET_GEMROC_ID << 16) + gemroc_cmd_tag + gemroc_cmd_word_count;
-      gemroc_command_words[1] = ((gemroc_OVT_LIMIT_FEB3 & 0xFF) << 22) + ((gemroc_D_OVV_LIMIT_FEB3 & 0x1FF) << 13) + ((gemroc_D_OVC_LIMIT_FEB3 & 0x1FF) << 4);
-      gemroc_command_words[2]  = ((gemroc_OVT_LIMIT_FEB2 & 0xFF) << 22) + ((gemroc_D_OVV_LIMIT_FEB2 & 0x1FF) << 13) + ((gemroc_D_OVC_LIMIT_FEB2 & 0x1FF) << 4);
-      gemroc_command_words[3]  = ((gemroc_OVT_LIMIT_FEB1 & 0xFF) << 22) + ((gemroc_D_OVV_LIMIT_FEB1 & 0x1FF) << 13) + ((gemroc_D_OVC_LIMIT_FEB1 & 0x1FF) << 4);
-      gemroc_command_words[4]  = ((gemroc_OVT_LIMIT_FEB0 & 0xFF) << 22) + ((gemroc_D_OVV_LIMIT_FEB0 & 0x1FF) << 13) + ((gemroc_D_OVC_LIMIT_FEB0 & 0x1FF) << 4);
-      gemroc_command_words[5]  = ((gemroc_A_OVV_LIMIT_FEB3 & 0x1FF) << 13) + ((gemroc_A_OVC_LIMIT_FEB3 & 0x1FF) << 4);
-      gemroc_command_words[6]  = ((gemroc_A_OVV_LIMIT_FEB2 & 0x1FF) << 13) + ((gemroc_A_OVC_LIMIT_FEB2 & 0x1FF) << 4);
-      gemroc_command_words[7]  = ((gemroc_A_OVV_LIMIT_FEB1 & 0x1FF) << 13) + ((gemroc_A_OVC_LIMIT_FEB1 & 0x1FF) << 4);
-      gemroc_command_words[8]  = ((gemroc_A_OVV_LIMIT_FEB0 & 0x1FF) << 13) + ((gemroc_A_OVC_LIMIT_FEB0 & 0x1FF) << 4);
-      gemroc_command_words[9] = ((gemroc_ROC_OVT_LIMIT & 0x3F) << 24) + ((gemroc_XCVR_LPBCK_TST_EN & 0x1) << 18) +((gemroc_ROC_OVT_EN & 0x1) << 16) + ((gemroc_FEB_OVT_EN_pattern & 0xF) << 12) + ((gemroc_FEB_OVV_EN_pattern & 0xF) << 8) + ((gemroc_FEB_OVC_EN_pattern & 0xF) << 4)+(gemroc_FEB_PWR_EN_pattern & 0xF);
-      gemroc_command_words[10] = ((gemroc_TIMING_DLY_FEB3 & 0x3F) << 24) + ((gemroc_TIMING_DLY_FEB2 & 0x3F) << 16) + ((gemroc_TIMING_DLY_FEB1 & 0x3F) << 8) + ((gemroc_TIMING_DLY_FEB0 & 0x3F) << 0);
-      gemroc_command_words[11] = ((gemroc_gemroc_cmd_code & 0xF) << 11);   }
+      gemroc.command_words[0] = header_tag + (gemroc.TARGET_GEMROC_ID << 16) + gemroc_cmd_tag + gemroc_cmd_word_count;
+      gemroc.command_words[1] = ((gemroc.OVT_LIMIT_FEB3 & 0xFF) << 22) + ((gemroc.D_OVV_LIMIT_FEB3 & 0x1FF) << 13) + ((gemroc.D_OVC_LIMIT_FEB3 & 0x1FF) << 4);
+      gemroc.command_words[2]  = ((gemroc.OVT_LIMIT_FEB2 & 0xFF) << 22) + ((gemroc.D_OVV_LIMIT_FEB2 & 0x1FF) << 13) + ((gemroc.D_OVC_LIMIT_FEB2 & 0x1FF) << 4);
+      gemroc.command_words[3]  = ((gemroc.OVT_LIMIT_FEB1 & 0xFF) << 22) + ((gemroc.D_OVV_LIMIT_FEB1 & 0x1FF) << 13) + ((gemroc.D_OVC_LIMIT_FEB1 & 0x1FF) << 4);
+      gemroc.command_words[4]  = ((gemroc.OVT_LIMIT_FEB0 & 0xFF) << 22) + ((gemroc.D_OVV_LIMIT_FEB0 & 0x1FF) << 13) + ((gemroc.D_OVC_LIMIT_FEB0 & 0x1FF) << 4);
+      gemroc.command_words[5]  = ((gemroc.A_OVV_LIMIT_FEB3 & 0x1FF) << 13) + ((gemroc.A_OVC_LIMIT_FEB3 & 0x1FF) << 4);
+      gemroc.command_words[6]  = ((gemroc.A_OVV_LIMIT_FEB2 & 0x1FF) << 13) + ((gemroc.A_OVC_LIMIT_FEB2 & 0x1FF) << 4);
+      gemroc.command_words[7]  = ((gemroc.A_OVV_LIMIT_FEB1 & 0x1FF) << 13) + ((gemroc.A_OVC_LIMIT_FEB1 & 0x1FF) << 4);
+      gemroc.command_words[8]  = ((gemroc.A_OVV_LIMIT_FEB0 & 0x1FF) << 13) + ((gemroc.A_OVC_LIMIT_FEB0 & 0x1FF) << 4);
+      gemroc.command_words[9] = ((gemroc.ROC_OVT_LIMIT & 0x3F) << 24) + ((gemroc.XCVR_LPBCK_TST_EN & 0x1) << 18) +((gemroc.ROC_OVT_EN & 0x1) << 16) + ((gemroc.FEB_OVT_EN_pattern & 0xF) << 12) + ((gemroc.FEB_OVV_EN_pattern & 0xF) << 8) + ((gemroc.FEB_OVC_EN_pattern & 0xF) << 4)+(gemroc.FEB_PWR_EN_pattern & 0xF);
+      gemroc.command_words[10] = ((gemroc.TIMING_DLY_FEB3 & 0x3F) << 24) + ((gemroc.TIMING_DLY_FEB2 & 0x3F) << 16) + ((gemroc.TIMING_DLY_FEB1 & 0x3F) << 8) + ((gemroc.TIMING_DLY_FEB0 & 0x3F) << 0);
+      gemroc.command_words[11] = ((gemroc.gemroc_cmd_code & 0xF) << 11);   }
 
 unsigned int gemroc_cmd_words_array_size()
 {
@@ -999,84 +1006,84 @@ unsigned int gemroc_cmd_words_array_size()
 void gemroc_print_command_words()
 {     int i;
       for(i=0;i<12;i++)
-         printf("%08X\n",gemroc_command_words[i]);   }
+         printf("%08X\n",gemroc.command_words[i]);   }
 
 void gemroc_set_target_GEMROC (unsigned int GEMROC_ID_param)
 {
-      gemroc_TARGET_GEMROC_ID = GEMROC_ID_param & 0x1F;
-      gemroc_command_words[0] = (gemroc_command_words[0] & 0xFF00FFFF) + (gemroc_TARGET_GEMROC_ID << 16);}
+      gemroc.TARGET_GEMROC_ID = GEMROC_ID_param & 0x1F;
+      gemroc.command_words[0] = (gemroc.command_words[0] & 0xFF00FFFF) + (gemroc.TARGET_GEMROC_ID << 16);}
 
 void gemroc_set_FEB_PWR_EN_pattern(unsigned int target_FEB_PWR_EN_pattern)
 {
-      gemroc_FEB_PWR_EN_pattern = target_FEB_PWR_EN_pattern & 0xF;  }
+      gemroc.FEB_PWR_EN_pattern = target_FEB_PWR_EN_pattern & 0xF;  }
 
 void gemroc_set_timing_toFEB_delay(unsigned int FEB3dly_param, unsigned int FEB2dly_param,
                                    unsigned int FEB1dly_param,unsigned int  FEB0dly_param)
 {
-      gemroc_TIMING_DLY_FEB3 = FEB3dly_param & 0x3F;
-      gemroc_TIMING_DLY_FEB2 = FEB2dly_param & 0x3F;
-      gemroc_TIMING_DLY_FEB1 = FEB1dly_param & 0x3F;
-      gemroc_TIMING_DLY_FEB0 = FEB0dly_param & 0x3F;     }
+      gemroc.TIMING_DLY_FEB3 = FEB3dly_param & 0x3F;
+      gemroc.TIMING_DLY_FEB2 = FEB2dly_param & 0x3F;
+      gemroc.TIMING_DLY_FEB1 = FEB1dly_param & 0x3F;
+      gemroc.TIMING_DLY_FEB0 = FEB0dly_param & 0x3F;     }
 
 void gemroc_set_gemroc_cmd_code(char*command_string_param, unsigned int no_of_executions_param)
 {     int i;
-      gemroc_number_of_repetitions = no_of_executions_param;
-      gemroc_command_string = command_string_param;
+      gemroc.number_of_repetitions = no_of_executions_param;
+      gemroc.command_string = command_string_param;
       for(i=0;i<6;i++)
-         if(strcmp(gemroc_command_string,gemroc_command_list[i])==0)
-            gemroc_gemroc_cmd_code = i;    }
+         if(strcmp(gemroc.command_string,gemroc_command_list[i])==0)
+            gemroc.gemroc_cmd_code = i;    }
 
 void gemroc_update_command_words()
 {     int i;
-      if ( ((gemroc_gemroc_cmd_code & 0xF) == 0x2)||((gemroc_gemroc_cmd_code & 0xF) == 0x3)||((gemroc_gemroc_cmd_code & 0xF) == 0x4) )
+      if ( ((gemroc.gemroc_cmd_code & 0xF) == 0x2)||((gemroc.gemroc_cmd_code & 0xF) == 0x3)||((gemroc.gemroc_cmd_code & 0xF) == 0x4) )
         for(i=1;i<11;i++)
-           gemroc_command_words[i]=0;
+           gemroc.command_words[i]=0;
       else {
-         gemroc_command_words[1] = ((gemroc_OVT_LIMIT_FEB3 & 0xFF) << 22) + ((gemroc_D_OVV_LIMIT_FEB3 & 0x1FF) << 13) + ((gemroc_D_OVC_LIMIT_FEB3 & 0x1FF) << 4);
-         gemroc_command_words[2]  = ((gemroc_OVT_LIMIT_FEB2 & 0xFF) << 22) + ((gemroc_D_OVV_LIMIT_FEB2 & 0x1FF) << 13) + ((gemroc_D_OVC_LIMIT_FEB2 & 0x1FF) << 4);
-         gemroc_command_words[3]  = ((gemroc_OVT_LIMIT_FEB1 & 0xFF) << 22) + ((gemroc_D_OVV_LIMIT_FEB1 & 0x1FF) << 13) + ((gemroc_D_OVC_LIMIT_FEB1 & 0x1FF) << 4);
-         gemroc_command_words[4]  = ((gemroc_OVT_LIMIT_FEB0 & 0xFF) << 22) + ((gemroc_D_OVV_LIMIT_FEB0 & 0x1FF) << 13) + ((gemroc_D_OVC_LIMIT_FEB0 & 0x1FF) << 4);
-         gemroc_command_words[5]  = ((gemroc_A_OVV_LIMIT_FEB3 & 0x1FF) << 13) + ((gemroc_A_OVC_LIMIT_FEB3 & 0x1FF) << 4);
-         gemroc_command_words[6]  = ((gemroc_A_OVV_LIMIT_FEB2 & 0x1FF) << 13) + ((gemroc_A_OVC_LIMIT_FEB2 & 0x1FF) << 4);
-         gemroc_command_words[7]  = ((gemroc_A_OVV_LIMIT_FEB1 & 0x1FF) << 13) + ((gemroc_A_OVC_LIMIT_FEB1 & 0x1FF) << 4);
-         gemroc_command_words[8]  = ((gemroc_A_OVV_LIMIT_FEB0 & 0x1FF) << 13) + ((gemroc_A_OVC_LIMIT_FEB0 & 0x1FF) << 4);
-         gemroc_command_words[9] = ((gemroc_ROC_OVT_LIMIT & 0x3F) << 24) + ((gemroc_XCVR_LPBCK_TST_EN & 0x1) << 18) +((gemroc_ROC_OVT_EN & 0x1) << 16) + ((gemroc_FEB_OVT_EN_pattern & 0xF) << 12) + ((gemroc_FEB_OVV_EN_pattern & 0xF) << 8) + ((gemroc_FEB_OVC_EN_pattern & 0xF) << 4) + (gemroc_FEB_PWR_EN_pattern & 0xF);
-         gemroc_command_words[10] = ((gemroc_TIMING_DLY_FEB3 & 0x3F) << 24) + ((gemroc_TIMING_DLY_FEB2 & 0x3F) << 16) + ((gemroc_TIMING_DLY_FEB1 & 0x3F) << 8) + ((gemroc_TIMING_DLY_FEB0 & 0x3F) << 0);   }       
-         gemroc_command_words[11] = ((gemroc_gemroc_cmd_code & 0xF) << 11);   }
+         gemroc.command_words[1] = ((gemroc.OVT_LIMIT_FEB3 & 0xFF) << 22) + ((gemroc.D_OVV_LIMIT_FEB3 & 0x1FF) << 13) + ((gemroc.D_OVC_LIMIT_FEB3 & 0x1FF) << 4);
+         gemroc.command_words[2]  = ((gemroc.OVT_LIMIT_FEB2 & 0xFF) << 22) + ((gemroc.D_OVV_LIMIT_FEB2 & 0x1FF) << 13) + ((gemroc.D_OVC_LIMIT_FEB2 & 0x1FF) << 4);
+         gemroc.command_words[3]  = ((gemroc.OVT_LIMIT_FEB1 & 0xFF) << 22) + ((gemroc.D_OVV_LIMIT_FEB1 & 0x1FF) << 13) + ((gemroc.D_OVC_LIMIT_FEB1 & 0x1FF) << 4);
+         gemroc.command_words[4]  = ((gemroc.OVT_LIMIT_FEB0 & 0xFF) << 22) + ((gemroc.D_OVV_LIMIT_FEB0 & 0x1FF) << 13) + ((gemroc.D_OVC_LIMIT_FEB0 & 0x1FF) << 4);
+         gemroc.command_words[5]  = ((gemroc.A_OVV_LIMIT_FEB3 & 0x1FF) << 13) + ((gemroc.A_OVC_LIMIT_FEB3 & 0x1FF) << 4);
+         gemroc.command_words[6]  = ((gemroc.A_OVV_LIMIT_FEB2 & 0x1FF) << 13) + ((gemroc.A_OVC_LIMIT_FEB2 & 0x1FF) << 4);
+         gemroc.command_words[7]  = ((gemroc.A_OVV_LIMIT_FEB1 & 0x1FF) << 13) + ((gemroc.A_OVC_LIMIT_FEB1 & 0x1FF) << 4);
+         gemroc.command_words[8]  = ((gemroc.A_OVV_LIMIT_FEB0 & 0x1FF) << 13) + ((gemroc.A_OVC_LIMIT_FEB0 & 0x1FF) << 4);
+         gemroc.command_words[9] = ((gemroc.ROC_OVT_LIMIT & 0x3F) << 24) + ((gemroc.XCVR_LPBCK_TST_EN & 0x1) << 18) +((gemroc.ROC_OVT_EN & 0x1) << 16) + ((gemroc.FEB_OVT_EN_pattern & 0xF) << 12) + ((gemroc.FEB_OVV_EN_pattern & 0xF) << 8) + ((gemroc.FEB_OVC_EN_pattern & 0xF) << 4) + (gemroc.FEB_PWR_EN_pattern & 0xF);
+         gemroc.command_words[10] = ((gemroc.TIMING_DLY_FEB3 & 0x3F) << 24) + ((gemroc.TIMING_DLY_FEB2 & 0x3F) << 16) + ((gemroc.TIMING_DLY_FEB1 & 0x3F) << 8) + ((gemroc.TIMING_DLY_FEB0 & 0x3F) << 0);   }       
+         gemroc.command_words[11] = ((gemroc.gemroc_cmd_code & 0xF) << 11);   }
 
 void gemroc_extract_parameters_from_UDP_packet()
 {
-      printf ( "\n   OVT_LIMIT_FEB3 = %04X %d",((gemroc_command_words[1] >> 22) &  0xFF), ((gemroc_command_words[1] >> 22) &  0xFF));
-      printf ( "\n D_OVV_LIMIT_FEB3 = %04X %d ",((gemroc_command_words[1] >> 13) &  0x1FF), ((gemroc_command_words[1] >> 13) &  0x1FF) );
-      printf ( "\n D_OVC_LIMIT_FEB3 = %04X %d",((gemroc_command_words[1] >> 4) &  0x1FF), ((gemroc_command_words[1] >> 4) &  0x1FF) );
-      printf ( "\n   OVT_LIMIT_FEB2 = %04X %d",((gemroc_command_words[2] >> 22) &  0xFF), ((gemroc_command_words[2] >> 22) &  0xFF) );
-      printf ( "\n D_OVV_LIMIT_FEB2 = %04X %d ",((gemroc_command_words[2] >> 13) &  0x1FF), ((gemroc_command_words[2] >> 13) &  0x1FF) );
-      printf ( "\n D_OVC_LIMIT_FEB2 = %04X %d",((gemroc_command_words[2] >> 4) &  0x1FF), ((gemroc_command_words[2] >> 4) &  0x1FF) );
-      printf ( "\n   OVT_LIMIT_FEB1 = %04X %d", ((gemroc_command_words[3] >> 22) &  0xFF), ((gemroc_command_words[3] >> 22) &  0xFF) );
-      printf ( "\n D_OVV_LIMIT_FEB1 = %04X %d ", ((gemroc_command_words[3] >> 13) &  0x1FF), ((gemroc_command_words[3] >> 13) &  0x1FF) );
-      printf ( "\n D_OVC_LIMIT_FEB1 = %04X %d", ((gemroc_command_words[3] >> 4) &  0x1FF), ((gemroc_command_words[3] >> 4) &  0x1FF) );
-      printf ( "\n   OVT_LIMIT_FEB0 = %04X %d",((gemroc_command_words[4] >> 22) &  0xFF), ((gemroc_command_words[4] >> 22) &  0xFF) );
-      printf ( "\n D_OVV_LIMIT_FEB0 = %04X %d ", ((gemroc_command_words[4] >> 13) &  0x1FF), ((gemroc_command_words[4] >> 13) &  0x1FF) );
-      printf ( "\n D_OVC_LIMIT_FEB0 = %04X %d", ((gemroc_command_words[4] >> 4) &  0x1FF), ((gemroc_command_words[4] >> 4) &  0x1FF) );
-      printf ( "\n A_OVV_LIMIT_FEB3 = %04X %d ", ((gemroc_command_words[5] >> 13) &  0x1FF), ((gemroc_command_words[5] >> 13) &  0x1FF) );
-      printf ( "\n A_OVC_LIMIT_FEB3 = %04X %d",((gemroc_command_words[5] >> 4) &  0x1FF), ((gemroc_command_words[5] >> 4) &  0x1FF) );
-      printf ( "\n A_OVV_LIMIT_FEB2 = %04X %d ", ((gemroc_command_words[6] >> 13) &  0x1FF), ((gemroc_command_words[6] >> 13) &  0x1FF) );
-      printf ( "\n A_OVC_LIMIT_FEB2 = %04X %d",((gemroc_command_words[6] >> 4) &  0x1FF), ((gemroc_command_words[6] >> 4) &  0x1FF) );
-      printf ( "\n A_OVV_LIMIT_FEB1 = %04X %d ", ((gemroc_command_words[7] >> 13) &  0x1FF), ((gemroc_command_words[7] >> 13) &  0x1FF) );
-      printf ( "\n A_OVC_LIMIT_FEB1 = %04X %d",((gemroc_command_words[7] >> 4) &  0x1FF), ((gemroc_command_words[7] >> 4) &  0x1FF) );
-      printf ( "\n A_OVV_LIMIT_FEB0 = %04X %d ", ((gemroc_command_words[8] >> 13) &  0x1FF), ((gemroc_command_words[8] >> 13) &  0x1FF) );
-      printf ( "\n A_OVC_LIMIT_FEB0 = %04X %d",((gemroc_command_words[8] >> 4) &  0x1FF), ((gemroc_command_words[8] >> 4) &  0x1FF) );
-      printf ( "\n ROC_OVT_LIMIT = %04X %d",((gemroc_command_words[9] >> 24) &  0x3F), ((gemroc_command_words[9] >> 24) &  0x3F) );
-      printf ( "\n XCVR_LPBCK_TST_EN = %d",(gemroc_command_words[9] >> 18) &  0x1);
-      printf ( "\n ROC_OVT_EN = %d",(gemroc_command_words[9] >> 16) &  0x1);
-      printf ( "\n FEB_OVT_EN_pattern = %01X %d",((gemroc_command_words[9] >> 12) &  0xF), ((gemroc_command_words[9] >> 12) &  0xF) );
-      printf ( "\n FEB_OVV_EN_pattern = %01X %d",((gemroc_command_words[9] >> 8) &  0xF), ((gemroc_command_words[9] >> 8) &  0xF) );
-      printf ( "\n FEB_OVC_EN_pattern = %01X %d", ((gemroc_command_words[9] >> 4) &  0xF), ((gemroc_command_words[9] >> 4) &  0xF) );
-      printf ( "\n FEB_PWR_EN_pattern = %01X %d", ((gemroc_command_words[9] >> 0) &  0xF), ((gemroc_command_words[9] >> 0) &  0xF) );
-      printf ( "\n TIMING_DLY_FEB3 = %02X %d", ((gemroc_command_words[10] >> 24) &  0x3F), ((gemroc_command_words[10] >> 24) &  0x3F) );
-      printf ( "\n TIMING_DLY_FEB2 = %02X %d",((gemroc_command_words[10] >> 16) &  0x3F), ((gemroc_command_words[10] >> 16) &  0x3F) );
-      printf ( "\n TIMING_DLY_FEB1 = %02X %d", ((gemroc_command_words[10] >>  8) &  0x3F), ((gemroc_command_words[10] >>  8) &  0x3F) );
-      printf ( "\n TIMING_DLY_FEB0 = %02X %d",((gemroc_command_words[10] >>  0) &  0x3F), ((gemroc_command_words[10] >>  0) &  0x3F) ) ;}
+      printf ( "\n   OVT_LIMIT_FEB3 = %04X %d",((gemroc.command_words[1] >> 22) &  0xFF), ((gemroc.command_words[1] >> 22) &  0xFF));
+      printf ( "\n D_OVV_LIMIT_FEB3 = %04X %d ",((gemroc.command_words[1] >> 13) &  0x1FF), ((gemroc.command_words[1] >> 13) &  0x1FF) );
+      printf ( "\n D_OVC_LIMIT_FEB3 = %04X %d",((gemroc.command_words[1] >> 4) &  0x1FF), ((gemroc.command_words[1] >> 4) &  0x1FF) );
+      printf ( "\n   OVT_LIMIT_FEB2 = %04X %d",((gemroc.command_words[2] >> 22) &  0xFF), ((gemroc.command_words[2] >> 22) &  0xFF) );
+      printf ( "\n D_OVV_LIMIT_FEB2 = %04X %d ",((gemroc.command_words[2] >> 13) &  0x1FF), ((gemroc.command_words[2] >> 13) &  0x1FF) );
+      printf ( "\n D_OVC_LIMIT_FEB2 = %04X %d",((gemroc.command_words[2] >> 4) &  0x1FF), ((gemroc.command_words[2] >> 4) &  0x1FF) );
+      printf ( "\n   OVT_LIMIT_FEB1 = %04X %d", ((gemroc.command_words[3] >> 22) &  0xFF), ((gemroc.command_words[3] >> 22) &  0xFF) );
+      printf ( "\n D_OVV_LIMIT_FEB1 = %04X %d ", ((gemroc.command_words[3] >> 13) &  0x1FF), ((gemroc.command_words[3] >> 13) &  0x1FF) );
+      printf ( "\n D_OVC_LIMIT_FEB1 = %04X %d", ((gemroc.command_words[3] >> 4) &  0x1FF), ((gemroc.command_words[3] >> 4) &  0x1FF) );
+      printf ( "\n   OVT_LIMIT_FEB0 = %04X %d",((gemroc.command_words[4] >> 22) &  0xFF), ((gemroc.command_words[4] >> 22) &  0xFF) );
+      printf ( "\n D_OVV_LIMIT_FEB0 = %04X %d ", ((gemroc.command_words[4] >> 13) &  0x1FF), ((gemroc.command_words[4] >> 13) &  0x1FF) );
+      printf ( "\n D_OVC_LIMIT_FEB0 = %04X %d", ((gemroc.command_words[4] >> 4) &  0x1FF), ((gemroc.command_words[4] >> 4) &  0x1FF) );
+      printf ( "\n A_OVV_LIMIT_FEB3 = %04X %d ", ((gemroc.command_words[5] >> 13) &  0x1FF), ((gemroc.command_words[5] >> 13) &  0x1FF) );
+      printf ( "\n A_OVC_LIMIT_FEB3 = %04X %d",((gemroc.command_words[5] >> 4) &  0x1FF), ((gemroc.command_words[5] >> 4) &  0x1FF) );
+      printf ( "\n A_OVV_LIMIT_FEB2 = %04X %d ", ((gemroc.command_words[6] >> 13) &  0x1FF), ((gemroc.command_words[6] >> 13) &  0x1FF) );
+      printf ( "\n A_OVC_LIMIT_FEB2 = %04X %d",((gemroc.command_words[6] >> 4) &  0x1FF), ((gemroc.command_words[6] >> 4) &  0x1FF) );
+      printf ( "\n A_OVV_LIMIT_FEB1 = %04X %d ", ((gemroc.command_words[7] >> 13) &  0x1FF), ((gemroc.command_words[7] >> 13) &  0x1FF) );
+      printf ( "\n A_OVC_LIMIT_FEB1 = %04X %d",((gemroc.command_words[7] >> 4) &  0x1FF), ((gemroc.command_words[7] >> 4) &  0x1FF) );
+      printf ( "\n A_OVV_LIMIT_FEB0 = %04X %d ", ((gemroc.command_words[8] >> 13) &  0x1FF), ((gemroc.command_words[8] >> 13) &  0x1FF) );
+      printf ( "\n A_OVC_LIMIT_FEB0 = %04X %d",((gemroc.command_words[8] >> 4) &  0x1FF), ((gemroc.command_words[8] >> 4) &  0x1FF) );
+      printf ( "\n ROC_OVT_LIMIT = %04X %d",((gemroc.command_words[9] >> 24) &  0x3F), ((gemroc.command_words[9] >> 24) &  0x3F) );
+      printf ( "\n XCVR_LPBCK_TST_EN = %d",(gemroc.command_words[9] >> 18) &  0x1);
+      printf ( "\n ROC_OVT_EN = %d",(gemroc.command_words[9] >> 16) &  0x1);
+      printf ( "\n FEB_OVT_EN_pattern = %01X %d",((gemroc.command_words[9] >> 12) &  0xF), ((gemroc.command_words[9] >> 12) &  0xF) );
+      printf ( "\n FEB_OVV_EN_pattern = %01X %d",((gemroc.command_words[9] >> 8) &  0xF), ((gemroc.command_words[9] >> 8) &  0xF) );
+      printf ( "\n FEB_OVC_EN_pattern = %01X %d", ((gemroc.command_words[9] >> 4) &  0xF), ((gemroc.command_words[9] >> 4) &  0xF) );
+      printf ( "\n FEB_PWR_EN_pattern = %01X %d", ((gemroc.command_words[9] >> 0) &  0xF), ((gemroc.command_words[9] >> 0) &  0xF) );
+      printf ( "\n TIMING_DLY_FEB3 = %02X %d", ((gemroc.command_words[10] >> 24) &  0x3F), ((gemroc.command_words[10] >> 24) &  0x3F) );
+      printf ( "\n TIMING_DLY_FEB2 = %02X %d",((gemroc.command_words[10] >> 16) &  0x3F), ((gemroc.command_words[10] >> 16) &  0x3F) );
+      printf ( "\n TIMING_DLY_FEB1 = %02X %d", ((gemroc.command_words[10] >>  8) &  0x3F), ((gemroc.command_words[10] >>  8) &  0x3F) );
+      printf ( "\n TIMING_DLY_FEB0 = %02X %d",((gemroc.command_words[10] >>  0) &  0x3F), ((gemroc.command_words[10] >>  0) &  0x3F) ) ;}
 
 
 
@@ -1111,96 +1118,96 @@ void ch_reg_init(unsigned int TARGET_GEMROC_ID_param,char* cfg_filename_param)
       unsigned int Channel_cfg_cmd_ID; 
       unsigned int ccfg_cmd_tag; 
       unsigned int ccfg_cmd_word_count; 
-      ch_reg_TARGET_GEMROC_ID = TARGET_GEMROC_ID_param ;
-      ch_reg_cfg_filename = cfg_filename_param;
-      readfromtxt(ch_reg_cfg_filename,ch_reg_parameter_array,30);
-      write_array_to_txt("ch_reg_init",ch_reg_parameter_array,30);
-      ch_reg_DisableHyst = ch_reg_parameter_array [0]  ;
-      ch_reg_T2Hyst = ch_reg_parameter_array [1]  ;
-      ch_reg_T1Hyst = ch_reg_parameter_array [2]  ;
-      ch_reg_Ch63ObufMSB = ch_reg_parameter_array [3]  ;
-      ch_reg_TP_disable_FE = ch_reg_parameter_array [4]  ;
-      ch_reg_TDC_IB_E = ch_reg_parameter_array [5]  ;
-      ch_reg_TDC_IB_T = ch_reg_parameter_array [6]  ;
-      ch_reg_Integ = ch_reg_parameter_array [7]  ;
-      ch_reg_PostAmpGain = ch_reg_parameter_array [8]  ;
-      ch_reg_FE_delay = ch_reg_parameter_array [9]  ;
-      ch_reg_Vth_T2 = ch_reg_parameter_array [10]  ;
-      ch_reg_Vth_T1 = ch_reg_parameter_array [11]  ;
-      ch_reg_QTx2Enable = ch_reg_parameter_array [12]  ;
-      ch_reg_MaxIntegTime = ch_reg_parameter_array [13]  ;
-      ch_reg_MinIntegTime = ch_reg_parameter_array [14]  ;
-      ch_reg_TriggerBLatched = ch_reg_parameter_array [15]  ;
-      ch_reg_QdcMode = ch_reg_parameter_array [16]  ;
-      ch_reg_BranchEnableT = ch_reg_parameter_array [17]  ;
-      ch_reg_BranchEnableEQ = ch_reg_parameter_array [18]  ;
-      ch_reg_TriggerMode2B = ch_reg_parameter_array [19]  ;
-      ch_reg_TriggerMode2Q = ch_reg_parameter_array [20]  ;
-      ch_reg_TriggerMode2E = ch_reg_parameter_array [21]  ;
-      ch_reg_TriggerMode2T = ch_reg_parameter_array [22]  ;
-      ch_reg_TACMinAge = ch_reg_parameter_array [23]  ;
-      ch_reg_TACMaxAge = ch_reg_parameter_array [24]  ;
-      ch_reg_CounterMode = ch_reg_parameter_array [25]  ;
-      ch_reg_DeadTime = ch_reg_parameter_array [26]  ;
-      ch_reg_SyncChainLen = ch_reg_parameter_array [27]  ;
-      ch_reg_Ch_DebugMode = ch_reg_parameter_array [28]  ;
-      ch_reg_TriggerMode = ch_reg_parameter_array [29];
-      ch_reg_is_a_write = 0x1;
-      ch_reg_target_TIGER_ID = 0x1;
-      ch_reg_command_code = 0x9;
-      ch_reg_TO_ALL_enable = 0x1;
-      ch_reg_channel_ID = 0x3;
+      ch_reg.TARGET_GEMROC_ID = TARGET_GEMROC_ID_param ;
+      ch_reg.cfg_filename = cfg_filename_param;
+      readfromtxt(ch_reg.cfg_filename,ch_reg.parameter_array,30);
+      write_array_to_txt("ch_reg.init",ch_reg.parameter_array,30);
+      ch_reg.DisableHyst = ch_reg.parameter_array [0]  ;
+      ch_reg.T2Hyst = ch_reg.parameter_array [1]  ;
+      ch_reg.T1Hyst = ch_reg.parameter_array [2]  ;
+      ch_reg.Ch63ObufMSB = ch_reg.parameter_array [3]  ;
+      ch_reg.TP_disable_FE = ch_reg.parameter_array [4]  ;
+      ch_reg.TDC_IB_E = ch_reg.parameter_array [5]  ;
+      ch_reg.TDC_IB_T = ch_reg.parameter_array [6]  ;
+      ch_reg.Integ = ch_reg.parameter_array [7]  ;
+      ch_reg.PostAmpGain = ch_reg.parameter_array [8]  ;
+      ch_reg.FE_delay = ch_reg.parameter_array [9]  ;
+      ch_reg.Vth_T2 = ch_reg.parameter_array [10]  ;
+      ch_reg.Vth_T1 = ch_reg.parameter_array [11]  ;
+      ch_reg.QTx2Enable = ch_reg.parameter_array [12]  ;
+      ch_reg.MaxIntegTime = ch_reg.parameter_array [13]  ;
+      ch_reg.MinIntegTime = ch_reg.parameter_array [14]  ;
+      ch_reg.TriggerBLatched = ch_reg.parameter_array [15]  ;
+      ch_reg.QdcMode = ch_reg.parameter_array [16]  ;
+      ch_reg.BranchEnableT = ch_reg.parameter_array [17]  ;
+      ch_reg.BranchEnableEQ = ch_reg.parameter_array [18]  ;
+      ch_reg.TriggerMode2B = ch_reg.parameter_array [19]  ;
+      ch_reg.TriggerMode2Q = ch_reg.parameter_array [20]  ;
+      ch_reg.TriggerMode2E = ch_reg.parameter_array [21]  ;
+      ch_reg.TriggerMode2T = ch_reg.parameter_array [22]  ;
+      ch_reg.TACMinAge = ch_reg.parameter_array [23]  ;
+      ch_reg.TACMaxAge = ch_reg.parameter_array [24]  ;
+      ch_reg.CounterMode = ch_reg.parameter_array [25]  ;
+      ch_reg.DeadTime = ch_reg.parameter_array [26]  ;
+      ch_reg.SyncChainLen = ch_reg.parameter_array [27]  ;
+      ch_reg.Ch_DebugMode = ch_reg.parameter_array [28]  ;
+      ch_reg.TriggerMode = ch_reg.parameter_array [29];
+      ch_reg.is_a_write = 0x1;
+      ch_reg.target_TIGER_ID = 0x1;
+      ch_reg.command_code = 0x9;
+      ch_reg.TO_ALL_enable = 0x1;
+      ch_reg.channel_ID = 0x3;
       header_tag = 0x8 << 28;
       Channel_cfg_cmd_ID = 0xE ;
       ccfg_cmd_tag = Channel_cfg_cmd_ID << 24;
       ccfg_cmd_word_count = 9 ;
-      ch_reg_command_words[0] = header_tag + (ch_reg_TARGET_GEMROC_ID << 16) + ccfg_cmd_tag + ccfg_cmd_word_count;
-      ch_reg_command_words[1] = ((ch_reg_DisableHyst & 0x1) << 24) + ((ch_reg_T2Hyst & 0x7) << 16) + ((ch_reg_T1Hyst & 0x7) << 8) + ((ch_reg_Ch63ObufMSB & 0x1));
-      ch_reg_command_words[2] = ((ch_reg_TP_disable_FE & 0x1) << 24) + ((ch_reg_TDC_IB_E & 0xF) << 16) + ((ch_reg_TDC_IB_T & 0xF) << 8) + ((ch_reg_Integ & 0x1));
-      ch_reg_command_words[3] = ((ch_reg_PostAmpGain & 0x3) << 24) + ((ch_reg_FE_delay & 0x1F) << 16) + ((ch_reg_Vth_T2 & 0x3F) << 8) + ((ch_reg_Vth_T1 & 0x3F));
-      ch_reg_command_words[4] = ((ch_reg_QTx2Enable & 0x1) << 24) + ((ch_reg_MaxIntegTime & 0x7F) << 16) + ((ch_reg_MinIntegTime & 0x7F) << 8) + ((ch_reg_TriggerBLatched & 0x1));
-      ch_reg_command_words[5] = ((ch_reg_QdcMode & 0x1) << 24) + ((ch_reg_BranchEnableT & 0x1) << 16) + ((ch_reg_BranchEnableEQ & 0x1) << 8) + ((ch_reg_TriggerMode2B & 0x7));
-      ch_reg_command_words[6] = ((ch_reg_TriggerMode2Q & 0x3) << 24) + ((ch_reg_TriggerMode2E & 0x7) << 16) + ((ch_reg_TriggerMode2T & 0x3) << 8) + ((ch_reg_TACMinAge & 0x1F));
-      ch_reg_command_words[7] = ((ch_reg_TACMaxAge & 0x1F) << 24) + ((ch_reg_CounterMode & 0xF) << 16) + ((ch_reg_DeadTime & 0x3F) << 8) + ((ch_reg_SyncChainLen & 0x3));
-      ch_reg_command_words[8] = ((ch_reg_Ch_DebugMode & 0x3) << 24) + ((ch_reg_TriggerMode & 0x3) << 16);
-      ch_reg_command_words[9] = ((ch_reg_command_code & 0xF) << 11) + ((ch_reg_target_TIGER_ID & 0x7) << 8) + ((ch_reg_is_a_write & 0x1) << 7) + ((ch_reg_TO_ALL_enable & 0x1) << 6) + (ch_reg_channel_ID & 0x3F);   }
+      ch_reg.command_words[0] = header_tag + (ch_reg.TARGET_GEMROC_ID << 16) + ccfg_cmd_tag + ccfg_cmd_word_count;
+      ch_reg.command_words[1] = ((ch_reg.DisableHyst & 0x1) << 24) + ((ch_reg.T2Hyst & 0x7) << 16) + ((ch_reg.T1Hyst & 0x7) << 8) + ((ch_reg.Ch63ObufMSB & 0x1));
+      ch_reg.command_words[2] = ((ch_reg.TP_disable_FE & 0x1) << 24) + ((ch_reg.TDC_IB_E & 0xF) << 16) + ((ch_reg.TDC_IB_T & 0xF) << 8) + ((ch_reg.Integ & 0x1));
+      ch_reg.command_words[3] = ((ch_reg.PostAmpGain & 0x3) << 24) + ((ch_reg.FE_delay & 0x1F) << 16) + ((ch_reg.Vth_T2 & 0x3F) << 8) + ((ch_reg.Vth_T1 & 0x3F));
+      ch_reg.command_words[4] = ((ch_reg.QTx2Enable & 0x1) << 24) + ((ch_reg.MaxIntegTime & 0x7F) << 16) + ((ch_reg.MinIntegTime & 0x7F) << 8) + ((ch_reg.TriggerBLatched & 0x1));
+      ch_reg.command_words[5] = ((ch_reg.QdcMode & 0x1) << 24) + ((ch_reg.BranchEnableT & 0x1) << 16) + ((ch_reg.BranchEnableEQ & 0x1) << 8) + ((ch_reg.TriggerMode2B & 0x7));
+      ch_reg.command_words[6] = ((ch_reg.TriggerMode2Q & 0x3) << 24) + ((ch_reg.TriggerMode2E & 0x7) << 16) + ((ch_reg.TriggerMode2T & 0x3) << 8) + ((ch_reg.TACMinAge & 0x1F));
+      ch_reg.command_words[7] = ((ch_reg.TACMaxAge & 0x1F) << 24) + ((ch_reg.CounterMode & 0xF) << 16) + ((ch_reg.DeadTime & 0x3F) << 8) + ((ch_reg.SyncChainLen & 0x3));
+      ch_reg.command_words[8] = ((ch_reg.Ch_DebugMode & 0x3) << 24) + ((ch_reg.TriggerMode & 0x3) << 16);
+      ch_reg.command_words[9] = ((ch_reg.command_code & 0xF) << 11) + ((ch_reg.target_TIGER_ID & 0x7) << 8) + ((ch_reg.is_a_write & 0x1) << 7) + ((ch_reg.TO_ALL_enable & 0x1) << 6) + (ch_reg.channel_ID & 0x3F);   }
 
 
 void ch_reg_reload_chcfg_settings_from_file(char* ChCFGReg_def_fname_param)
 {
-      readfromtxt(ChCFGReg_def_fname_param,ch_reg_parameter_array,30);
-      write_array_to_txt("ch_reg reload",ch_reg_parameter_array,30);
-      ch_reg_DisableHyst = ch_reg_parameter_array [0]  ;
-      ch_reg_T2Hyst = ch_reg_parameter_array [1]  ;
-      ch_reg_T1Hyst = ch_reg_parameter_array [2]  ;
-      ch_reg_Ch63ObufMSB = ch_reg_parameter_array [3]  ;
-      ch_reg_TP_disable_FE = ch_reg_parameter_array [4]  ;
-      ch_reg_TDC_IB_E = ch_reg_parameter_array [5]  ;
-      printf("ch_reg_TDC_IB_E = ch_reg_parameter_array [5]=%d\n",ch_reg_TDC_IB_E);
-      ch_reg_TDC_IB_T = ch_reg_parameter_array [6]  ;
-      ch_reg_Integ = ch_reg_parameter_array [7]  ;
-      ch_reg_PostAmpGain = ch_reg_parameter_array [8]  ;
-      ch_reg_FE_delay = ch_reg_parameter_array [9]  ;
-      ch_reg_Vth_T2 = ch_reg_parameter_array [10]  ;
-      ch_reg_Vth_T1 = ch_reg_parameter_array [11]  ;
-      ch_reg_QTx2Enable = ch_reg_parameter_array [12]  ;
-      ch_reg_MaxIntegTime = ch_reg_parameter_array [13]  ;
-      ch_reg_MinIntegTime = ch_reg_parameter_array [14]  ;
-      ch_reg_TriggerBLatched = ch_reg_parameter_array [15]  ;
-      ch_reg_QdcMode = ch_reg_parameter_array [16]  ;
-      ch_reg_BranchEnableT = ch_reg_parameter_array [17]  ;
-      ch_reg_BranchEnableEQ = ch_reg_parameter_array [18]  ;
-      ch_reg_TriggerMode2B = ch_reg_parameter_array [19]  ;
-      ch_reg_TriggerMode2Q = ch_reg_parameter_array [20]  ;
-      ch_reg_TriggerMode2E = ch_reg_parameter_array [21]  ;
-      ch_reg_TriggerMode2T = ch_reg_parameter_array [22]  ;
-      ch_reg_TACMinAge = ch_reg_parameter_array [23]  ;
-      ch_reg_TACMaxAge = ch_reg_parameter_array [24]  ;
-      ch_reg_CounterMode = ch_reg_parameter_array [25]  ;
-      ch_reg_DeadTime = ch_reg_parameter_array [26]  ;
-      ch_reg_SyncChainLen = ch_reg_parameter_array [27]  ;
-      ch_reg_Ch_DebugMode = ch_reg_parameter_array [28]  ;
-      ch_reg_TriggerMode = ch_reg_parameter_array [29];
+      readfromtxt(ChCFGReg_def_fname_param,ch_reg.parameter_array,30);
+      write_array_to_txt("ch_reg reload",ch_reg.parameter_array,30);
+      ch_reg.DisableHyst = ch_reg.parameter_array [0]  ;
+      ch_reg.T2Hyst = ch_reg.parameter_array [1]  ;
+      ch_reg.T1Hyst = ch_reg.parameter_array [2]  ;
+      ch_reg.Ch63ObufMSB = ch_reg.parameter_array [3]  ;
+      ch_reg.TP_disable_FE = ch_reg.parameter_array [4]  ;
+      ch_reg.TDC_IB_E = ch_reg.parameter_array [5]  ;
+      printf("ch_reg.TDC_IB_E = ch_reg.parameter_array [5]=%d\n",ch_reg.TDC_IB_E);
+      ch_reg.TDC_IB_T = ch_reg.parameter_array [6]  ;
+      ch_reg.Integ = ch_reg.parameter_array [7]  ;
+      ch_reg.PostAmpGain = ch_reg.parameter_array [8]  ;
+      ch_reg.FE_delay = ch_reg.parameter_array [9]  ;
+      ch_reg.Vth_T2 = ch_reg.parameter_array [10]  ;
+      ch_reg.Vth_T1 = ch_reg.parameter_array [11]  ;
+      ch_reg.QTx2Enable = ch_reg.parameter_array [12]  ;
+      ch_reg.MaxIntegTime = ch_reg.parameter_array [13]  ;
+      ch_reg.MinIntegTime = ch_reg.parameter_array [14]  ;
+      ch_reg.TriggerBLatched = ch_reg.parameter_array [15]  ;
+      ch_reg.QdcMode = ch_reg.parameter_array [16]  ;
+      ch_reg.BranchEnableT = ch_reg.parameter_array [17]  ;
+      ch_reg.BranchEnableEQ = ch_reg.parameter_array [18]  ;
+      ch_reg.TriggerMode2B = ch_reg.parameter_array [19]  ;
+      ch_reg.TriggerMode2Q = ch_reg.parameter_array [20]  ;
+      ch_reg.TriggerMode2E = ch_reg.parameter_array [21]  ;
+      ch_reg.TriggerMode2T = ch_reg.parameter_array [22]  ;
+      ch_reg.TACMinAge = ch_reg.parameter_array [23]  ;
+      ch_reg.TACMaxAge = ch_reg.parameter_array [24]  ;
+      ch_reg.CounterMode = ch_reg.parameter_array [25]  ;
+      ch_reg.DeadTime = ch_reg.parameter_array [26]  ;
+      ch_reg.SyncChainLen = ch_reg.parameter_array [27]  ;
+      ch_reg.Ch_DebugMode = ch_reg.parameter_array [28]  ;
+      ch_reg.TriggerMode = ch_reg.parameter_array [29];
 }
 
   
@@ -1211,46 +1218,46 @@ void ch_reg_reload_chcfg_settings_from_file(char* ChCFGReg_def_fname_param)
 void ch_reg_print_command_words()
 {    int i;
      for(i=0;i<10;i++)
-      printf("%08X\n", ch_reg_command_words[i]);  }
+      printf("%08X\n", ch_reg.command_words[i]);  }
 
 void ch_reg_set_target_GEMROC(unsigned int GEMROC_ID_param)
 {
-      ch_reg_TARGET_GEMROC_ID = GEMROC_ID_param & 0x1f;
-      ch_reg_command_words[0] = (ch_reg_command_words[0] & 0xFF00FFFF) + (ch_reg_TARGET_GEMROC_ID << 16);  }
+      ch_reg.TARGET_GEMROC_ID = GEMROC_ID_param & 0x1f;
+      ch_reg.command_words[0] = (ch_reg.command_words[0] & 0xFF00FFFF) + (ch_reg.TARGET_GEMROC_ID << 16);  }
 
 
 void ch_reg_set_target_TIGER(unsigned int target_TIGER_param)
 {
-      ch_reg_target_TIGER_ID = target_TIGER_param & 0x7;
-      ch_reg_command_words[9] = ((ch_reg_command_code & 0xF) << 12) + ((ch_reg_target_TIGER_ID & 0x7) << 8) + ((ch_reg_is_a_write & 0x1) << 7) + ((ch_reg_TO_ALL_enable & 0x1) << 6) + (ch_reg_channel_ID & 0x1F);  }
+      ch_reg.target_TIGER_ID = target_TIGER_param & 0x7;
+      ch_reg.command_words[9] = ((ch_reg.command_code & 0xF) << 12) + ((ch_reg.target_TIGER_ID & 0x7) << 8) + ((ch_reg.is_a_write & 0x1) << 7) + ((ch_reg.TO_ALL_enable & 0x1) << 6) + (ch_reg.channel_ID & 0x1F);  }
 
 void ch_reg_set_target_channel(unsigned int target_channel_param)
 {
-      ch_reg_channel_ID = target_channel_param & 0x3F;
-      ch_reg_command_words[9] = ((ch_reg_command_code & 0xF) << 12) + ((ch_reg_target_TIGER_ID & 0x7) << 8) + ((ch_reg_is_a_write & 0x1) << 7) + ((ch_reg_TO_ALL_enable & 0x1) << 6) + (ch_reg_channel_ID & 0x3F);   }
+      ch_reg.channel_ID = target_channel_param & 0x3F;
+      ch_reg.command_words[9] = ((ch_reg.command_code & 0xF) << 12) + ((ch_reg.target_TIGER_ID & 0x7) << 8) + ((ch_reg.is_a_write & 0x1) << 7) + ((ch_reg.TO_ALL_enable & 0x1) << 6) + (ch_reg.channel_ID & 0x3F);   }
 
 void ch_reg_set_Vth_T1(unsigned int Vth_T1_param)
 {
-      ch_reg_Vth_T1 = Vth_T1_param & 0x3F;  }
+      ch_reg.Vth_T1 = Vth_T1_param & 0x3F;  }
 
 
 void ch_reg_set_to_ALL_param(unsigned int to_ALL_param)
 {
-      ch_reg_TO_ALL_enable = to_ALL_param & 0x1;
-      ch_reg_command_words[9] = ((ch_reg_command_code & 0xF) << 12) + ((ch_reg_target_TIGER_ID & 0x7) << 8) + ((ch_reg_is_a_write & 0x1) << 7) + ((ch_reg_TO_ALL_enable & 0x1) << 6) + (ch_reg_channel_ID & 0x1F);   }
+      ch_reg.TO_ALL_enable = to_ALL_param & 0x1;
+      ch_reg.command_words[9] = ((ch_reg.command_code & 0xF) << 12) + ((ch_reg.target_TIGER_ID & 0x7) << 8) + ((ch_reg.is_a_write & 0x1) << 7) + ((ch_reg.TO_ALL_enable & 0x1) << 6) + (ch_reg.channel_ID & 0x1F);   }
 
 
   
 void ch_reg_set_command_code(char*command_code_param)
 {
       if (strcmp(command_code_param,"WR")==0){
-         ch_reg_command_code = 0x0;
-         ch_reg_is_a_write = 1;
-         ch_reg_command_words[9] = ((ch_reg_command_code & 0xF) << 12) + ((ch_reg_target_TIGER_ID & 0x7) << 8) + ((ch_reg_is_a_write & 0x1) << 7) + ((ch_reg_TO_ALL_enable & 0x1) << 6) + (ch_reg_channel_ID & 0x1F); }
+         ch_reg.command_code = 0x0;
+         ch_reg.is_a_write = 1;
+         ch_reg.command_words[9] = ((ch_reg.command_code & 0xF) << 12) + ((ch_reg.target_TIGER_ID & 0x7) << 8) + ((ch_reg.is_a_write & 0x1) << 7) + ((ch_reg.TO_ALL_enable & 0x1) << 6) + (ch_reg.channel_ID & 0x1F); }
       else if (strcmp(command_code_param,"RD")==0){
-         ch_reg_command_code = 0x1;
-         ch_reg_is_a_write = 0;
-         ch_reg_command_words[9] = ((ch_reg_command_code & 0xF) << 12) + ((ch_reg_target_TIGER_ID & 0x7) << 8) + ((ch_reg_is_a_write & 0x1) << 7) + ((ch_reg_TO_ALL_enable & 0x1) << 6) + (ch_reg_channel_ID & 0x1F);  }
+         ch_reg.command_code = 0x1;
+         ch_reg.is_a_write = 0;
+         ch_reg.command_words[9] = ((ch_reg.command_code & 0xF) << 12) + ((ch_reg.target_TIGER_ID & 0x7) << 8) + ((ch_reg.is_a_write & 0x1) << 7) + ((ch_reg.TO_ALL_enable & 0x1) << 6) + (ch_reg.channel_ID & 0x1F);  }
       else 
          printf("ch_reg:bad command_code parameter passed");
    }
@@ -1258,38 +1265,38 @@ void ch_reg_set_command_code(char*command_code_param)
 
 void ch_reg_set_TP_disable_FE(unsigned int TP_disable_FE_param)
 {
-      ch_reg_TP_disable_FE = TP_disable_FE_param & 0x1;}
+      ch_reg.TP_disable_FE = TP_disable_FE_param & 0x1;}
 
 
 void ch_reg_update_command_words()
 {     int i;
-      if ( (ch_reg_command_code & 0xF) == 0x1 )
+      if ( (ch_reg.command_code & 0xF) == 0x1 )
        for(i=1;i<9;i++)
-         ch_reg_command_words[i]=0;
+         ch_reg.command_words[i]=0;
       else{
-         ch_reg_command_words[1] = ((ch_reg_DisableHyst & 0x1) << 24)   + ((ch_reg_T2Hyst & 0x7) << 16)        + ((ch_reg_T1Hyst & 0x7) << 8)         + ((ch_reg_Ch63ObufMSB & 0x1));
-         ch_reg_command_words[2] = ((ch_reg_TP_disable_FE & 0x1) << 24) + ((ch_reg_TDC_IB_E & 0xF) << 16)      + ((ch_reg_TDC_IB_T & 0xF) << 8)       + ((ch_reg_Integ & 0x1));
-         ch_reg_command_words[3] = ((ch_reg_PostAmpGain & 0x3) << 24)   + ((ch_reg_FE_delay & 0x1F) << 16)     + ((ch_reg_Vth_T2 & 0x3F) << 8)        + ((ch_reg_Vth_T1 & 0x3F));
-         ch_reg_command_words[4] = ((ch_reg_QTx2Enable & 0x1) << 24)    + ((ch_reg_MaxIntegTime & 0x7F) << 16) + ((ch_reg_MinIntegTime & 0x7F) << 8)  + ((ch_reg_TriggerBLatched & 0x1));
-         ch_reg_command_words[5] = ((ch_reg_QdcMode & 0x1) << 24)       + ((ch_reg_BranchEnableT & 0x1) << 16) + ((ch_reg_BranchEnableEQ & 0x1) << 8) + ((ch_reg_TriggerMode2B & 0x7));
-         ch_reg_command_words[6] = ((ch_reg_TriggerMode2Q & 0x3) << 24) + ((ch_reg_TriggerMode2E & 0x7) << 16) + ((ch_reg_TriggerMode2T & 0x3) << 8)  + ((ch_reg_TACMinAge & 0x1F));
-         ch_reg_command_words[7] = ((ch_reg_TACMaxAge & 0x1F) << 24)    + ((ch_reg_CounterMode & 0xF) << 16)   + ((ch_reg_DeadTime & 0x3F) << 8)      + ((ch_reg_SyncChainLen & 0x3));
-         ch_reg_command_words[8] = ((ch_reg_Ch_DebugMode & 0x3) << 24)  + ((ch_reg_TriggerMode & 0x3) << 16);  }
-      ch_reg_command_words[9] = ((ch_reg_command_code & 0xF) << command_code_shift) + ((ch_reg_target_TIGER_ID & 0x7) << target_TIGER_ID_shift) + ((ch_reg_TO_ALL_enable & 0x1) << 6) + (ch_reg_channel_ID & 0x3F);    }
+         ch_reg.command_words[1] = ((ch_reg.DisableHyst & 0x1) << 24)   + ((ch_reg.T2Hyst & 0x7) << 16)        + ((ch_reg.T1Hyst & 0x7) << 8)         + ((ch_reg.Ch63ObufMSB & 0x1));
+         ch_reg.command_words[2] = ((ch_reg.TP_disable_FE & 0x1) << 24) + ((ch_reg.TDC_IB_E & 0xF) << 16)      + ((ch_reg.TDC_IB_T & 0xF) << 8)       + ((ch_reg.Integ & 0x1));
+         ch_reg.command_words[3] = ((ch_reg.PostAmpGain & 0x3) << 24)   + ((ch_reg.FE_delay & 0x1F) << 16)     + ((ch_reg.Vth_T2 & 0x3F) << 8)        + ((ch_reg.Vth_T1 & 0x3F));
+         ch_reg.command_words[4] = ((ch_reg.QTx2Enable & 0x1) << 24)    + ((ch_reg.MaxIntegTime & 0x7F) << 16) + ((ch_reg.MinIntegTime & 0x7F) << 8)  + ((ch_reg.TriggerBLatched & 0x1));
+         ch_reg.command_words[5] = ((ch_reg.QdcMode & 0x1) << 24)       + ((ch_reg.BranchEnableT & 0x1) << 16) + ((ch_reg.BranchEnableEQ & 0x1) << 8) + ((ch_reg.TriggerMode2B & 0x7));
+         ch_reg.command_words[6] = ((ch_reg.TriggerMode2Q & 0x3) << 24) + ((ch_reg.TriggerMode2E & 0x7) << 16) + ((ch_reg.TriggerMode2T & 0x3) << 8)  + ((ch_reg.TACMinAge & 0x1F));
+         ch_reg.command_words[7] = ((ch_reg.TACMaxAge & 0x1F) << 24)    + ((ch_reg.CounterMode & 0xF) << 16)   + ((ch_reg.DeadTime & 0x3F) << 8)      + ((ch_reg.SyncChainLen & 0x3));
+         ch_reg.command_words[8] = ((ch_reg.Ch_DebugMode & 0x3) << 24)  + ((ch_reg.TriggerMode & 0x3) << 16);  }
+      ch_reg.command_words[9] = ((ch_reg.command_code & 0xF) << command_code_shift) + ((ch_reg.target_TIGER_ID & 0x7) << target_TIGER_ID_shift) + ((ch_reg.TO_ALL_enable & 0x1) << 6) + (ch_reg.channel_ID & 0x3F);    }
 
 
 void ch_reg_extract_parameters_from_UDP_packet()
 {
-      printf("\nList of parameters sent to TIGER%d:",ch_reg_target_TIGER_ID);
-      printf("\ncmd_word8: DisableHyst:%02X;\t\tT2Hyst:%02X;\t\tT1Hyst:%02X;\t\tCh63ObufMSB:%02X;", ((ch_reg_command_words[1]>>24)&0x1), ((ch_reg_command_words[1]>>16)&0x7),  ((ch_reg_command_words[1]>>8)&0x7),  ((ch_reg_command_words[1]>>0)&0x1)  ) ;
-      printf ("\ncmd_word7: TP_disable_FE:%02X;\t\tTDC_IB_E:%02X;\t\tTDC_IB_T:%02X;\t\tInteg:%02X;",((ch_reg_command_words[2]>>24)&0x1), ((ch_reg_command_words[2]>>16)&0xF),  ((ch_reg_command_words[2]>>8)&0xF),  ((ch_reg_command_words[2]>>0)&0x1)  ) ;
-      printf ("\ncmd_word6: PostAmpGain:%02X;\t\tFE_delay:%02X;\t\tVth_T2:%02X;\t\tVth_T1:%02X;",((ch_reg_command_words[3]>>24)&0x3), ((ch_reg_command_words[3]>>16)&0x1F), ((ch_reg_command_words[3]>>8)&0x3F), ((ch_reg_command_words[3]>>0)&0x3F) ) ;
-      printf("\ncmd_word5: QTx2Enable:%02X;\t\tMaxIntegTime:%02X;\t\tMinIntegTime:%02X;\t\tTriggerBLatched:%02X;",((ch_reg_command_words[4]>>24)&0x1), ((ch_reg_command_words[4]>>16)&0x7F), ((ch_reg_command_words[4]>>8)&0x7F), ((ch_reg_command_words[4]>>0)&0x1)  ) ;
-      printf ("\ncmd_word4: QdcMode:%02X;\t\tBranchEnableT:%02X;\t\tBranchEnableEQ:%02X;\t\tTriggerMode2B:%02X;",((ch_reg_command_words[5]>>24)&0x1), ((ch_reg_command_words[5]>>16)&0x1),  ((ch_reg_command_words[5]>>8)&0x1),  ((ch_reg_command_words[5]>>0)&0x7)  );
-      printf ("\ncmd_word3: TriggerMode2Q:%02X;\t\tTriggerMode2E:%02X;\t\tTriggerMode2T:%02X;\t\tTACMinAge:%02X;",((ch_reg_command_words[6]>>24)&0x3), ((ch_reg_command_words[6]>>16)&0x7),  ((ch_reg_command_words[6]>>8)&0x3),  ((ch_reg_command_words[6]>>0)&0x1F) );
-      printf("\ncmd_word2: TACMaxAge:%02X;\t\tCounterMode:%02X;\t\tDeadTime:%02X;\t\tSyncChainLen:%02X;",((ch_reg_command_words[7]>>24)&0x1F),((ch_reg_command_words[7]>>16)&0xF),  ((ch_reg_command_words[7]>>8)&0x3F), ((ch_reg_command_words[7]>>0)&0x3)  );
-      printf("\ncmd_word1: Ch_DebugMode:%02X;\t\tTriggerMode:%02X;",((ch_reg_command_words[8]>>24)&0x3), ((ch_reg_command_words[8]>>16)&0x3));
-      printf("\ncmd_word0: command_code:%02X;\t\ttarget_TIGER_ID:%02X;\t\tTO_ALL_enable:%02X;\t\tchannel_ID:%02X;",((ch_reg_command_words[9]>>command_code_shift)&0xF), ((ch_reg_command_words[9]>>target_TIGER_ID_shift)&0x7),  ((ch_reg_command_words[9]>>6)&0x1), ((ch_reg_command_words[9]>>0)&0x3F)  );  }
+      printf("\nList of parameters sent to TIGER%d:",ch_reg.target_TIGER_ID);
+      printf("\ncmd_word8: DisableHyst:%02X;\t\tT2Hyst:%02X;\t\tT1Hyst:%02X;\t\tCh63ObufMSB:%02X;", ((ch_reg.command_words[1]>>24)&0x1), ((ch_reg.command_words[1]>>16)&0x7),  ((ch_reg.command_words[1]>>8)&0x7),  ((ch_reg.command_words[1]>>0)&0x1)  ) ;
+      printf ("\ncmd_word7: TP_disable_FE:%02X;\t\tTDC_IB_E:%02X;\t\tTDC_IB_T:%02X;\t\tInteg:%02X;",((ch_reg.command_words[2]>>24)&0x1), ((ch_reg.command_words[2]>>16)&0xF),  ((ch_reg.command_words[2]>>8)&0xF),  ((ch_reg.command_words[2]>>0)&0x1)  ) ;
+      printf ("\ncmd_word6: PostAmpGain:%02X;\t\tFE_delay:%02X;\t\tVth_T2:%02X;\t\tVth_T1:%02X;",((ch_reg.command_words[3]>>24)&0x3), ((ch_reg.command_words[3]>>16)&0x1F), ((ch_reg.command_words[3]>>8)&0x3F), ((ch_reg.command_words[3]>>0)&0x3F) ) ;
+      printf("\ncmd_word5: QTx2Enable:%02X;\t\tMaxIntegTime:%02X;\t\tMinIntegTime:%02X;\t\tTriggerBLatched:%02X;",((ch_reg.command_words[4]>>24)&0x1), ((ch_reg.command_words[4]>>16)&0x7F), ((ch_reg.command_words[4]>>8)&0x7F), ((ch_reg.command_words[4]>>0)&0x1)  ) ;
+      printf ("\ncmd_word4: QdcMode:%02X;\t\tBranchEnableT:%02X;\t\tBranchEnableEQ:%02X;\t\tTriggerMode2B:%02X;",((ch_reg.command_words[5]>>24)&0x1), ((ch_reg.command_words[5]>>16)&0x1),  ((ch_reg.command_words[5]>>8)&0x1),  ((ch_reg.command_words[5]>>0)&0x7)  );
+      printf ("\ncmd_word3: TriggerMode2Q:%02X;\t\tTriggerMode2E:%02X;\t\tTriggerMode2T:%02X;\t\tTACMinAge:%02X;",((ch_reg.command_words[6]>>24)&0x3), ((ch_reg.command_words[6]>>16)&0x7),  ((ch_reg.command_words[6]>>8)&0x3),  ((ch_reg.command_words[6]>>0)&0x1F) );
+      printf("\ncmd_word2: TACMaxAge:%02X;\t\tCounterMode:%02X;\t\tDeadTime:%02X;\t\tSyncChainLen:%02X;",((ch_reg.command_words[7]>>24)&0x1F),((ch_reg.command_words[7]>>16)&0xF),  ((ch_reg.command_words[7]>>8)&0x3F), ((ch_reg.command_words[7]>>0)&0x3)  );
+      printf("\ncmd_word1: Ch_DebugMode:%02X;\t\tTriggerMode:%02X;",((ch_reg.command_words[8]>>24)&0x3), ((ch_reg.command_words[8]>>16)&0x3));
+      printf("\ncmd_word0: command_code:%02X;\t\ttarget_TIGER_ID:%02X;\t\tTO_ALL_enable:%02X;\t\tchannel_ID:%02X;",((ch_reg.command_words[9]>>command_code_shift)&0xF), ((ch_reg.command_words[9]>>target_TIGER_ID_shift)&0x7),  ((ch_reg.command_words[9]>>6)&0x1), ((ch_reg.command_words[9]>>0)&0x3F)  );  }
 
 
 
@@ -1311,113 +1318,113 @@ void g_reg_init(int TARGET_GEMROC_ID_param, char*cfg_filename_param)
      unsigned int  Global_cfg_cmd_ID;
      unsigned int  gcfg_cmd_tag;
      unsigned int  gcfg_cmd_word_count;
-      g_reg_TARGET_GEMROC_ID = TARGET_GEMROC_ID_param;
-      g_reg_cfg_filename = cfg_filename_param;
-      readfromtxt(g_reg_cfg_filename,g_reg_parameter_array,37);
-      write_array_to_txt("g_reg_init",g_reg_parameter_array,37);
-      g_reg_BufferBias = g_reg_parameter_array [0];
-      g_reg_TDCVcasN        = swap_order_N_bits(g_reg_parameter_array [1],4);
-      g_reg_TDCVcasP        = swap_order_N_bits(g_reg_parameter_array [2],5);
-      g_reg_TDCVcasPHyst    = swap_order_N_bits(g_reg_parameter_array [3],6);
-      g_reg_DiscFE_Ibias    = swap_order_N_bits(g_reg_parameter_array [4],6);
+      g_reg.TARGET_GEMROC_ID = TARGET_GEMROC_ID_param;
+      g_reg.cfg_filename = cfg_filename_param;
+      readfromtxt(g_reg.cfg_filename,g_reg.parameter_array,37);
+      write_array_to_txt("g_reg.init",g_reg.parameter_array,37);
+      g_reg.BufferBias = g_reg.parameter_array [0];
+      g_reg.TDCVcasN        = swap_order_N_bits(g_reg.parameter_array [1],4);
+      g_reg.TDCVcasP        = swap_order_N_bits(g_reg.parameter_array [2],5);
+      g_reg.TDCVcasPHyst    = swap_order_N_bits(g_reg.parameter_array [3],6);
+      g_reg.DiscFE_Ibias    = swap_order_N_bits(g_reg.parameter_array [4],6);
 
-      g_reg_BiasFE_PpreN = g_reg_parameter_array [5];
-      g_reg_AVcasp_global   = swap_order_N_bits(g_reg_parameter_array [6],5);
-      g_reg_TDCcompVcas     = swap_order_N_bits(g_reg_parameter_array [7],4);
-      g_reg_TDCIref_cs      = swap_order_N_bits(g_reg_parameter_array [8],5);
-      g_reg_DiscVcasN       = swap_order_N_bits(g_reg_parameter_array [9],4);
-      g_reg_IntegVb1        = swap_order_N_bits(g_reg_parameter_array [10],6);
-      g_reg_BiasFE_A1 = g_reg_parameter_array [11];
-      g_reg_Vcasp_Vth       = swap_order_N_bits(g_reg_parameter_array [12],6);
-      g_reg_TAC_I_LSB = g_reg_parameter_array [13];
-      g_reg_TDCcompVbias = g_reg_parameter_array [14] ;
+      g_reg.BiasFE_PpreN = g_reg.parameter_array [5];
+      g_reg.AVcasp_global   = swap_order_N_bits(g_reg.parameter_array [6],5);
+      g_reg.TDCcompVcas     = swap_order_N_bits(g_reg.parameter_array [7],4);
+      g_reg.TDCIref_cs      = swap_order_N_bits(g_reg.parameter_array [8],5);
+      g_reg.DiscVcasN       = swap_order_N_bits(g_reg.parameter_array [9],4);
+      g_reg.IntegVb1        = swap_order_N_bits(g_reg.parameter_array [10],6);
+      g_reg.BiasFE_A1 = g_reg.parameter_array [11];
+      g_reg.Vcasp_Vth       = swap_order_N_bits(g_reg.parameter_array [12],6);
+      g_reg.TAC_I_LSB = g_reg.parameter_array [13];
+      g_reg.TDCcompVbias = g_reg.parameter_array [14] ;
 
-      g_reg_Vref_Integ      = swap_order_N_bits(g_reg_parameter_array [15],6) ;
-      g_reg_IBiasTPcal      = swap_order_N_bits(g_reg_parameter_array [16],5) ;
-      g_reg_TP_Vcal         = swap_order_N_bits(g_reg_parameter_array [17],5) ;
-      g_reg_ShaperIbias = g_reg_parameter_array [18] ;
-      g_reg_IPostamp        = swap_order_N_bits(g_reg_parameter_array [19],5) ;
+      g_reg.Vref_Integ      = swap_order_N_bits(g_reg.parameter_array [15],6) ;
+      g_reg.IBiasTPcal      = swap_order_N_bits(g_reg.parameter_array [16],5) ;
+      g_reg.TP_Vcal         = swap_order_N_bits(g_reg.parameter_array [17],5) ;
+      g_reg.ShaperIbias = g_reg.parameter_array [18] ;
+      g_reg.IPostamp        = swap_order_N_bits(g_reg.parameter_array [19],5) ;
 
-      g_reg_TP_Vcal_ref     = swap_order_N_bits(g_reg_parameter_array [20],5) ;
-      g_reg_Vref_integ_diff = swap_order_N_bits(g_reg_parameter_array [21],6) ;
-      g_reg_Sig_pol = g_reg_parameter_array [22] ;
-      g_reg_FE_TPEnable = g_reg_parameter_array [23];
-      g_reg_DataClkDiv = g_reg_parameter_array [24] ;
-      g_reg_TACrefreshPeriod = g_reg_parameter_array [25] ;
-      g_reg_TACrefreshEnable = g_reg_parameter_array [26] ;
-      g_reg_CounterPeriod = g_reg_parameter_array [27] ; 
-      g_reg_CounterEnable = g_reg_parameter_array [28] ;
+      g_reg.TP_Vcal_ref     = swap_order_N_bits(g_reg.parameter_array [20],5) ;
+      g_reg.Vref_integ_diff = swap_order_N_bits(g_reg.parameter_array [21],6) ;
+      g_reg.Sig_pol = g_reg.parameter_array [22] ;
+      g_reg.FE_TPEnable = g_reg.parameter_array [23];
+      g_reg.DataClkDiv = g_reg.parameter_array [24] ;
+      g_reg.TACrefreshPeriod = g_reg.parameter_array [25] ;
+      g_reg.TACrefreshEnable = g_reg.parameter_array [26] ;
+      g_reg.CounterPeriod = g_reg.parameter_array [27] ; 
+      g_reg.CounterEnable = g_reg.parameter_array [28] ;
 
-      g_reg_StopRampEnable = g_reg_parameter_array [29] ;
-      g_reg_RClkEnable = g_reg_parameter_array [30] ;
-      g_reg_TDCClkdiv = g_reg_parameter_array [31] ;
-      g_reg_VetoMode = g_reg_parameter_array [32] ;
-      g_reg_Ch_DebugMode = g_reg_parameter_array [33];
-      g_reg_TxMode = g_reg_parameter_array [34] ;
-      g_reg_TxDDR = g_reg_parameter_array [35] ; 
-      g_reg_TxLinks = g_reg_parameter_array [36];
-      g_reg_is_a_write = 0x1;
-      g_reg_target_TIGER_ID = 0x1;
-      g_reg_command_code = 0x9;
+      g_reg.StopRampEnable = g_reg.parameter_array [29] ;
+      g_reg.RClkEnable = g_reg.parameter_array [30] ;
+      g_reg.TDCClkdiv = g_reg.parameter_array [31] ;
+      g_reg.VetoMode = g_reg.parameter_array [32] ;
+      g_reg.Ch_DebugMode = g_reg.parameter_array [33];
+      g_reg.TxMode = g_reg.parameter_array [34] ;
+      g_reg.TxDDR = g_reg.parameter_array [35] ; 
+      g_reg.TxLinks = g_reg.parameter_array [36];
+      g_reg.is_a_write = 0x1;
+      g_reg.target_TIGER_ID = 0x1;
+      g_reg.command_code = 0x9;
       header_tag = 0x8 << 28;
       Global_cfg_cmd_ID = 0xF;
       gcfg_cmd_tag = Global_cfg_cmd_ID << 24;
       gcfg_cmd_word_count = 11;
-      g_reg_command_words[0] = header_tag + (g_reg_TARGET_GEMROC_ID << 16) + gcfg_cmd_tag + gcfg_cmd_word_count;
-      g_reg_command_words[1] = ((g_reg_BufferBias & 0x3) << 24) + ((g_reg_TDCVcasN & 0xF) << 16) + ((g_reg_TDCVcasP & 0x1F) << 8) + ((g_reg_TDCVcasPHyst & 0x3F));
-      g_reg_command_words[2] = ((g_reg_DiscFE_Ibias & 0x3f) << 24) + ((g_reg_BiasFE_PpreN & 0x3F) << 16) + ((g_reg_AVcasp_global & 0x1F) << 8) + ((g_reg_TDCcompVcas & 0xF));
-      g_reg_command_words[3] = ((g_reg_TDCIref_cs & 0x1f) << 24) + ((g_reg_DiscVcasN & 0xF) << 16) + ((g_reg_IntegVb1 & 0x3F) << 8) + ((g_reg_BiasFE_A1 & 0xF));
-      g_reg_command_words[4] = ((g_reg_Vcasp_Vth & 0x3f) << 24) + ((g_reg_TAC_I_LSB & 0x1F) << 16) + ((g_reg_TDCcompVbias & 0x1F) << 8) + ((g_reg_Vref_Integ & 0x3F));
-      g_reg_command_words[5] = ((g_reg_IBiasTPcal & 0x1f) << 24) + ((g_reg_TP_Vcal & 0x1F) << 16) + ((g_reg_ShaperIbias & 0xF) << 8) + ((g_reg_IPostamp & 0x1F));
-      g_reg_command_words[6] = ((g_reg_TP_Vcal_ref & 0x1f) << 24) + ((g_reg_Vref_integ_diff & 0x3F) << 16) + ((g_reg_Sig_pol & 0x1) << 8) + ((g_reg_FE_TPEnable & 0x1));
-      g_reg_command_words[7] = ((g_reg_DataClkDiv & 0x3) << 16) + ((g_reg_TACrefreshPeriod & 0xf) << 8) + ((g_reg_TACrefreshEnable & 0x1));
-      g_reg_command_words[8] = ((g_reg_CounterPeriod & 0x7) << 24) + ((g_reg_CounterEnable & 0x1) << 16) + ((g_reg_StopRampEnable & 0x3) << 8) + ((g_reg_RClkEnable & 0x1F));
-      g_reg_command_words[9] = ((g_reg_TDCClkdiv & 0x1) << 24) + ((g_reg_VetoMode & 0x3F) << 16) + ((g_reg_Ch_DebugMode & 0x1) << 8) + ((g_reg_TxMode & 0x3)) ;
-      g_reg_command_words[10] = ((g_reg_TxDDR & 0x1) << 24) + ((g_reg_TxLinks & 0x3) << 16);
-      g_reg_command_words[11] = ((g_reg_command_code & 0xF) << command_code_shift) + ((g_reg_target_TIGER_ID & 0x7) << target_TIGER_ID_shift);
+      g_reg.command_words[0] = header_tag + (g_reg.TARGET_GEMROC_ID << 16) + gcfg_cmd_tag + gcfg_cmd_word_count;
+      g_reg.command_words[1] = ((g_reg.BufferBias & 0x3) << 24) + ((g_reg.TDCVcasN & 0xF) << 16) + ((g_reg.TDCVcasP & 0x1F) << 8) + ((g_reg.TDCVcasPHyst & 0x3F));
+      g_reg.command_words[2] = ((g_reg.DiscFE_Ibias & 0x3f) << 24) + ((g_reg.BiasFE_PpreN & 0x3F) << 16) + ((g_reg.AVcasp_global & 0x1F) << 8) + ((g_reg.TDCcompVcas & 0xF));
+      g_reg.command_words[3] = ((g_reg.TDCIref_cs & 0x1f) << 24) + ((g_reg.DiscVcasN & 0xF) << 16) + ((g_reg.IntegVb1 & 0x3F) << 8) + ((g_reg.BiasFE_A1 & 0xF));
+      g_reg.command_words[4] = ((g_reg.Vcasp_Vth & 0x3f) << 24) + ((g_reg.TAC_I_LSB & 0x1F) << 16) + ((g_reg.TDCcompVbias & 0x1F) << 8) + ((g_reg.Vref_Integ & 0x3F));
+      g_reg.command_words[5] = ((g_reg.IBiasTPcal & 0x1f) << 24) + ((g_reg.TP_Vcal & 0x1F) << 16) + ((g_reg.ShaperIbias & 0xF) << 8) + ((g_reg.IPostamp & 0x1F));
+      g_reg.command_words[6] = ((g_reg.TP_Vcal_ref & 0x1f) << 24) + ((g_reg.Vref_integ_diff & 0x3F) << 16) + ((g_reg.Sig_pol & 0x1) << 8) + ((g_reg.FE_TPEnable & 0x1));
+      g_reg.command_words[7] = ((g_reg.DataClkDiv & 0x3) << 16) + ((g_reg.TACrefreshPeriod & 0xf) << 8) + ((g_reg.TACrefreshEnable & 0x1));
+      g_reg.command_words[8] = ((g_reg.CounterPeriod & 0x7) << 24) + ((g_reg.CounterEnable & 0x1) << 16) + ((g_reg.StopRampEnable & 0x3) << 8) + ((g_reg.RClkEnable & 0x1F));
+      g_reg.command_words[9] = ((g_reg.TDCClkdiv & 0x1) << 24) + ((g_reg.VetoMode & 0x3F) << 16) + ((g_reg.Ch_DebugMode & 0x1) << 8) + ((g_reg.TxMode & 0x3)) ;
+      g_reg.command_words[10] = ((g_reg.TxDDR & 0x1) << 24) + ((g_reg.TxLinks & 0x3) << 16);
+      g_reg.command_words[11] = ((g_reg.command_code & 0xF) << command_code_shift) + ((g_reg.target_TIGER_ID & 0x7) << target_TIGER_ID_shift);
 }
 
 void g_reg_reload_gcfg_settings_from_file(char* GCFGReg_def_fname_param)
 {
-      readfromtxt(GCFGReg_def_fname_param,g_reg_parameter_array,37);
-      write_array_to_txt("g_reg reload",g_reg_parameter_array,37);
-      g_reg_BufferBias = g_reg_parameter_array [0] ;
-      g_reg_TDCVcasN        = swap_order_N_bits(g_reg_parameter_array [1],4)  ;
-      g_reg_TDCVcasP        = swap_order_N_bits(g_reg_parameter_array [2],5)  ;
-      g_reg_TDCVcasPHyst    = swap_order_N_bits(g_reg_parameter_array [3],6)  ;
-      g_reg_DiscFE_Ibias    = swap_order_N_bits(g_reg_parameter_array [4],6)  ;
-      g_reg_BiasFE_PpreN    = g_reg_parameter_array [5] ;
-      g_reg_AVcasp_global   = swap_order_N_bits(g_reg_parameter_array [6],5)  ;
-      g_reg_TDCcompVcas     = swap_order_N_bits(g_reg_parameter_array [7],4)  ;
-      g_reg_TDCIref_cs      = swap_order_N_bits(g_reg_parameter_array [8],5)  ;
-      g_reg_DiscVcasN       = swap_order_N_bits(g_reg_parameter_array [9],4)  ;
-      g_reg_IntegVb1        = swap_order_N_bits(g_reg_parameter_array [10],6) ;
-      g_reg_BiasFE_A1 = g_reg_parameter_array [11] ;
-      g_reg_Vcasp_Vth       = swap_order_N_bits(g_reg_parameter_array [12],6) ;
-      g_reg_TAC_I_LSB = g_reg_parameter_array [13] ;
-      g_reg_TDCcompVbias = g_reg_parameter_array [14] ;
-      g_reg_Vref_Integ      = swap_order_N_bits(g_reg_parameter_array [15],6) ;
-      g_reg_IBiasTPcal      = swap_order_N_bits(g_reg_parameter_array [16],5) ;
-      g_reg_TP_Vcal         = swap_order_N_bits(g_reg_parameter_array [17],5) ;
-      g_reg_ShaperIbias = g_reg_parameter_array [18] ;
-      g_reg_IPostamp        = swap_order_N_bits(g_reg_parameter_array [19],5) ;
-      g_reg_TP_Vcal_ref     = swap_order_N_bits(g_reg_parameter_array [20],5) ;
-      g_reg_Vref_integ_diff = swap_order_N_bits(g_reg_parameter_array [21],6) ;
-      g_reg_Sig_pol = g_reg_parameter_array [22] ;
-      g_reg_FE_TPEnable = g_reg_parameter_array [23] ;
-      g_reg_DataClkDiv = g_reg_parameter_array [24] ;
-      g_reg_TACrefreshPeriod = g_reg_parameter_array [25] ;
-      g_reg_TACrefreshEnable = g_reg_parameter_array [26] ;
-      g_reg_CounterPeriod = g_reg_parameter_array [27] ;
-      g_reg_CounterEnable = g_reg_parameter_array [28] ;
-      g_reg_StopRampEnable = g_reg_parameter_array [29] ;
-      g_reg_RClkEnable = g_reg_parameter_array [30] ;
-      g_reg_TDCClkdiv = g_reg_parameter_array [31] ;
-      g_reg_VetoMode = g_reg_parameter_array [32] ;
-      g_reg_Ch_DebugMode = g_reg_parameter_array [33] ;
-      g_reg_TxMode = g_reg_parameter_array [34] ;
-      g_reg_TxDDR = g_reg_parameter_array [35] ;
-      g_reg_TxLinks = g_reg_parameter_array [36];    }
+      readfromtxt(GCFGReg_def_fname_param,g_reg.parameter_array,37);
+      write_array_to_txt("g_reg reload",g_reg.parameter_array,37);
+      g_reg.BufferBias = g_reg.parameter_array [0] ;
+      g_reg.TDCVcasN        = swap_order_N_bits(g_reg.parameter_array [1],4)  ;
+      g_reg.TDCVcasP        = swap_order_N_bits(g_reg.parameter_array [2],5)  ;
+      g_reg.TDCVcasPHyst    = swap_order_N_bits(g_reg.parameter_array [3],6)  ;
+      g_reg.DiscFE_Ibias    = swap_order_N_bits(g_reg.parameter_array [4],6)  ;
+      g_reg.BiasFE_PpreN    = g_reg.parameter_array [5] ;
+      g_reg.AVcasp_global   = swap_order_N_bits(g_reg.parameter_array [6],5)  ;
+      g_reg.TDCcompVcas     = swap_order_N_bits(g_reg.parameter_array [7],4)  ;
+      g_reg.TDCIref_cs      = swap_order_N_bits(g_reg.parameter_array [8],5)  ;
+      g_reg.DiscVcasN       = swap_order_N_bits(g_reg.parameter_array [9],4)  ;
+      g_reg.IntegVb1        = swap_order_N_bits(g_reg.parameter_array [10],6) ;
+      g_reg.BiasFE_A1 = g_reg.parameter_array [11] ;
+      g_reg.Vcasp_Vth       = swap_order_N_bits(g_reg.parameter_array [12],6) ;
+      g_reg.TAC_I_LSB = g_reg.parameter_array [13] ;
+      g_reg.TDCcompVbias = g_reg.parameter_array [14] ;
+      g_reg.Vref_Integ      = swap_order_N_bits(g_reg.parameter_array [15],6) ;
+      g_reg.IBiasTPcal      = swap_order_N_bits(g_reg.parameter_array [16],5) ;
+      g_reg.TP_Vcal         = swap_order_N_bits(g_reg.parameter_array [17],5) ;
+      g_reg.ShaperIbias = g_reg.parameter_array [18] ;
+      g_reg.IPostamp        = swap_order_N_bits(g_reg.parameter_array [19],5) ;
+      g_reg.TP_Vcal_ref     = swap_order_N_bits(g_reg.parameter_array [20],5) ;
+      g_reg.Vref_integ_diff = swap_order_N_bits(g_reg.parameter_array [21],6) ;
+      g_reg.Sig_pol = g_reg.parameter_array [22] ;
+      g_reg.FE_TPEnable = g_reg.parameter_array [23] ;
+      g_reg.DataClkDiv = g_reg.parameter_array [24] ;
+      g_reg.TACrefreshPeriod = g_reg.parameter_array [25] ;
+      g_reg.TACrefreshEnable = g_reg.parameter_array [26] ;
+      g_reg.CounterPeriod = g_reg.parameter_array [27] ;
+      g_reg.CounterEnable = g_reg.parameter_array [28] ;
+      g_reg.StopRampEnable = g_reg.parameter_array [29] ;
+      g_reg.RClkEnable = g_reg.parameter_array [30] ;
+      g_reg.TDCClkdiv = g_reg.parameter_array [31] ;
+      g_reg.VetoMode = g_reg.parameter_array [32] ;
+      g_reg.Ch_DebugMode = g_reg.parameter_array [33] ;
+      g_reg.TxMode = g_reg.parameter_array [34] ;
+      g_reg.TxDDR = g_reg.parameter_array [35] ;
+      g_reg.TxLinks = g_reg.parameter_array [36];    }
 
 unsigned int g_reg_command_words_array_size()
 {
@@ -1426,96 +1433,98 @@ unsigned int g_reg_command_words_array_size()
 void g_reg_print_command_words()
 {   unsigned int i;
     for(i=0; i<12;i++)
-        printf("%08X\n",g_reg_command_words[i]);   }
+        printf("%08X\n",g_reg.command_words[i]);   }
 
 void g_reg_set_target_GEMROC(unsigned int GEMROC_ID_param)
 {
-      g_reg_TARGET_GEMROC_ID = GEMROC_ID_param & 0x1f;
-      g_reg_command_words[0] = (g_reg_command_words[0] & 0xFF00FFFF) + (g_reg_TARGET_GEMROC_ID << 16);   }
+      g_reg.TARGET_GEMROC_ID = GEMROC_ID_param & 0x1f;
+      g_reg.command_words[0] = (g_reg.command_words[0] & 0xFF00FFFF) + (g_reg.TARGET_GEMROC_ID << 16);   }
 
 void g_reg_set_target_TIGER(unsigned int target_TIGER_param)
 {
-      g_reg_target_TIGER_ID = target_TIGER_param & 0x7;
-      g_reg_command_words[11] = ((g_reg_command_code & 0xF) << command_code_shift) + ((g_reg_target_TIGER_ID & 0x7) << target_TIGER_ID_shift);
+      g_reg.target_TIGER_ID = target_TIGER_param & 0x7;
+      g_reg.command_words[11] = ((g_reg.command_code & 0xF) << command_code_shift) + ((g_reg.target_TIGER_ID & 0x7) << target_TIGER_ID_shift);
            }
 
 void g_reg_set_FE_TPEnable(FE_TPEnable_param)
 {
-  g_reg_FE_TPEnable = FE_TPEnable_param & 0x1;  }
+  g_reg.FE_TPEnable = FE_TPEnable_param & 0x1;  }
 
 
 void g_reg_set_AVcasp_global(unsigned int AVcasp_global_param)
 {
-      g_reg_AVcasp_global = AVcasp_global_param & 0x1F;  }
+      g_reg.AVcasp_global = AVcasp_global_param & 0x1F;  }
 
 
 void g_reg_set_command_code(char* command_code_param)
 {
       if (strcmp(command_code_param,"WR")==0){
-         g_reg_command_code = 0x8;
-         g_reg_is_a_write = 1;
-         g_reg_command_words[11] = ((g_reg_command_code & 0xF) << command_code_shift) + ((g_reg_target_TIGER_ID & 0x7) << target_TIGER_ID_shift);    }
+         g_reg.command_code = 0x8;
+         g_reg.is_a_write = 1;
+         g_reg.command_words[11] = ((g_reg.command_code & 0xF) << command_code_shift) + ((g_reg.target_TIGER_ID & 0x7) << target_TIGER_ID_shift);    }
       else if(strcmp(command_code_param,"RD")==0){
-         g_reg_command_code = 0x9;
-         g_reg_is_a_write = 0;
-         g_reg_command_words[11] = ((g_reg_command_code & 0xF) << command_code_shift) + ((g_reg_target_TIGER_ID & 0x7) << target_TIGER_ID_shift);  }
+         g_reg.command_code = 0x9;
+         g_reg.is_a_write = 0;
+         g_reg.command_words[11] = ((g_reg.command_code & 0xF) << command_code_shift) + ((g_reg.target_TIGER_ID & 0x7) << target_TIGER_ID_shift);  }
       else
          printf("bad command_code parameter passed\n");   }
 
 
 void g_reg_update_command_words()
 {     int i;
-      if ( (g_reg_command_code & 0xF) == 0x9 )
+      if ( (g_reg.command_code & 0xF) == 0x9 )
         for(i=1;i<11;i++)
-          g_reg_command_words[i]=0;
+          g_reg.command_words[i]=0;
       else {
-         g_reg_command_words[1] = ((g_reg_BufferBias & 0x3) << 24)+ ((g_reg_TDCVcasN & 0xF) << 16) + ((g_reg_TDCVcasP & 0x1F) << 8) + ((g_reg_TDCVcasPHyst & 0x3F));
-         g_reg_command_words[2] =((g_reg_DiscFE_Ibias & 0x3f) << 24) + ((g_reg_BiasFE_PpreN & 0x3F) << 16) + ((g_reg_AVcasp_global & 0x1F) << 8)   + ((g_reg_TDCcompVcas & 0xF));
-         g_reg_command_words[3] =((g_reg_TDCIref_cs & 0x1f) << 24) + ((g_reg_DiscVcasN & 0xF) << 16) + ((g_reg_IntegVb1 & 0x3F) << 8)  + ((g_reg_BiasFE_A1 & 0xF));
-         g_reg_command_words[4] =  ((g_reg_Vcasp_Vth & 0x3f) << 24) + ((g_reg_TAC_I_LSB & 0x1F) << 16) + ((g_reg_TDCcompVbias & 0x1F) << 8) + ((g_reg_Vref_Integ & 0x3F));
-         g_reg_command_words[5] =  ((g_reg_IBiasTPcal & 0x1f) << 24) + ((g_reg_TP_Vcal & 0x1F) << 16) + ((g_reg_ShaperIbias & 0xF) << 8)      + ((g_reg_IPostamp & 0x1F));
-         g_reg_command_words[6] =  ((g_reg_TP_Vcal_ref & 0x1f) << 24) + ((g_reg_Vref_integ_diff & 0x3F) << 16) + ((g_reg_Sig_pol & 0x1) << 8)          + ((g_reg_FE_TPEnable & 0x1));
-         g_reg_command_words[7] = ((g_reg_DataClkDiv & 0x3) << 16) + ((g_reg_TACrefreshPeriod & 0xf) << 8) + ((g_reg_TACrefreshEnable & 0x1));
-         g_reg_command_words[8] = ((g_reg_CounterPeriod & 0x7) << 24) + ((g_reg_CounterEnable & 0x1) << 16) + ((g_reg_StopRampEnable & 0x3) << 8)   + ((g_reg_RClkEnable & 0x1F));
-         g_reg_command_words[9] =  ((g_reg_TDCClkdiv & 0x1) << 24) + ((g_reg_VetoMode & 0x3F) << 16) + ((g_reg_Ch_DebugMode & 0x1) << 8) + ((g_reg_TxMode & 0x3));
-         g_reg_command_words[10] =  ((g_reg_TxDDR & 0x1) << 24) + ((g_reg_TxLinks & 0x3) << 16); }
-      g_reg_command_words[11] = ((g_reg_command_code & 0xF) << command_code_shift) + ((g_reg_target_TIGER_ID & 0x7) << target_TIGER_ID_shift);     
+         g_reg.command_words[1] = ((g_reg.BufferBias & 0x3) << 24)+ ((g_reg.TDCVcasN & 0xF) << 16) + ((g_reg.TDCVcasP & 0x1F) << 8) + ((g_reg.TDCVcasPHyst & 0x3F));
+         g_reg.command_words[2] =((g_reg.DiscFE_Ibias & 0x3f) << 24) + ((g_reg.BiasFE_PpreN & 0x3F) << 16) + ((g_reg.AVcasp_global & 0x1F) << 8)   + ((g_reg.TDCcompVcas & 0xF));
+         g_reg.command_words[3] =((g_reg.TDCIref_cs & 0x1f) << 24) + ((g_reg.DiscVcasN & 0xF) << 16) + ((g_reg.IntegVb1 & 0x3F) << 8)  + ((g_reg.BiasFE_A1 & 0xF));
+         g_reg.command_words[4] =  ((g_reg.Vcasp_Vth & 0x3f) << 24) + ((g_reg.TAC_I_LSB & 0x1F) << 16) + ((g_reg.TDCcompVbias & 0x1F) << 8) + ((g_reg.Vref_Integ & 0x3F));
+         g_reg.command_words[5] =  ((g_reg.IBiasTPcal & 0x1f) << 24) + ((g_reg.TP_Vcal & 0x1F) << 16) + ((g_reg.ShaperIbias & 0xF) << 8)      + ((g_reg.IPostamp & 0x1F));
+         g_reg.command_words[6] =  ((g_reg.TP_Vcal_ref & 0x1f) << 24) + ((g_reg.Vref_integ_diff & 0x3F) << 16) + ((g_reg.Sig_pol & 0x1) << 8)          + ((g_reg.FE_TPEnable & 0x1));
+         g_reg.command_words[7] = ((g_reg.DataClkDiv & 0x3) << 16) + ((g_reg.TACrefreshPeriod & 0xf) << 8) + ((g_reg.TACrefreshEnable & 0x1));
+         g_reg.command_words[8] = ((g_reg.CounterPeriod & 0x7) << 24) + ((g_reg.CounterEnable & 0x1) << 16) + ((g_reg.StopRampEnable & 0x3) << 8)   + ((g_reg.RClkEnable & 0x1F));
+         g_reg.command_words[9] =  ((g_reg.TDCClkdiv & 0x1) << 24) + ((g_reg.VetoMode & 0x3F) << 16) + ((g_reg.Ch_DebugMode & 0x1) << 8) + ((g_reg.TxMode & 0x3));
+         g_reg.command_words[10] =  ((g_reg.TxDDR & 0x1) << 24) + ((g_reg.TxLinks & 0x3) << 16); }
+      g_reg.command_words[11] = ((g_reg.command_code & 0xF) << command_code_shift) + ((g_reg.target_TIGER_ID & 0x7) << target_TIGER_ID_shift);     
 }
 
 
 
 void g_reg_extract_parameters_from_UDP_packet()
 {
-      printf("\nList of parameters sent to TIGER%d:",g_reg_target_TIGER_ID);
-      printf("\nBufferBias:%02X;\t\tTDCVcasN:%02X;\t\tTDCVcasP:%02X;\t\tTDCVcasPHyst:%02X;",((g_reg_command_words[1]>>24)&0x3), swap_order_N_bits(((g_reg_command_words[1]>>16)&0xF),4), swap_order_N_bits(((g_reg_command_words[1]>>8)&0x1F),5), swap_order_N_bits(((g_reg_command_words[1]>>0)&0x3F),6) );
-      printf("\nDiscFE_Ibias:%02X;\tBiasFE_PpreN:%02X;\tAVcasp_global:%02X;\tTDCcompVcas:%02X;",swap_order_N_bits(((g_reg_command_words[2]>>24)&0x3F),6), ((g_reg_command_words[2]>>16)&0x3F), swap_order_N_bits(((g_reg_command_words[2]>>8)&0x1F),5), swap_order_N_bits(((g_reg_command_words[2]>>0)&0xF),4) );
-      printf( "\nTDCIref_cs:%02X;\t\tDiscVcasN:%02X;\t\tIntegVb1:%02X;\t\tBiasFE_A1:%02X;", swap_order_N_bits(((g_reg_command_words[3]>>24)&0x1F),5), swap_order_N_bits(((g_reg_command_words[3]>>16)&0xF),4), swap_order_N_bits(((g_reg_command_words[3]>>8)&0x3F),6), ((g_reg_command_words[3]>>0)&0xF) ); 
-      printf( "\nVcasp_Vth:%02X;\t\tTAC_I_LSB:%02X;\t\tTDCcompVbias:%02X;\tVref_Integ:%02X;", swap_order_N_bits(((g_reg_command_words[4]>>24)&0x3F),6), ((g_reg_command_words[4]>>16)&0x1F), ((g_reg_command_words[4]>>8)&0x1F), swap_order_N_bits(((g_reg_command_words[4]>>0)&0x3F),6) ) ;
-      printf ( "\nIBiasTPcal:%02X;\t\tTP_Vcal:%02X;\t\tShaperIbias:%02X;\t\tIPostamp:%02X;", swap_order_N_bits(((g_reg_command_words[5]>>24)&0x1F),5), swap_order_N_bits(((g_reg_command_words[5]>>16)&0x1F),5), ((g_reg_command_words[5]>>8)&0xF), swap_order_N_bits(((g_reg_command_words[5]>>0)&0x1F),5) ) ;
-      printf( "\nTP_Vcal_ref:%02X;\t\tVref_integ_diff:%02X;\tSig_pol:%02X;\t\tFE_TPEnable:%02X;" , swap_order_N_bits(((g_reg_command_words[6]>>24)&0x1F),5), swap_order_N_bits(((g_reg_command_words[6]>>16)&0x3F),6), ((g_reg_command_words[6]>>8)&0x1), ((g_reg_command_words[6]>>0)&0x1) ) ;
-      printf ( "\nDataClkDiv:%02X;\t\tTACrefreshPeriod:%02X;\tTACrefreshEnable:%02X;", ((g_reg_command_words[7]>>16)&0x3), ((g_reg_command_words[7]>>8)&0xF), ((g_reg_command_words[7]>>0)&0x1) ) ;
-      printf ( "\nCounterPeriod:%02X;\tCounterEnable:%02X;\tStopRampEnable:%02X;\tRClkEnable:%02X;" , ((g_reg_command_words[8]>>24)&0x7), ((g_reg_command_words[8]>>16)&0x1), ((g_reg_command_words[8]>>8)&0x3), ((g_reg_command_words[8]>>0)&0x1F) );
-      printf( "\nTDCClkdiv:%02X;\t\tVetoMode:%02X;\t\tCh_DebugMode:%02X;\tTxMode:%02X;" , ((g_reg_command_words[9]>>24)&0x1), ((g_reg_command_words[9]>>16)&0x3F), ((g_reg_command_words[9]>>8)&0x1 ), ((g_reg_command_words[9]>>0)&0x3) ) ;
-      printf ( "\nTxDDR:%02X;\t\tTxLinks:%02X;" , ((g_reg_command_words[10]>>24)&0x1), ((g_reg_command_words[10]>>16)&0x3) ) ; }
+      printf("\nList of parameters sent to TIGER%d:",g_reg.target_TIGER_ID);
+      printf("\nBufferBias:%02X;\t\tTDCVcasN:%02X;\t\tTDCVcasP:%02X;\t\tTDCVcasPHyst:%02X;",((g_reg.command_words[1]>>24)&0x3), swap_order_N_bits(((g_reg.command_words[1]>>16)&0xF),4), swap_order_N_bits(((g_reg.command_words[1]>>8)&0x1F),5), swap_order_N_bits(((g_reg.command_words[1]>>0)&0x3F),6) );
+      printf("\nDiscFE_Ibias:%02X;\tBiasFE_PpreN:%02X;\tAVcasp_global:%02X;\tTDCcompVcas:%02X;",swap_order_N_bits(((g_reg.command_words[2]>>24)&0x3F),6), ((g_reg.command_words[2]>>16)&0x3F), swap_order_N_bits(((g_reg.command_words[2]>>8)&0x1F),5), swap_order_N_bits(((g_reg.command_words[2]>>0)&0xF),4) );
+      printf( "\nTDCIref_cs:%02X;\t\tDiscVcasN:%02X;\t\tIntegVb1:%02X;\t\tBiasFE_A1:%02X;", swap_order_N_bits(((g_reg.command_words[3]>>24)&0x1F),5), swap_order_N_bits(((g_reg.command_words[3]>>16)&0xF),4), swap_order_N_bits(((g_reg.command_words[3]>>8)&0x3F),6), ((g_reg.command_words[3]>>0)&0xF) ); 
+      printf( "\nVcasp_Vth:%02X;\t\tTAC_I_LSB:%02X;\t\tTDCcompVbias:%02X;\tVref_Integ:%02X;", swap_order_N_bits(((g_reg.command_words[4]>>24)&0x3F),6), ((g_reg.command_words[4]>>16)&0x1F), ((g_reg.command_words[4]>>8)&0x1F), swap_order_N_bits(((g_reg.command_words[4]>>0)&0x3F),6) ) ;
+      printf ( "\nIBiasTPcal:%02X;\t\tTP_Vcal:%02X;\t\tShaperIbias:%02X;\t\tIPostamp:%02X;", swap_order_N_bits(((g_reg.command_words[5]>>24)&0x1F),5), swap_order_N_bits(((g_reg.command_words[5]>>16)&0x1F),5), ((g_reg.command_words[5]>>8)&0xF), swap_order_N_bits(((g_reg.command_words[5]>>0)&0x1F),5) ) ;
+      printf( "\nTP_Vcal_ref:%02X;\t\tVref_integ_diff:%02X;\tSig_pol:%02X;\t\tFE_TPEnable:%02X;" , swap_order_N_bits(((g_reg.command_words[6]>>24)&0x1F),5), swap_order_N_bits(((g_reg.command_words[6]>>16)&0x3F),6), ((g_reg.command_words[6]>>8)&0x1), ((g_reg.command_words[6]>>0)&0x1) ) ;
+      printf ( "\nDataClkDiv:%02X;\t\tTACrefreshPeriod:%02X;\tTACrefreshEnable:%02X;", ((g_reg.command_words[7]>>16)&0x3), ((g_reg.command_words[7]>>8)&0xF), ((g_reg.command_words[7]>>0)&0x1) ) ;
+      printf ( "\nCounterPeriod:%02X;\tCounterEnable:%02X;\tStopRampEnable:%02X;\tRClkEnable:%02X;" , ((g_reg.command_words[8]>>24)&0x7), ((g_reg.command_words[8]>>16)&0x1), ((g_reg.command_words[8]>>8)&0x3), ((g_reg.command_words[8]>>0)&0x1F) );
+      printf( "\nTDCClkdiv:%02X;\t\tVetoMode:%02X;\t\tCh_DebugMode:%02X;\tTxMode:%02X;" , ((g_reg.command_words[9]>>24)&0x1), ((g_reg.command_words[9]>>16)&0x3F), ((g_reg.command_words[9]>>8)&0x1 ), ((g_reg.command_words[9]>>0)&0x3) ) ;
+      printf ( "\nTxDDR:%02X;\t\tTxLinks:%02X;" , ((g_reg.command_words[10]>>24)&0x1), ((g_reg.command_words[10]>>16)&0x3) ) ; }
 
 
 void g_reg_extract_d_parameters_from_UDP_packet()
 {
-      printf("\nList of parameters sent to TIGER%d:",g_reg_target_TIGER_ID);
-      printf( "\nBufferBias:%d;\t\tTDCVcasN:%d;\t\tTDCVcasP:%d;\t\tTDCVcasPHyst:%d;", ((g_reg_command_words[1]>>24)&0x3), swap_order_N_bits(((g_reg_command_words[1]>>16)&0xF),4), swap_order_N_bits(((g_reg_command_words[1]>>8)&0x1F),5), swap_order_N_bits(((g_reg_command_words[1]>>0)&0x3F),6) ) ;
+      printf("\nList of parameters sent to TIGER%d:",g_reg.target_TIGER_ID);
+      printf( "\nBufferBias:%d;\t\tTDCVcasN:%d;\t\tTDCVcasP:%d;\t\tTDCVcasPHyst:%d;", ((g_reg.command_words[1]>>24)&0x3), swap_order_N_bits(((g_reg.command_words[1]>>16)&0xF),4), swap_order_N_bits(((g_reg.command_words[1]>>8)&0x1F),5), swap_order_N_bits(((g_reg.command_words[1]>>0)&0x3F),6) ) ;
 
-     printf( "\nDiscFE_Ibias:%d;\tBiasFE_PpreN:%d;\tAVcasp_global:%d;\tTDCcompVcas:%d;", swap_order_N_bits(((g_reg_command_words[2]>>24)&0x3F),6), ((g_reg_command_words[2]>>16)&0x3F), swap_order_N_bits(((g_reg_command_words[2]>>8)&0x1F),5), swap_order_N_bits(((g_reg_command_words[2]>>0)&0xF),4) );
-      printf( "\nTDCIref_cs:%d;\t\tDiscVcasN:%d;\t\tIntegVb1:%d;\t\tBiasFE_A1:%d;", swap_order_N_bits(((g_reg_command_words[3]>>24)&0x1F),5), swap_order_N_bits(((g_reg_command_words[3]>>16)&0xF),4), swap_order_N_bits(((g_reg_command_words[3]>>8)&0x3F),6), ((g_reg_command_words[3]>>0)&0xF) );
-      printf ( "\nVcasp_Vth:%d;\t\tTAC_I_LSB:%d;\t\tTDCcompVbias:%d;\tVref_Integ:%d;", swap_order_N_bits(((g_reg_command_words[4]>>24)&0x3F),6), ((g_reg_command_words[4]>>16)&0x1F), ((g_reg_command_words[4]>>8)&0x1F), swap_order_N_bits(((g_reg_command_words[4]>>0)&0x3F),6) );
-      printf ( "\nIBiasTPcal:%d;\t\tTP_Vcal:%d;\t\tShaperIbias:%d;\t\tIPostamp:%d;",swap_order_N_bits(((g_reg_command_words[5]>>24)&0x1F),5), swap_order_N_bits(((g_reg_command_words[5]>>16)&0x1F),5), ((g_reg_command_words[5]>>8)&0xF), swap_order_N_bits(((g_reg_command_words[5]>>0)&0x1F),5) );
-      printf ( "\nTP_Vcal_ref:%d;\t\tVref_integ_diff:%d;\tSig_pol:%d;\t\tFE_TPEnable:%d;", swap_order_N_bits(((g_reg_command_words[6]>>24)&0x1F),5), swap_order_N_bits(((g_reg_command_words[6]>>16)&0x3F),6), ((g_reg_command_words[6]>>8)&0x1), ((g_reg_command_words[6]>>0)&0x1) ) ;
-      printf ( "\nDataClkDiv:%d;\t\tTACrefreshPeriod:%d;\tTACrefreshEnable:%d;", ((g_reg_command_words[7]>>16)&0x3), ((g_reg_command_words[7]>>8)&0xF), ((g_reg_command_words[7]>>0)&0x1) ) ;
-      printf ( "\nCounterPeriod:%d;\tCounterEnable:%d;\tStopRampEnable:%d;\tRClkEnable:%d;", ((g_reg_command_words[8]>>24)&0x7), ((g_reg_command_words[8]>>16)&0x1), ((g_reg_command_words[8]>>8)&0x3), ((g_reg_command_words[8]>>0)&0x1F) ) ;
-      printf ( "\nTDCClkdiv:%d;\t\tVetoMode:%d;\t\tCh_DebugMode:%d;\tTxMode:%d;", ((g_reg_command_words[9]>>24)&0x1), ((g_reg_command_words[9]>>16)&0x3F), ((g_reg_command_words[9]>>8)&0x1 ), ((g_reg_command_words[9]>>0)&0x3) ) ;
-      printf ( "\nTxDDR:%d;\t\tTxLinks:%d;", ((g_reg_command_words[10]>>24)&0x1), ((g_reg_command_words[10]>>16)&0x3) )  ;  } 
+     printf( "\nDiscFE_Ibias:%d;\tBiasFE_PpreN:%d;\tAVcasp_global:%d;\tTDCcompVcas:%d;", swap_order_N_bits(((g_reg.command_words[2]>>24)&0x3F),6), ((g_reg.command_words[2]>>16)&0x3F), swap_order_N_bits(((g_reg.command_words[2]>>8)&0x1F),5), swap_order_N_bits(((g_reg.command_words[2]>>0)&0xF),4) );
+      printf( "\nTDCIref_cs:%d;\t\tDiscVcasN:%d;\t\tIntegVb1:%d;\t\tBiasFE_A1:%d;", swap_order_N_bits(((g_reg.command_words[3]>>24)&0x1F),5), swap_order_N_bits(((g_reg.command_words[3]>>16)&0xF),4), swap_order_N_bits(((g_reg.command_words[3]>>8)&0x3F),6), ((g_reg.command_words[3]>>0)&0xF) );
+      printf ( "\nVcasp_Vth:%d;\t\tTAC_I_LSB:%d;\t\tTDCcompVbias:%d;\tVref_Integ:%d;", swap_order_N_bits(((g_reg.command_words[4]>>24)&0x3F),6), ((g_reg.command_words[4]>>16)&0x1F), ((g_reg.command_words[4]>>8)&0x1F), swap_order_N_bits(((g_reg.command_words[4]>>0)&0x3F),6) );
+      printf ( "\nIBiasTPcal:%d;\t\tTP_Vcal:%d;\t\tShaperIbias:%d;\t\tIPostamp:%d;",swap_order_N_bits(((g_reg.command_words[5]>>24)&0x1F),5), swap_order_N_bits(((g_reg.command_words[5]>>16)&0x1F),5), ((g_reg.command_words[5]>>8)&0xF), swap_order_N_bits(((g_reg.command_words[5]>>0)&0x1F),5) );
+      printf ( "\nTP_Vcal_ref:%d;\t\tVref_integ_diff:%d;\tSig_pol:%d;\t\tFE_TPEnable:%d;", swap_order_N_bits(((g_reg.command_words[6]>>24)&0x1F),5), swap_order_N_bits(((g_reg.command_words[6]>>16)&0x3F),6), ((g_reg.command_words[6]>>8)&0x1), ((g_reg.command_words[6]>>0)&0x1) ) ;
+      printf ( "\nDataClkDiv:%d;\t\tTACrefreshPeriod:%d;\tTACrefreshEnable:%d;", ((g_reg.command_words[7]>>16)&0x3), ((g_reg.command_words[7]>>8)&0xF), ((g_reg.command_words[7]>>0)&0x1) ) ;
+      printf ( "\nCounterPeriod:%d;\tCounterEnable:%d;\tStopRampEnable:%d;\tRClkEnable:%d;", ((g_reg.command_words[8]>>24)&0x7), ((g_reg.command_words[8]>>16)&0x1), ((g_reg.command_words[8]>>8)&0x3), ((g_reg.command_words[8]>>0)&0x1F) ) ;
+      printf ( "\nTDCClkdiv:%d;\t\tVetoMode:%d;\t\tCh_DebugMode:%d;\tTxMode:%d;", ((g_reg.command_words[9]>>24)&0x1), ((g_reg.command_words[9]>>16)&0x3F), ((g_reg.command_words[9]>>8)&0x1 ), ((g_reg.command_words[9]>>0)&0x3) ) ;
+      printf ( "\nTxDDR:%d;\t\tTxLinks:%d;", ((g_reg.command_words[10]>>24)&0x1), ((g_reg.command_words[10]>>16)&0x3) )  ;  } 
+
 
 int main(int argc,char *argv[])
 {  
+ 
 if (argc < 3)
 {    printf("\n GEMROC_TIGER_CFG argument list: <Target_GEMROC: 1 thru 22> <Target_FEB_PWR_EN_pattern(Hex):0x0 thru 0xF>\n"); 
     default_arg_needed = 1;}
@@ -1562,14 +1571,14 @@ FEB_PWR_EN_pattern = TARGET_FEB_PWR_PATTERN_param;
 
     sprintf(cfg_filename,"GEMROC_%d_def_cfg_LV_2018.txt",GEMROC_ID) ;
     gemroc_init(GEMROC_ID,"NONE",1,cfg_filename);
-    print_cmd("gemroc_init",gemroc_command_words,sizeof(gemroc_command_words));
+    print_cmd("gemroc_init",gemroc.command_words,sizeof(gemroc.command_words));
     gemroc_set_FEB_PWR_EN_pattern(FEB_PWR_EN_pattern);
-    print_cmd("gemroc_set_FEB_PWR_EN_pattern",gemroc_command_words,sizeof(gemroc_command_words));
+    print_cmd("gemroc_set_FEB_PWR_EN_pattern",gemroc.command_words,sizeof(gemroc.command_words));
     gemroc_set_gemroc_cmd_code("CMD_GEMROC_LV_CFG_WR",1);
-     print_cmd("gemroc_set_gemroc_cmd_code",gemroc_command_words,sizeof(gemroc_command_words));
+     print_cmd("gemroc_set_gemroc_cmd_code",gemroc.command_words,sizeof(gemroc.command_words));
     gemroc_update_command_words();
-    print_cmd("gemroc_update_command_words",gemroc_command_words,sizeof(gemroc_command_words));
-    send_GEMROC_CFG_CMD_PKT(GEMROC_ID,"send_GEMROC_CFG_CMD_PKT in line 1560",gemroc_command_words,sizeof(gemroc_command_words),DEST_IP_ADDRESS,DEST_PORT_NO);
+    print_cmd("gemroc_update_command_words",gemroc.command_words,sizeof(gemroc.command_words));
+    send_GEMROC_CFG_CMD_PKT(GEMROC_ID,"send_GEMROC_CFG_CMD_PKT in line 1560",gemroc.command_words,sizeof(gemroc.command_words),DEST_IP_ADDRESS,DEST_PORT_NO);
     printf("sent : CMD_GEMROC_LV_CFG_WR\n");
     
 sprintf(cfg_filename,"GEMROC_%d_def_cfg_DAQ_2018v3.txt",GEMROC_ID) ;
@@ -1598,13 +1607,6 @@ close(socket_descriptor1);
 fclose(fd_cmd);
 fclose(fw);
 fclose(file_name);
-
-
-
-
-
-
-
 
 
 
