@@ -447,13 +447,13 @@ void ReadTgtGEMROC_TIGER_ChCfgReg (char*ChCFGReg_setting_inst, unsigned int GEMR
     if (channel_ID_param < 64){
         ch_reg_set_target_channel(channel_ID_param);
         ch_reg_update_command_words();
-        send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param, info,ch_reg_command_words,sizeof(ch_reg_command_words), DEST_IP_ADDRESS, DEST_PORT_NO, info);
+        send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param, info,ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO, info);
         if (verbose_mode == 1); }
     else
         for(i=0;i<64;i++){
             ch_reg_set_target_channel(i);
             ch_reg_update_command_words();
-            send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,info,ch_reg_command_words,sizeof(ch_reg_command_words), DEST_IP_ADDRESS, DEST_PORT_NO,info );
+            send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,info,ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO,info );
             if (verbose_mode == 1);;}
 }
 
@@ -470,14 +470,14 @@ void Set_GEMROC_TIGER_ch_TPEn (char*ChCFGReg_setting_inst, unsigned int GEMROC_I
         ch_reg_set_TP_disable_FE(TP_disable_FE_param);
         ch_reg_TriggerMode = TriggerMode_param;
         ch_reg_update_command_words();
-        send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,info,ch_reg_command_words,sizeof(ch_reg_command_words), DEST_IP_ADDRESS, DEST_PORT_NO,info) ;}
+        send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,info,ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO,info) ;}
     else
         for(i=0;i<64;i++){
             ch_reg_set_target_channel(i);
             ch_reg_set_TP_disable_FE(TP_disable_FE_param);
             ch_reg_TriggerMode = TriggerMode_param;
             ch_reg_update_command_words();
-            send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param, info,ch_reg_command_words,sizeof(ch_reg_command_words), DEST_IP_ADDRESS, DEST_PORT_NO,info );}
+            send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param, info,ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO,info );}
 }
 
 
@@ -493,12 +493,12 @@ void Set_Vth_T1 (char*ChCFGReg_setting_inst, unsigned int GEMROC_ID_param, unsig
     if (Channel_ID_param < 64){
         ch_reg_set_target_channel(Channel_ID_param);
         ch_reg_update_command_words();
-        send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param, info, ch_reg_command_words,sizeof(ch_reg_command_words), DEST_IP_ADDRESS, DEST_PORT_NO,info);}
+        send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param, info, ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO,info);}
     else
         for(i=0;i<64;i++) {
             ch_reg_set_target_channel(i);
             ch_reg_update_command_words();
-            send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param, info,ch_reg_command_words,sizeof(ch_reg_command_words), DEST_IP_ADDRESS, DEST_PORT_NO,info);  }    }
+            send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param, info,ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO,info);  }    }
 
 void set_AVcasp_global(char*GCFGReg_setting_inst, unsigned int GEMROC_ID_param, unsigned int TIGER_ID_param,
                         unsigned int AVcasp_global_param, char*info)
@@ -509,7 +509,7 @@ void set_AVcasp_global(char*GCFGReg_setting_inst, unsigned int GEMROC_ID_param, 
     char*COMMAND_STRING = "WR";
     g_reg_set_command_code(COMMAND_STRING);
     g_reg_update_command_words();
-    send_TIGER_GCFG_Reg_CMD_PKT( TIGER_ID_param,info, g_reg_command_words,sizeof(g_reg_command_words), DEST_IP_ADDRESS, DEST_PORT_NO, info);
+    send_TIGER_GCFG_Reg_CMD_PKT( TIGER_ID_param,info, g_reg.command_words,sizeof(g_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO, info);
 }
 void SynchReset_to_TgtFEB(char*info, unsigned int GEMROC_ID_param, unsigned int TargetFEB_param, unsigned int To_ALL_param)
 {
@@ -543,10 +543,10 @@ void DAQ_set_and_TL_start(char*info, unsigned int GEMROC_ID_param,
 void Set_OV_OC_OT_PWR_CUT_EN_FLAGS(char*gemroc_inst_param, unsigned int GEMROC_ID_param, unsigned int FEB_OVC_EN_pattern_param, 
        unsigned int FEB_OVV_EN_pattern_param, unsigned int FEB_OVT_EN_pattern_param,unsigned int ROC_OVT_EN_param, char*info)
 {
-    gemroc_FEB_OVC_EN_pattern = FEB_OVC_EN_pattern_param & 0xF;
-    gemroc_FEB_OVV_EN_pattern = FEB_OVV_EN_pattern_param & 0xF;
-    gemroc_FEB_OVT_EN_pattern = FEB_OVT_EN_pattern_param & 0xF;
-    gemroc_ROC_OVT_EN = ROC_OVT_EN_param & 0x1;
+    gemroc.FEB_OVC_EN_pattern = FEB_OVC_EN_pattern_param & 0xF;
+    gemroc.FEB_OVV_EN_pattern = FEB_OVV_EN_pattern_param & 0xF;
+    gemroc.FEB_OVT_EN_pattern = FEB_OVT_EN_pattern_param & 0xF;
+    gemroc.ROC_OVT_EN = ROC_OVT_EN_param & 0x1;
     char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
     send_GEMROC_LV_CMD (GEMROC_ID_param, COMMAND_STRING,info);
 }
@@ -581,10 +581,10 @@ void Set_OVVA_LIMIT(char*gemroc_inst_param, unsigned int GEMROC_ID_param, unsign
         FEB0_OVVA_thr_Unsigned8 = FEB0_OVVA_thr_int;
     else
         FEB0_OVVA_thr_Unsigned8 = 511;
-    gemroc_A_OVV_LIMIT_FEB3 = FEB3_OVVA_thr_Unsigned8;
-    gemroc_A_OVV_LIMIT_FEB2 = FEB2_OVVA_thr_Unsigned8;
-    gemroc_A_OVV_LIMIT_FEB1 = FEB1_OVVA_thr_Unsigned8;
-    gemroc_A_OVV_LIMIT_FEB0 = FEB0_OVVA_thr_Unsigned8;
+    gemroc.A_OVV_LIMIT_FEB3 = FEB3_OVVA_thr_Unsigned8;
+    gemroc.A_OVV_LIMIT_FEB2 = FEB2_OVVA_thr_Unsigned8;
+    gemroc.A_OVV_LIMIT_FEB1 = FEB1_OVVA_thr_Unsigned8;
+    gemroc.A_OVV_LIMIT_FEB0 = FEB0_OVVA_thr_Unsigned8;
     char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
     send_GEMROC_LV_CMD (GEMROC_ID_param, COMMAND_STRING,info);
 }
@@ -619,10 +619,10 @@ void Set_OVVD_LIMIT(char*gemroc_inst_param, unsigned int GEMROC_ID_param, unsign
         FEB0_OVVD_thr_Unsigned8 = FEB0_OVVD_thr_int;
     else
         FEB0_OVVD_thr_Unsigned8 = 511;
-    gemroc_D_OVV_LIMIT_FEB3 = FEB3_OVVD_thr_Unsigned8;
-    gemroc_D_OVV_LIMIT_FEB2 = FEB2_OVVD_thr_Unsigned8;
-    gemroc_D_OVV_LIMIT_FEB1 = FEB1_OVVD_thr_Unsigned8;
-    gemroc_D_OVV_LIMIT_FEB0 = FEB0_OVVD_thr_Unsigned8;
+    gemroc.D_OVV_LIMIT_FEB3 = FEB3_OVVD_thr_Unsigned8;
+    gemroc.D_OVV_LIMIT_FEB2 = FEB2_OVVD_thr_Unsigned8;
+    gemroc.D_OVV_LIMIT_FEB1 = FEB1_OVVD_thr_Unsigned8;
+    gemroc.D_OVV_LIMIT_FEB0 = FEB0_OVVD_thr_Unsigned8;
     char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
     send_GEMROC_LV_CMD (GEMROC_ID_param, COMMAND_STRING,info);
 }
@@ -660,10 +660,10 @@ void Set_OVCA_LIMIT(char*gemroc_inst_param,unsigned int GEMROC_ID_param, unsigne
         FEB0_OVCA_thr_U9 = FEB0_OVCA_thr_int;
     else
         FEB0_OVCA_thr_U9 = 511;
-    gemroc_A_OVC_LIMIT_FEB3 = FEB3_OVCA_thr_U9;
-    gemroc_A_OVC_LIMIT_FEB2 = FEB2_OVCA_thr_U9;
-    gemroc_A_OVC_LIMIT_FEB1 = FEB1_OVCA_thr_U9;
-    gemroc_A_OVC_LIMIT_FEB0 = FEB0_OVCA_thr_U9;
+    gemroc.A_OVC_LIMIT_FEB3 = FEB3_OVCA_thr_U9;
+    gemroc.A_OVC_LIMIT_FEB2 = FEB2_OVCA_thr_U9;
+    gemroc.A_OVC_LIMIT_FEB1 = FEB1_OVCA_thr_U9;
+    gemroc.A_OVC_LIMIT_FEB0 = FEB0_OVCA_thr_U9;
     char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
     send_GEMROC_LV_CMD (GEMROC_ID_param, COMMAND_STRING,info);
 }
@@ -701,14 +701,14 @@ void Set_OVCD_LIMIT(char*gemroc_inst_param, unsigned int GEMROC_ID_param, unsign
         FEB0_OVCD_thr_U9 = FEB0_OVCD_thr_int;
     else
         FEB0_OVCD_thr_U9 = 511;
-    gemroc_D_OVC_LIMIT_FEB3 = FEB3_OVCD_thr_U9;
-    gemroc_D_OVC_LIMIT_FEB2 = FEB2_OVCD_thr_U9;
-    gemroc_D_OVC_LIMIT_FEB1 = FEB1_OVCD_thr_U9;
-    gemroc_D_OVC_LIMIT_FEB0 = FEB0_OVCD_thr_U9;
+    gemroc.D_OVC_LIMIT_FEB3 = FEB3_OVCD_thr_U9;
+    gemroc.D_OVC_LIMIT_FEB2 = FEB2_OVCD_thr_U9;
+    gemroc.D_OVC_LIMIT_FEB1 = FEB1_OVCD_thr_U9;
+    gemroc.D_OVC_LIMIT_FEB0 = FEB0_OVCD_thr_U9;
     char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
     send_GEMROC_LV_CMD (GEMROC_ID_param, COMMAND_STRING,info);
 }
-
+//2018-4-19 11:20
 void Set_OVTF_LIMIT(char*gemroc_inst_param, int GEMROC_ID_param, int FEB3_OVTF_thr_param,int FEB2_OVTF_thr_param, 
                      int FEB1_OVTF_thr_param, int FEB0_OVTF_thr_param, char*info)
 {
