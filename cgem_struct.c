@@ -5,8 +5,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#define HOST_IP "127.0.0.1"
-//#define HOST_IP "192.168.1.200"
+//#define HOST_IP "127.0.0.1"
+#define HOST_IP "192.168.1.200"
 #define BUFSIZE 4096 
       unsigned int command_code_shift = 11; 
       unsigned int target_TIGER_ID_shift = 8; 
@@ -288,13 +288,19 @@ void send_GEMROC_CFG_CMD_PKT( unsigned int TARGET_GEMROC_ID_param, char*info,
     sin_dest.sin_port=htons(DEST_PORT_NO_PARAM);
     sendto(socket_descriptor,buff2,cmdlen,0,(struct sockaddr *)&sin_dest,sin_len);
     num++;
-    j=sprintf(cmd_message,"\nnum: %3d, %s\n",num,info); // C4996
+    j=sprintf(cmd_message,"\nnum:%d, %s\n",num,info); // C4996
     fwrite(cmd_message,sizeof(unsigned char),j,fw);
     j=0;
     for(i=0;i<cmdlen;i++)
       j+=sprintf(cmd_message+j,"%02x",buff2[i]);
     fwrite(cmd_message,sizeof(unsigned char),cmdlen<<1,fw);
     recvfrom(socket_descriptor1,buff,cmdlen,0,NULL,NULL);
+    j=sprintf(cmd_message,"\nnum:%d, %s\n",num,"echo:"); // C4996
+    fwrite(cmd_message,sizeof(unsigned char),j,fw);
+    j=0;
+    for(i=0;i<cmdlen;i++)
+      j+=sprintf(cmd_message+j,"%02x",buff[i]);
+    fwrite(cmd_message,sizeof(unsigned char),cmdlen<<1,fw);
 }
 
 void send_TIGER_GCFG_Reg_CMD_PKT(unsigned int TIGER_ID_param, char*info, void*array_to_send_param, int cmdlen,
@@ -309,13 +315,19 @@ void send_TIGER_GCFG_Reg_CMD_PKT(unsigned int TIGER_ID_param, char*info, void*ar
     sin_dest.sin_port=htons(DEST_PORT_NO_PARAM);
     sendto(socket_descriptor,buff2,cmdlen,0,(struct sockaddr *)&sin_dest,sin_len);
     num++;
-    j=sprintf(cmd_message,"\nnum: %3d, %s\n",num,info);
+    j=sprintf(cmd_message,"\nnum:%d, %s\n",num,info);
     fwrite(cmd_message,sizeof(unsigned char),j,fw);
     j=0;
     for(i=0;i<cmdlen;i++)
       j+=sprintf(cmd_message+j,"%02x",buff2[i]);
     fwrite(cmd_message,sizeof(unsigned char),cmdlen<<1,fw);
     recvfrom(socket_descriptor1,buff,cmdlen,0,NULL,NULL);
+    j=sprintf(cmd_message,"\nnum:%d, %s\n",num,"echo:"); // C4996
+    fwrite(cmd_message,sizeof(unsigned char),j,fw);
+    j=0;
+    for(i=0;i<cmdlen;i++)
+      j+=sprintf(cmd_message+j,"%02x",buff[i]);
+    fwrite(cmd_message,sizeof(unsigned char),cmdlen<<1,fw);
 }
 
 void send_TIGER_Ch_CFG_Reg_CMD_PKT(unsigned int TIGER_ID_param, char*info,void*array_to_send_param,int cmdlen,
@@ -330,13 +342,19 @@ void send_TIGER_Ch_CFG_Reg_CMD_PKT(unsigned int TIGER_ID_param, char*info,void*a
     sin_dest.sin_port=htons(DEST_PORT_NO_PARAM);
     sendto(socket_descriptor,buff2,cmdlen,0,(struct sockaddr *)&sin_dest,sin_len);
     num++;
-    j=sprintf(cmd_message,"\nnum: %3d, %s\n",num,info);
+    j=sprintf(cmd_message,"\nnum:%d, %s\n",num,info);
     fwrite(cmd_message,sizeof(unsigned char),j,fw);
     j=0;
     for(i=0;i<cmdlen;i++)
       j+=sprintf(cmd_message+j,"%02x",buff2[i]);
     fwrite(cmd_message,sizeof(unsigned char),cmdlen<<1,fw);
     recvfrom(socket_descriptor1,buff,cmdlen,0,NULL,NULL);
+    j=sprintf(cmd_message,"\nnum:%d, %s\n",num,"echo:"); // C4996
+    fwrite(cmd_message,sizeof(unsigned char),j,fw);
+    j=0;
+    for(i=0;i<cmdlen;i++)
+      j+=sprintf(cmd_message+j,"%02x",buff[i]);
+    fwrite(cmd_message,sizeof(unsigned char),cmdlen<<1,fw);
 }
 
 void GEMROC_IVT_read_and_log(unsigned int GEMROC_ID_param, unsigned int display_enable_param, 
@@ -1543,8 +1561,8 @@ FEB_PWR_EN_pattern = TARGET_FEB_PWR_PATTERN_param;
 
       HOST_PORT=54817+GEMROC_ID;
       HOST_PORT_RECEIVE=58913+GEMROC_ID;
-//      sprintf(DEST_IP_ADDRESS,"192.168.1.%d",(GEMROC_ID+16)) ;
-      sprintf(DEST_IP_ADDRESS,"127.0.0.%d",1) ;
+      sprintf(DEST_IP_ADDRESS,"192.168.1.%d",(GEMROC_ID+16)) ;
+//      sprintf(DEST_IP_ADDRESS,"127.0.0.%d",1) ;
       DEST_PORT_NO = 58913;
    fd_cmd = fopen("c_cmd_check.txt","w+");
    fw = fopen("my_c_log.txt","w+");
