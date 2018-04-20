@@ -6,5 +6,5 @@ TPEnG 0 1
 TP 0 0 0 1
 SRst 0
 DRst 0
-DSTART 1 1
+DSTART 0x1 0x1
 Q

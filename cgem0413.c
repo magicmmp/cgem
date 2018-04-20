@@ -5,8 +5,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#define HOST_IP "127.0.0.1"
-//#define HOST_IP "192.168.1.200"
+//#define HOST_IP "127.0.0.1"
+#define HOST_IP "192.168.1.200"
 #define BUFSIZE 4096 
 unsigned int command_code_shift = 11; 
 unsigned int target_TIGER_ID_shift = 8; 
@@ -1531,8 +1531,8 @@ FEB_PWR_EN_pattern = TARGET_FEB_PWR_PATTERN_param;
 
       HOST_PORT=54817+GEMROC_ID;
       HOST_PORT_RECEIVE=58913+GEMROC_ID;
-//      sprintf(DEST_IP_ADDRESS,"192.168.1.%d",(GEMROC_ID+16)) ;
-      sprintf(DEST_IP_ADDRESS,"127.0.0.%d",1) ;
+      sprintf(DEST_IP_ADDRESS,"192.168.1.%d",(GEMROC_ID+16)) ;
+//      sprintf(DEST_IP_ADDRESS,"127.0.0.%d",1) ;
       DEST_PORT_NO = 58913;
    fd_cmd = fopen("c_cmd_check.txt","w+");
    fw = fopen("my_c_log.txt","w+");

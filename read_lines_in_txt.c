@@ -70,7 +70,7 @@ int main()
    char line[128],cmd_string[32];
    unsigned int cmd_para[10];
    int i,j;
-   fp = fopen("auto_input_para.txt", "r");
+   fp = fopen("read_para_test.txt", "r");
  while(!feof(fp))  
   {  
        memset(cmd_string,0, sizeof(cmd_string));
