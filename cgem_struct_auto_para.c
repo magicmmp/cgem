@@ -1757,10 +1757,31 @@ LOOP_FLAG=1;
     if(cmd_string== "DAQCR")
       if(cmd_para[0]==1)
       {
-        
+        Read_GEMROC_DAQ_CfgReg("DAQCR",GEMROC_ID,"DAQCR in 1760");
       }
+    if(cmd_string== "GRST")
+      if(cmd_para[0]==1)
+      {
+        ResetTgtGEMROC_ALL_TIGER_GCfgReg(GEMROC_ID, "ResetTgtGEMROC_ALL_TIGER_GCfgReg in line 1765");
+      }
+    if(cmd_string== "GWdef"||cmd_string=="GW")
+      if(cmd_para[0]==2)
+      {
+      WriteTgtGEMROC_TIGER_GCfgReg_fromfile("GW", GEMROC_ID, cmd_para[1], "TIGER_def_g_cfg_2018.txt", "WriteTgtGEMROC_TIGER_GCfgReg_fromfile in line 1770");
+      ReadTgtGEMROC_TIGER_GCfgReg("GW", GEMROC_ID, cmd_para[1], "ReadTgtGEMROC_TIGER_GCfgReg in line 1770" );
+      sleep(4);
+      }
+    if(cmd_string== "GRd"||cmd_string=="GR")
+      if(cmd_para[0]==2)
+      {
+      ReadTgtGEMROC_TIGER_GCfgReg("GRd", GEMROC_ID,cmd_para[1],"GRd in 1777" );
+      }
+    
   }   
 }
+
+
+
 
 
 
