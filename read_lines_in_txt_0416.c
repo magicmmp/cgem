@@ -49,7 +49,7 @@ void extract_para_from_line(char*line,int line_strlen,char*cmd_string,unsigned i
     for(i=para_info[0][1];i<=para_info[0][2];i++)
    {  cmd_string[j]=line[i];
       j++;}
-    cmd_string[j]=0;}
+    cmd_string[j]='\0';}
   cmd_para[0]=para_num;
   for(i=1;i<cmd_para[0];i++)
   { 
@@ -90,6 +90,8 @@ int main()
        memset(line,0, sizeof(line));  
        fgets(line, sizeof(line), fp);
        extract_para_from_line(line,strlen(line),cmd_string,cmd_para);
+       if(strcmp(cmd_string,"Q")==0)
+         printf("A QQQQQ! ");
        printf("string length=%d,para_num=%d,cmd string:%s,",strlen(cmd_string),cmd_para[0],cmd_string);
        for(i=1;i<cmd_para[0];i++)
        printf(" %u",cmd_para[i]);

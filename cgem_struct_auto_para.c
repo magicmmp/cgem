@@ -472,7 +472,6 @@ void send_GEMROC_DAQ_CMD(unsigned int GEMROC_ID_param,char*info, char*COMMAND_ST
 void  ResetTgtGEMROC_ALL_TIGER_GCfgReg(unsigned int GEMROC_ID_param, char*info)
 {
     send_GEMROC_DAQ_CMD(GEMROC_ID_param,info, "CMD_GEMROC_DAQ_TIGER_GCFGREG_RESET");
-    printf("\n CMD_GEMROC_DAQ_TIGER_GCFGREG_RESET\n");
     sleep(5);
 }
 
@@ -1025,7 +1024,7 @@ void DAQ_extract_parameters_from_UDP_packet()
       printf( "\n EN_TM_TCAM_pattern = %X %d",((DAQ.command_words[3] >>  0)  &  0xFF) , ((DAQ.command_words[3] >>  0)  &  0xFF) );
       printf( "\n number_of_repetitions = %X %d",((DAQ.command_words[4] >> 16)  & 0x3FF)  , ((DAQ.command_words[4] >> 16)  & 0x3FF) );
       printf( "\n target_TCAM_ID = %X %d",((DAQ.command_words[4] >>  8)  &  0x3)  , ((DAQ.command_words[4] >>  8)  &  0x3) );
-      printf( "\n to_ALL_TCAM_enable = %X %d",((DAQ.command_words[4] >>  6)  &  0x1)  , ((DAQ.command_words[4] >>  6)  &  0x1) );  }
+      printf( "\n to_ALL_TCAM_enable = %X %d\n",((DAQ.command_words[4] >>  6)  &  0x1)  , ((DAQ.command_words[4] >>  6)  &  0x1) );  }
 
 
 
@@ -1277,7 +1276,6 @@ void ch_reg_reload_chcfg_settings_from_file(char* ChCFGReg_def_fname_param)
       ch_reg.Ch63ObufMSB = ch_reg.parameter_array [3]  ;
       ch_reg.TP_disable_FE = ch_reg.parameter_array [4]  ;
       ch_reg.TDC_IB_E = ch_reg.parameter_array [5]  ;
-      printf("ch_reg.TDC_IB_E = ch_reg.parameter_array [5]=%d\n",ch_reg.TDC_IB_E);
       ch_reg.TDC_IB_T = ch_reg.parameter_array [6]  ;
       ch_reg.Integ = ch_reg.parameter_array [7]  ;
       ch_reg.PostAmpGain = ch_reg.parameter_array [8]  ;
@@ -1618,7 +1616,6 @@ void g_reg_extract_d_parameters_from_UDP_packet()
 
 int main(int argc,char *argv[])
 {  
-  int LOOP_FLAG;
   char line[128],cmd_string[32];
   unsigned int cmd_para[10];
 if (argc < 3)
@@ -1676,8 +1673,6 @@ FEB_PWR_EN_pattern = TARGET_FEB_PWR_PATTERN_param;
     gemroc_update_command_words();
     print_cmd("gemroc_update_command_words",gemroc.command_words,sizeof(gemroc.command_words));
     send_GEMROC_CFG_CMD_PKT(GEMROC_ID,"send_GEMROC_CFG_CMD_PKT in line 1560",gemroc.command_words,sizeof(gemroc.command_words),DEST_IP_ADDRESS,DEST_PORT_NO);
-    printf("sent : CMD_GEMROC_LV_CFG_WR\n");
-    
 sprintf(cfg_filename,"GEMROC_%d_def_cfg_DAQ_2018v3.txt",GEMROC_ID) ;
 DAQ_init(GEMROC_ID,"NONE",0,1,0,cfg_filename);
 DAQ_extract_parameters_from_UDP_packet();
@@ -1687,7 +1682,6 @@ g_reg_init(GEMROC_ID,"TIGER_def_g_cfg_2018.txt");
 ch_reg_init(GEMROC_ID,"TIGER_def_ch_cfg_2018.txt");
 
 GEMROC_IVT_read_and_log(GEMROC_ID,1, IVT_LOG_ENABLE, "GEMROC_IVT_read_and_log in line 1571");
-LOOP_FLAG=1;
   while(!feof(fd_read_para))
 {  
   memset(cmd_string,0, sizeof(cmd_string));
@@ -1696,117 +1690,187 @@ LOOP_FLAG=1;
   extract_para_from_line(line,strlen(line),cmd_string,cmd_para);
   if(cmd_para[0]>0)
   {
-    if(cmd_string== "quit" ||cmd_string == "q"||cmd_string== "Quit"||cmd_string=="Q")
-      break; 
-
-    if(cmd_string== "PEW" ||cmd_string == "P")
+    if(strcmp(cmd_string,"quit")==0 ||strcmp(cmd_string ,"q")==0||strcmp(cmd_string,"Quit")==0||strcmp(cmd_string,"Q")==0)
+    {  
+       printf("%s\n",cmd_string);
+       break;
+    }
+    if(strcmp(cmd_string,"PEW")==0 ||strcmp(cmd_string,"P")==0)
       if(cmd_para[0]==2)
-        FEBPwrEnPattern_set(GEMROC_ID,cmd_para[1],"FEBPwrEnPattern_set in line 1572");
-    if(cmd_string== "TDly" ||cmd_string == "TD")
+       {
+        FEBPwrEnPattern_set(GEMROC_ID,cmd_para[1],"FEBPwrEnPattern_set in line 1701");
+        printf("%s %d\n",cmd_string,cmd_para[1]);
+        }
+    if(strcmp(cmd_string,"TDly")==0 ||strcmp(cmd_string,"TD")==0)
       if(cmd_para[0]==5)
+       {
         set_FEB_timing_delays(GEMROC_ID,cmd_para[1],cmd_para[2],cmd_para[3],cmd_para[4],"set_FEB_timing_delays in line 1707");
-    if(cmd_string== "IVT" ||cmd_string == "I")
+        printf("%s %d %d %d %d\n",cmd_string,cmd_para[1],cmd_para[2],cmd_para[3],cmd_para[4]);
+        }
+    if(strcmp(cmd_string,"IVT")==0 ||strcmp(cmd_string,"I")==0)
       if(cmd_para[0]==1)
-       GEMROC_IVT_read_and_log(GEMROC_ID,1, IVT_LOG_ENABLE, "GEMROC_IVT_read_and_log in line 1710");
-    if(cmd_string== "OCVTEn")
+       {GEMROC_IVT_read_and_log(GEMROC_ID,1, IVT_LOG_ENABLE, "GEMROC_IVT_read_and_log in line 1710");
+        printf("%s\n",cmd_string);
+        sleep(1);  }
+    if(strcmp(cmd_string,"OCVTEn")==0)
       if(cmd_para[0]==5)    
       {
         Set_OV_OC_OT_PWR_CUT_EN_FLAGS("OCVTEn",GEMROC_ID,cmd_para[1],cmd_para[2],cmd_para[3],cmd_para[4],"OCVTEn in line 1713");
-        GEMROC_IVT_read_and_log(GEMROC_ID,1, IVT_LOG_ENABLE, "OCVTEn in line 1715");}
-    if(cmd_string== "OVVA")
+        GEMROC_IVT_read_and_log(GEMROC_ID,1, IVT_LOG_ENABLE, "OCVTEn in line 1715");
+        printf("%s %d %d %d %d\n",cmd_string,cmd_para[1],cmd_para[2],cmd_para[3],cmd_para[4]);
+       }
+    if(strcmp(cmd_string,"OVVA")==0)
       if(cmd_para[0]==5)
       {
         Set_OVVA_LIMIT("OVVA info",GEMROC_ID,cmd_para[1],cmd_para[2],cmd_para[3],cmd_para[4],"OVVA in line 1719");
         GEMROC_IVT_read_and_log(GEMROC_ID,1, IVT_LOG_ENABLE, "OVVA in line 1720");
+        printf("%s %d %d %d %d\n",cmd_string,cmd_para[1],cmd_para[2],cmd_para[3],cmd_para[4]);
       }
-    if(cmd_string== "OVVD")
+    if(strcmp(cmd_string,"OVVD")==0)
       if(cmd_para[0]==5)
       {
         Set_OVVD_LIMIT("OVVD info",GEMROC_ID,cmd_para[1],cmd_para[2],cmd_para[3],cmd_para[4],"OVVD in line 1725");
         GEMROC_IVT_read_and_log(GEMROC_ID,1, IVT_LOG_ENABLE, "OVVD in line 1726");
+        printf("%s %d %d %d %d\n",cmd_string,cmd_para[1],cmd_para[2],cmd_para[3],cmd_para[4]);
       }
-    if(cmd_string== "OVCA")
+    if(strcmp(cmd_string,"OVCA")==0)
       if(cmd_para[0]==5)
       {
         Set_OVCA_LIMIT("OVCA info",GEMROC_ID,cmd_para[1],cmd_para[2],cmd_para[3],cmd_para[4],"OVCA in 1731");
         GEMROC_IVT_read_and_log(GEMROC_ID,1, 0, "OVCA in line 1732");
+        printf("%s %d %d %d %d\n",cmd_string,cmd_para[1],cmd_para[2],cmd_para[3],cmd_para[4]);
       }
-    if(cmd_string== "OVCD")
+    if(strcmp(cmd_string,"OVCD")==0)
       if(cmd_para[0]==5)
       {
         Set_OVCD_LIMIT("OVCD info",GEMROC_ID,cmd_para[1],cmd_para[2],cmd_para[3],cmd_para[4],"OVCD in 1737");
         GEMROC_IVT_read_and_log(GEMROC_ID,1, 0, "OVCD in line 1738");
+        printf("%s %d %d %d %d\n",cmd_string,cmd_para[1],cmd_para[2],cmd_para[3],cmd_para[4]);
       }
-    if(cmd_string== "OVTF")
+    if(strcmp(cmd_string, "OVTF")==0)
       if(cmd_para[0]==5)
       {
         Set_OVTF_LIMIT("OVTF info",GEMROC_ID,cmd_para[1],cmd_para[2],cmd_para[3],cmd_para[4],"OVTF in 1743");
         GEMROC_IVT_read_and_log(GEMROC_ID,1, 0, "OVTF in line 1744");
+        printf("%s %d %d %d %d\n",cmd_string,cmd_para[1],cmd_para[2],cmd_para[3],cmd_para[4]);
       }
-    if(cmd_string== "OVTR")
+    if(strcmp(cmd_string,"OVTR")==0)
       if(cmd_para[0]==2)
       {
         set_ROC_OVT_LIMIT("info",GEMROC_ID,cmd_para[1],"OVTR in 1749");
         GEMROC_IVT_read_and_log(GEMROC_ID,1, 0, "OVTR in line 1750");
+        printf("%s %d\n",cmd_string,cmd_para[1]);
       }
-    if(cmd_string== "LVCR")
+    if(strcmp(cmd_string,"LVCR")==0)
       if(cmd_para[0]==1)
       {
         Read_GEMROC_LV_CfgReg("info",GEMROC_ID,"LVCR in 1755");
+        printf("%s\n",cmd_string);
       }    
-    if(cmd_string== "DAQCR")
+    if(strcmp(cmd_string,"DAQCR")==0)
       if(cmd_para[0]==1)
       {
         Read_GEMROC_DAQ_CfgReg("DAQCR",GEMROC_ID,"DAQCR in 1760");
+        printf("%s\n",cmd_string);
       }
-    if(cmd_string== "GRST")
+    if(strcmp(cmd_string,"GRST")==0)
       if(cmd_para[0]==1)
       {
         ResetTgtGEMROC_ALL_TIGER_GCfgReg(GEMROC_ID, "ResetTgtGEMROC_ALL_TIGER_GCfgReg in line 1765");
+        printf("%s\n",cmd_string);
       }
-    if(cmd_string== "GWdef"||cmd_string=="GW")
+    if(strcmp(cmd_string,"GWdef")==0||strcmp(cmd_string,"GW")==0)
       if(cmd_para[0]==2)
       {
       WriteTgtGEMROC_TIGER_GCfgReg_fromfile("GW", GEMROC_ID, cmd_para[1], "TIGER_def_g_cfg_2018.txt", "WriteTgtGEMROC_TIGER_GCfgReg_fromfile in line 1770");
       ReadTgtGEMROC_TIGER_GCfgReg("GW", GEMROC_ID, cmd_para[1], "ReadTgtGEMROC_TIGER_GCfgReg in line 1770" );
+      printf("%s %d\n",cmd_string,cmd_para[1]);
       sleep(4);
       }
-    if(cmd_string== "GRd"||cmd_string=="GR")
+    if(strcmp(cmd_string,"GRd")==0||strcmp(cmd_string,"GR")==0)
       if(cmd_para[0]==2)
       {
       ReadTgtGEMROC_TIGER_GCfgReg("GRd", GEMROC_ID,cmd_para[1],"GRd in 1777" );
+      printf("%s %d\n",cmd_string,cmd_para[1]);
       }
-    
+    if(strcmp(cmd_string,"CWdef")==0||strcmp(cmd_string,"CW")==0)
+      if(cmd_para[0]==3)
+      {
+       WriteTgtGEMROC_TIGER_ChCfgReg_fromfile("c_inst", GEMROC_ID,cmd_para[1],cmd_para[2],"TIGER_def_ch_cfg_2018.txt", "WriteTgtGEMROC_TIGER_ChCfgReg_fromfile in line 1782");
+       ReadTgtGEMROC_TIGER_ChCfgReg ("c_inst", GEMROC_ID,cmd_para[1],cmd_para[2],0, "ReadTgtGEMROC_TIGER_ChCfgReg in line 1784" ); 
+       printf("%s %d %d\n",cmd_string,cmd_para[1],cmd_para[2]);
+       sleep(4);
+      }     
+    if(strcmp(cmd_string,"CRd")==0||strcmp(cmd_string,"CR")==0)
+      if(cmd_para[0]==3)
+       {
+        ReadTgtGEMROC_TIGER_ChCfgReg ("c_inst", GEMROC_ID,cmd_para[1],cmd_para[2],0, "CR in line 1789" );        
+        printf("%s %d %d\n",cmd_string,cmd_para[1],cmd_para[2]);
+        }
+    if(strcmp(cmd_string,"TPEnG")==0)
+      if(cmd_para[0]==3)
+      {
+        set_FE_TPEnable("g_inst", GEMROC_ID,cmd_para[1],cmd_para[2], "set_FE_TPEnable in line 1793");
+        printf("%s %d %d\n",cmd_string,cmd_para[1],cmd_para[2]);
+        sleep(2);        
+      }
+    if(strcmp(cmd_string,"TPEW_ch")==0||strcmp(cmd_string, "TP")==0)
+      if(cmd_para[0]==5)
+      {
+        Set_GEMROC_TIGER_ch_TPEn ("c_inst", GEMROC_ID,cmd_para[1],cmd_para[2],cmd_para[3],cmd_para[4],"Set_GEMROC_TIGER_ch_TPEn in line 1799");
+        printf("%s %d %d %d %d\n",cmd_string,cmd_para[1],cmd_para[2],cmd_para[3],cmd_para[4]);
+        sleep(2);
+      }
+    if(strcmp(cmd_string,"VT1_ch")==0||strcmp(cmd_string,"VT1")==0)
+      if(cmd_para[0]==4)
+       {
+        Set_Vth_T1 ("VT1",GEMROC_ID,cmd_para[1],cmd_para[2],cmd_para[3],"VT1 in line 1805");
+        sleep(2);
+        printf("%s %d %d %d\n",cmd_string,cmd_para[1],cmd_para[2],cmd_para[3]);
+       }
+    if(strcmp(cmd_string,"AVCaspGset")==0||strcmp(cmd_string,"AV")==0)
+      if(cmd_para[0]==3)
+      {
+        set_AVcasp_global("AV",GEMROC_ID,cmd_para[1],cmd_para[2],"AV in 1811");
+        printf("%s %d %d\n",cmd_string,cmd_para[1],cmd_para[2]);
+        sleep(2);
+      }    
+    if(strcmp(cmd_string,"SRst")==0)
+      if(cmd_para[0]==2)
+      {
+        if(cmd_para[1]<4)
+          SynchReset_to_TgtFEB("SRst in line 1818", GEMROC_ID, cmd_para[1]&0x3, 0 );
+        else
+          SynchReset_to_TgtFEB("SRst in line 1818", GEMROC_ID, cmd_para[1]&0x3, 1);
+        printf("%s %d\n",cmd_string,cmd_para[1]);
+        sleep(2);
+      }
+    if(strcmp(cmd_string,"DRst")==0)
+      if(cmd_para[0]==2)
+      {
+         if(cmd_para[1]<4)
+           SynchReset_to_TgtTCAM("SDst in line 1827", GEMROC_ID,cmd_para[1]&0x3,0);
+         else
+           SynchReset_to_TgtTCAM("SDst in line 1829", GEMROC_ID,cmd_para[1]&0x3,1);
+         printf("%s %d\n",cmd_string,cmd_para[1]);
+         sleep(2);
+      }
+    if(strcmp(cmd_string,"DSTART")==0)
+      if(cmd_para[0]==3)
+        {
+        DAQ_set_and_TL_start("DSTART in 1835", GEMROC_ID,cmd_para[1]&0xFF,cmd_para[2]&0xF);
+        sleep(2);
+        printf("%s %d %d\n",cmd_string,cmd_para[1],cmd_para[2]);
+        }
   }   
 }
 
 
-
-
-
-
-
-FEBPwrEnPattern_set(GEMROC_ID,1,"FEBPwrEnPattern_set in line 1572");
-ResetTgtGEMROC_ALL_TIGER_GCfgReg(GEMROC_ID, "ResetTgtGEMROC_ALL_TIGER_GCfgReg in line 1573");
-WriteTgtGEMROC_TIGER_GCfgReg_fromfile("g_inst", GEMROC_ID, 0, "TIGER_def_g_cfg_2018.txt", "WriteTgtGEMROC_TIGER_GCfgReg_fromfile in line 1574");
-ReadTgtGEMROC_TIGER_GCfgReg("g_inst", GEMROC_ID, 0, "ReadTgtGEMROC_TIGER_GCfgReg in line 1575" );
-WriteTgtGEMROC_TIGER_ChCfgReg_fromfile("c_inst", GEMROC_ID,0, 64,"TIGER_def_ch_cfg_2018.txt", "WriteTgtGEMROC_TIGER_ChCfgReg_fromfile in line 1576");
-ReadTgtGEMROC_TIGER_ChCfgReg ("c_inst", GEMROC_ID,0,64, 0, "ReadTgtGEMROC_TIGER_ChCfgReg in line 1577" );
-set_FE_TPEnable("g_inst", GEMROC_ID, 0, 1, "set_FE_TPEnable in line 1578");
-Set_GEMROC_TIGER_ch_TPEn ("c_inst", GEMROC_ID,0,0,0,1,"Set_GEMROC_TIGER_ch_TPEn in line 1579");
-SynchReset_to_TgtFEB("SynchReset_to_TgtFEB in line 1580", GEMROC_ID, 0, 0 );
-SynchReset_to_TgtTCAM("SynchReset_to_TgtTCAM in line 1581", GEMROC_ID,0,0);
-DAQ_set_and_TL_start("DAQ_set_and_TL_start in line 1582", GEMROC_ID,1,1);
-
 close(socket_descriptor);
 close(socket_descriptor1);
 fclose(fd_cmd);
+fclose(fd_read_para);
 fclose(fw);
 fclose(file_name);
-
-
-
-
-
 
 }

@@ -1025,28 +1025,28 @@ menu_string = '\
 \nMENU: \
 \n(P)EW     <PWR_EN_PATTERN>(Hex, 0x0 thru 0xF) \
 \n(TD)ly    <FEB3_timing_dly> <FEB2_timing_dly> <FEB1_timing_dly> <FEB0_timing_dly> range of parameters is 0 to 63 corresponding to 88ps of incremental delay per LSB \
-\n(I)VT                                                                             read and print IVT parameters of GEM\
+\n(I)VT     read and print IVT parameters of GEM\
 \n OCVTEn   <FEB_OVC_EN_pattern>(Hex, 0x0 thru 0xF) <FEB_OVV_EN_pattern>(Hex, 0x0 thru 0xF) <FEB_OVT_EN_pattern>(Hex, 0x0 thru 0xF) <ROC_OVT_EN>(0 or 1)\
 \n OVVA     <FEB3_OVVA_thr_param> <FEB2_OVVA_thr_param> <FEB1_OVVA_thr_param> <FEB0_OVVA_thr_param>  range of parameters is 0 to 5000(dec) [mV]\
 \n OVVD     <FEB3_OVVD_thr_param> <FEB2_OVVD_thr_param> <FEB1_OVVD_thr_param> <FEB0_OVVD_thr_param>  range of parameters is 0 to 5000(dec) [mV]\
 \n OVCA     <FEB3_OVCA_thr_param> <FEB2_OVCA_thr_param> <FEB1_OVCA_thr_param> <FEB0_OVCA_thr_param>  range of parameters is 0 to 1200(dec) [mA]\
 \n OVCD     <FEB3_OVCD_thr_param> <FEB2_OVCD_thr_param> <FEB1_OVCD_thr_param> <FEB0_OVCD_thr_param>  range of parameters is 0 to 1200(dec) [mA]\
 \n OVTF     <FEB3_OVT_thr_param>  <FEB2_OVT_thr_param>  <FEB1_OVT_thr_param>  <FEB0_OVT_thr_param>   range of parameters is 0 to 100(dec)[degree Celsius]\
-\n OVTR     <FEB3_OVT_thr_param>                                                                     range of parameters is 0 to 63(dec)[degree Celsius]\
-\n LVCR                                                                             read and print setting of GEMROC LV configuration register  \
-\n DAQCR                                                                            read and print setting of GEMROC DAQ configuration register  \
-\n GRST                                                                             RESETS ALL TIGER CONFIGURATION REGISTERS: must be executed before TIGER Global Register Write \
-\n(GW)def   <TIGER_ID>(0 thru 7)                                                    (default file: "TIGER_def_g_cfg_2018.txt") \
-\n(AV)CaspGset <TIGER_ID>(0 thru 7) <AVcasp_global param> (0 thru 31);              AVcasp_global_set: 0 min power consumption; 31 max power consumption\
-\n(CW)def   <TIGER_ID>(0 thru 7) <channel_ID>(0 thru 64);                           if channel_ID =64 then WRITE ALL IN SEQUENCE (default file: "TIGER_def_ch_cfg_2018.txt"); \
+\n OVTR     <FEB3_OVT_thr_param>  range of parameters is 0 to 63(dec)[degree Celsius]\
+\n LVCR     read and print setting of GEMROC LV configuration register  \
+\n DAQCR    read and print setting of GEMROC DAQ configuration register  \
+\n GRST     RESETS ALL TIGER CONFIGURATION REGISTERS: must be executed before TIGER Global Register Write \
+\n(GW)def   <TIGER_ID>(0 thru 7)   (default file: "TIGER_def_g_cfg_2018.txt") \
+\n(AV)CaspGset <TIGER_ID>(0 thru 7) <AVcasp_global param> (0 thru 31);   AVcasp_global_set: 0 min power consumption; 31 max power consumption\
+\n(CW)def   <TIGER_ID>(0 thru 7) <channel_ID>(0 thru 64); if channel_ID =64 then WRITE ALL IN SEQUENCE (default file: "TIGER_def_ch_cfg_2018.txt"); \
 \n(GR)d     <TIGER_ID>(0 thru 7)  \
-\n(CR)d     <TIGER_ID>(0 thru 7) <channel_ID>(0 thru 64);                           if channel_ID = 64 then READ ALL channels IN SEQUENCE \
-\n TPEnG    <TIGER_ID>(0 thru 7) <On_Off_param> (0 or 1);                           set FE_TPEnable bit in the Global Configuration Register\
-\n(TP)EW_ch <TIGER_ID>(0 thru 7) <channel_ID>(0 thru 64) <TP_disable_FE_param> (0 or 1) <TriggerMode_param> (0 or 1);   if channel_ID = 64 then act on all channels\
+\n(CR)d     <TIGER_ID>(0 thru 7) <channel_ID>(0 thru 64); if channel_ID = 64 then READ ALL channels IN SEQUENCE \
+\n TPEnG    <TIGER_ID>(0 thru 7) <On_Off_param> (0 or 1); set FE_TPEnable bit in the Global Configuration Register\
+\n(TP)EW_ch <TIGER_ID>(0 thru 7) <channel_ID>(0 thru 64) <TP_disable_FE_param> (0 or 1) <TriggerMode_param> (0 or 1);if channel_ID = 64 then act on all channels\
 \n(VT1)_ch  <TIGER_ID>(0 thru 7) <channel_ID>(0 thru 64) <VthT1 param> (0 thru 63); if channel_ID = 64 then act on VthT1 for ALL channels\
-\n SRst     <SynchRst_TargetFEB>(0 to 4)                                            send a sycnh rst to the target FEB(0 to 3); if 4 is input then send synch rst to ALL FEBs  \
-\n DRst     <SynchRst_TargetTCAM>(0 to 4)                                           send a sycnh rst to the TIGER Data Processing unit (TCAM)0 to 3; if 4 is input then send synch rst to ALL TCAMs    \
-\n DSTART   <TCAM_En_pattern>(0x0 thru 0xF) <FEB_TP_En_pattern>(0x0 thru 0xF)       set GEMROC to start sending triggerless data from enabled TCAM units; set FEB periodic TP Enable pattern \
+\n SRst     <SynchRst_TargetFEB>(0 to 4) send a sycnh rst to the target FEB(0 to 3); if 4 is input then send synch rst to ALL FEBs  \
+\n DRst     <SynchRst_TargetTCAM>(0 to 4)  send a sycnh rst to the TIGER Data Processing unit (TCAM)0 to 3; if 4 is input then send synch rst to ALL TCAMs    \
+\n DSTART   <TCAM_En_pattern>(0x0 thru 0xF) <FEB_TP_En_pattern>(0x0 thru 0xF)  set GEMROC to start sending triggerless data from enabled TCAM units; set FEB periodic TP Enable pattern \
 \n(Q)uit: leave \
 \nEnter your command: '
 DONE = False

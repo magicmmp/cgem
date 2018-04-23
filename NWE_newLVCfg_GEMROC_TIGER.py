@@ -9,7 +9,7 @@
 import socket
 import string
 import time
-import GEMconf_classes_0410 #acr 2018-02-19 import GEMconf_classes_2018
+import GEMconf_classes_2018v3 #acr 2018-02-19 import GEMconf_classes_2018
 import struct
 import binascii
 import array
@@ -20,13 +20,13 @@ import Queue     ## acr 2018-02-21
 import os        ## acr 2018-02-21
 import datetime
 
-global num
-num=0
+
 default_arg_needed = 0
 TARGET_GEMROC_ID_param = 0
 TARGET_FEB_PWR_PATTERN_param = 0
 IVT_LOG_PERIOD_SECONDS = 20
 IVT_LOG_ENABLE = 1
+
 if (len(sys.argv) < 3):
     print"\n GEMROC_TIGER_CFG argument list: <Target_GEMROC: 1 thru 22> <Target_FEB_PWR_EN_pattern(Hex):0x0 thru 0xF>"
 ##    exit()
@@ -41,13 +41,6 @@ else:
 GEMROC_ID = TARGET_GEMROC_ID_param
 FEB_PWR_EN_pattern = TARGET_FEB_PWR_PATTERN_param
 
-def print_cmd(info,array_to_print):
-    cmd_message = "\n%s, cmd len=%d \n" %(info, len(array_to_print))
-    cmd_log.write(cmd_message)
-    for i in range (0, len(array_to_print)):
-       cmd_hex="%08X "%array_to_print[i]
-       cmd_log.write(cmd_hex)
-
 def send_GEMROC_CFG_CMD_PKT( TARGET_GEMROC_ID_param, COMMAND_STRING_PARAM, array_to_send_param, DEST_IP_ADDRESS_PARAM, DEST_PORT_NO_PARAM):
     buffer_to_send = struct.pack('>' + str(len(array_to_send_param)) + 'I', *array_to_send_param)
     clientSock.sendto(buffer_to_send, (DEST_IP_ADDRESS_PARAM, DEST_PORT_NO_PARAM))
@@ -55,22 +48,12 @@ def send_GEMROC_CFG_CMD_PKT( TARGET_GEMROC_ID_param, COMMAND_STRING_PARAM, array
     log_file.write(cmd_message)
     log_file.write(binascii.b2a_hex(buffer_to_send))
     command_echo_f = receiveSock.recv(BUFSIZE)
-    global num
-    num=num+1
-    cmd_message="\nnum:%02d,send_GEMROC_CFG_CMD_PKT,Target GEMROC:%d\n" %(num,TARGET_GEMROC_ID_param)
-    my_log.write(cmd_message)
-    my_log.write(binascii.b2a_hex(buffer_to_send))
-    cmd_message="\nnum:%d,python echo:\n" %num
-    my_log.write(cmd_message)
-    my_log.write(binascii.b2a_hex(command_echo_f))
 ##    (command_echo_f, source_IPADDR) = receiveSock.recvfrom(BUFSIZE) #S.C. 2018-03-08
 ##    cmd_message = "\nTarget GEMROC: %d; Target GEMROC IP_ADDR_LOWER_BYTE: %s; \nCMD echo (%s): \n" %(TARGET_GEMROC_ID_param, source_IPADDR, COMMAND_STRING_PARAM)
 ##    print (cmd_message) 
 ##    time.sleep(5)
     log_file.write(cmd_message)
     log_file.write(binascii.b2a_hex(command_echo_f))
-#    my_log.write(cmd_message)
-#    my_log.write(binascii.b2a_hex(command_echo_f))
     return command_echo_f
 
 ## acr 2018-02-19 BEGIN definining a function to call within the display loop
@@ -205,27 +188,27 @@ def display_log_GCfg_readback( command_echo_param, log_enable, log_fname_param):
     print('\nList of Global Config Register parameters read back from TIGER%d on RESPONDING GEMROC%d:'%( ((L_array[11] >> 8) & 0X7), ((L_array[0] >> 16) & 0X1f) ) ) # acr 2018-01-23
     print('\nTIGER REPLY BYTE (LOW LEVEL SERIAL PROTOCOL ERROR FLAG):%02X;' %(((L_array[11]>>16)&0xFF)) )
     print('\nBufferBias: %d' %(((L_array[1]>>24)&0x3)) )
-    print('\nTDCVcasN: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[1]>>16)&0xF),4)))
-    print('\nTDCVcasP: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[1]>>8)&0x1F),5)))
-    print('\nTDCVcasPHyst: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[1]>>0)&0x3F),6)))
-    print('\nDiscFE_Ibias: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[2]>>24)&0x3F),6)))
+    print('\nTDCVcasN: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[1]>>16)&0xF),4)))
+    print('\nTDCVcasP: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[1]>>8)&0x1F),5)))
+    print('\nTDCVcasPHyst: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[1]>>0)&0x3F),6)))
+    print('\nDiscFE_Ibias: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[2]>>24)&0x3F),6)))
     print('\nBiasFE_PpreN: %d' %(((L_array[2]>>16)&0x3F)) )
-    print('\nAVcasp_global: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[2]>>8)&0x1F),5)))
-    print('\nTDCcompVcas: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[2]>>0)&0xF),4)))
-    print('\nTDCIref_cs: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[3]>>24)&0x1F),5)))
-    print('\nDiscVcasN: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[3]>>16)&0xF),4)))
-    print('\nIntegVb1: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[3]>>8)&0x3F),6)))
+    print('\nAVcasp_global: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[2]>>8)&0x1F),5)))
+    print('\nTDCcompVcas: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[2]>>0)&0xF),4)))
+    print('\nTDCIref_cs: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[3]>>24)&0x1F),5)))
+    print('\nDiscVcasN: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[3]>>16)&0xF),4)))
+    print('\nIntegVb1: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[3]>>8)&0x3F),6)))
     print('\nBiasFE_A1: %d' %(((L_array[3]>>0)&0xF)) )
-    print('\nVcasp_Vth: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[4]>>24)&0x3F),6)))
+    print('\nVcasp_Vth: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[4]>>24)&0x3F),6)))
     print('\nTAC_I_LSB: %d' %(((L_array[4]>>16)&0x1F)) )
     print('\nTDCcompVbias: %d' %(((L_array[4]>>8)&0x1F)) )
-    print('\nVref_Integ: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[4]>>0)&0x3F),6)))
-    print('\nIBiasTPcal: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[5]>>24)&0x1F),5)))
-    print('\nTP_Vcal: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[5]>>16)&0x1F),5)))
+    print('\nVref_Integ: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[4]>>0)&0x3F),6)))
+    print('\nIBiasTPcal: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[5]>>24)&0x1F),5)))
+    print('\nTP_Vcal: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[5]>>16)&0x1F),5)))
     print('\nShaperIbias: %d' %(((L_array[5]>>8)&0xF)) )
-    print('\nIPostamp: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[5]>>0)&0x1F),5)))
-    print('\nTP_Vcal_ref: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[6]>>24)&0x1F),5)))
-    print('\nVref_integ_diff: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[6]>>16)&0x3F),6)))
+    print('\nIPostamp: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[5]>>0)&0x1F),5)))
+    print('\nTP_Vcal_ref: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[6]>>24)&0x1F),5)))
+    print('\nVref_integ_diff: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[6]>>16)&0x3F),6)))
     print('\nSig_pol: %d' %(((L_array[6]>>8)&0x1)) )
     print('\nFE_TPEnable: %d' %(((L_array[6]>>0)&0x1)) )
     print('\nDataClkDiv: %d' %(((L_array[7]>>16)&0x3)) )
@@ -245,27 +228,27 @@ def display_log_GCfg_readback( command_echo_param, log_enable, log_fname_param):
         log_fname_param.write('\nList of Global Config Register parameters read back from TIGER%d on RESPONDING GEMROC%d:'%( ((L_array[11] >> 8) & 0X7), ((L_array[0] >> 16) & 0X1f) ) )# acr 2018-01-23
         log_fname_param.write("\nTIGER REPLY BYTE (LOW LEVEL SERIAL PROTOCOL ERROR FLAG):%02X;" %(((L_array[11] >> 16) & 0XFF) ) )
         log_fname_param.write('\nBufferBias: %d' %(((L_array[1]>>24)&0x3)) )
-        log_fname_param.write('\nTDCVcasN: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[1]>>16)&0xF),4)))
-        log_fname_param.write('\nTDCVcasP: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[1]>>8)&0x1F),5)))
-        log_fname_param.write('\nTDCVcasPHyst: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[1]>>0)&0x3F),6)))
-        log_fname_param.write('\nDiscFE_Ibias: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[2]>>24)&0x3F),6)))
+        log_fname_param.write('\nTDCVcasN: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[1]>>16)&0xF),4)))
+        log_fname_param.write('\nTDCVcasP: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[1]>>8)&0x1F),5)))
+        log_fname_param.write('\nTDCVcasPHyst: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[1]>>0)&0x3F),6)))
+        log_fname_param.write('\nDiscFE_Ibias: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[2]>>24)&0x3F),6)))
         log_fname_param.write('\nBiasFE_PpreN: %d' %(((L_array[2]>>16)&0x3F)) )
-        log_fname_param.write('\nAVcasp_global: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[2]>>8)&0x1F),5)))
-        log_fname_param.write('\nTDCcompVcas: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[2]>>0)&0xF),4)))
-        log_fname_param.write('\nTDCIref_cs: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[3]>>24)&0x1F),5)))
-        log_fname_param.write('\nDiscVcasN: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[3]>>16)&0xF),4)))
-        log_fname_param.write('\nIntegVb1: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[3]>>8)&0x3F),6)))
+        log_fname_param.write('\nAVcasp_global: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[2]>>8)&0x1F),5)))
+        log_fname_param.write('\nTDCcompVcas: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[2]>>0)&0xF),4)))
+        log_fname_param.write('\nTDCIref_cs: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[3]>>24)&0x1F),5)))
+        log_fname_param.write('\nDiscVcasN: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[3]>>16)&0xF),4)))
+        log_fname_param.write('\nIntegVb1: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[3]>>8)&0x3F),6)))
         log_fname_param.write('\nBiasFE_A1: %d' %(((L_array[3]>>0)&0xF)) )
-        log_fname_param.write('\nVcasp_Vth: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[4]>>24)&0x3F),6)))
+        log_fname_param.write('\nVcasp_Vth: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[4]>>24)&0x3F),6)))
         log_fname_param.write('\nTAC_I_LSB: %d' %(((L_array[4]>>16)&0x1F)) )
         log_fname_param.write('\nTDCcompVbias: %d' %(((L_array[4]>>8)&0x1F)) )
-        log_fname_param.write('\nVref_Integ: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[4]>>0)&0x3F),6)))
-        log_fname_param.write('\nIBiasTPcal: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[5]>>24)&0x1F),5)))
-        log_fname_param.write('\nTP_Vcal: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[5]>>16)&0x1F),5)))
+        log_fname_param.write('\nVref_Integ: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[4]>>0)&0x3F),6)))
+        log_fname_param.write('\nIBiasTPcal: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[5]>>24)&0x1F),5)))
+        log_fname_param.write('\nTP_Vcal: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[5]>>16)&0x1F),5)))
         log_fname_param.write('\nShaperIbias: %d' %(((L_array[5]>>8)&0xF)) )
-        log_fname_param.write('\nIPostamp: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[5]>>0)&0x1F),5)))
-        log_fname_param.write('\nTP_Vcal_ref: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[6]>>24)&0x1F),5)))
-        log_fname_param.write('\nVref_integ_diff: %d'  %(GEMconf_classes_0410.swap_order_N_bits(((L_array[6]>>16)&0x3F),6)))
+        log_fname_param.write('\nIPostamp: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[5]>>0)&0x1F),5)))
+        log_fname_param.write('\nTP_Vcal_ref: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[6]>>24)&0x1F),5)))
+        log_fname_param.write('\nVref_integ_diff: %d'  %(GEMconf_classes_2018v3.swap_order_N_bits(((L_array[6]>>16)&0x3F),6)))
         log_fname_param.write('\nSig_pol: %d' %(((L_array[6]>>8)&0x1)) )
         log_fname_param.write('\nFE_TPEnable: %d' %(((L_array[6]>>0)&0x1)) )
         log_fname_param.write('\nDataClkDiv: %d' %(((L_array[7]>>16)&0x3)) )
@@ -358,20 +341,10 @@ def send_TIGER_GCFG_Reg_CMD_PKT( TIGER_ID_param, COMMAND_STRING_PARAM, array_to_
     cmd_message = '\nTIGER%d Global Cfg Reg CMD %s sent:\n' %(TIGER_ID_param, COMMAND_STRING_PARAM)
     log_fname_param.write(cmd_message)
     log_fname_param.write(binascii.b2a_hex(buffer_to_send))
-    global num
-    num=num+1
-    cmd_message="\nnum:%02d,send_TIGER_GCFG_Reg_CMD_PKT,TIGER_ID:%d\n" % (num,TIGER_ID_param)
-    my_log.write(cmd_message)
-    my_log.write(binascii.b2a_hex(buffer_to_send))
     cmd_message = '\nTIGER%d Global Cfg Reg CMD %s command echo:\n' %(TIGER_ID_param, COMMAND_STRING_PARAM)
     log_fname_param.write(cmd_message)
-#    my_log.write(cmd_message)
     command_echo_f = receiveSock.recv(BUFSIZE)
     log_fname_param.write(binascii.b2a_hex(command_echo_f))
-    cmd_message="\nnum:%d,python echo:\n" %num
-    my_log.write(cmd_message)
-    my_log.write(binascii.b2a_hex(command_echo_f))
-#    my_log.write(binascii.b2a_hex(command_echo_f))
     return command_echo_f
 
 def send_TIGER_Ch_CFG_Reg_CMD_PKT( TIGER_ID_param, COMMAND_STRING_PARAM, array_to_send_param, DEST_IP_ADDRESS_PARAM, DEST_PORT_NO_PARAM, log_fname_param): #acr 2018-03-04
@@ -382,20 +355,10 @@ def send_TIGER_Ch_CFG_Reg_CMD_PKT( TIGER_ID_param, COMMAND_STRING_PARAM, array_t
     cmd_message = '\nTIGER% d; TOALL = % d; Channel% s Cfg Reg CMD %s sent\n' %(TIGER_ID_param, Target_Ch_ToALL_f, Target_Ch_ID_f, COMMAND_STRING_PARAM) 
     log_fname_param.write(cmd_message)
     log_fname_param.write(binascii.b2a_hex(buffer_to_send))
-    global num
-    num=num+1
-    cmd_message="\nnum:%02d,send_TIGER_Ch_CFG_Reg_CMD_PKT,TIGER_ch:%d\n" % (num,TIGER_ID_param)
-    my_log.write(cmd_message)
-    my_log.write(binascii.b2a_hex(buffer_to_send))
     cmd_message = '\nTIGER% d; TOALL = % d; Channel% s Cfg Reg CMD %s echo\n' %(TIGER_ID_param, Target_Ch_ToALL_f, Target_Ch_ID_f, COMMAND_STRING_PARAM) 
     log_fname_param.write(cmd_message)
-#    my_log.write(cmd_message)
     command_echo_f = receiveSock.recv(BUFSIZE)
     log_fname_param.write(binascii.b2a_hex(command_echo_f))
-    cmd_message="\nnum:%d,python echo:\n" %num
-    my_log.write(cmd_message)
-    my_log.write(binascii.b2a_hex(command_echo_f))
-#    my_log.write(binascii.b2a_hex(command_echo_f))
     return command_echo_f
 
 def GEMROC_IVT_read_and_log(GEMROC_ID_param, display_enable_param, log_enable_param, log_filename_param):
@@ -495,16 +458,11 @@ def ReadTgtGEMROC_TIGER_GCfgReg (GCFGReg_setting_inst, GEMROC_ID_param, TIGER_ID
 
 def WriteTgtGEMROC_TIGER_ChCfgReg_fromfile (ChCFGReg_setting_inst, GEMROC_ID_param, TIGER_ID_param, channel_ID_param, ChCFGReg_def_fname_param, log_fname_param): 
     ChCFGReg_setting_inst.reload_chcfg_settings_from_file(ChCFGReg_def_fname_param) ## acr 2018-02-23 new method to reaload from a default file
-    print_cmd("1576,ChCFGReg_setting_inst.reload_chcfg_settings_from_file",ChCFGReg_setting_inst.return_command_words())
     ChCFGReg_setting_inst.set_target_GEMROC(GEMROC_ID_param)
-    print_cmd("1576,ChCFGReg_setting_inst.set_target_GEMROC",ChCFGReg_setting_inst.return_command_words())
     ChCFGReg_setting_inst.set_target_TIGER(TIGER_ID_param)
-    print_cmd("1576,ChCFGReg_setting_inst.set_target_TIGER",ChCFGReg_setting_inst.return_command_words())
     ChCFGReg_setting_inst.set_to_ALL_param (0) ## let's do multiple configuration under script control rather than under GEMROC NIOS2 processor control
-    print_cmd("1576,ChCFGReg_setting_inst.set_to_ALL_param",ChCFGReg_setting_inst.return_command_words())
     COMMAND_STRING = 'WR'
     ChCFGReg_setting_inst.set_command_code(COMMAND_STRING)
-    print_cmd("1576,ChCFGReg_setting_inst.set_command_code",ChCFGReg_setting_inst.return_command_words())
     if (channel_ID_param < 64):
         ChCFGReg_setting_inst.set_target_channel(channel_ID_param)
         ChCFGReg_setting_inst.update_command_words()
@@ -514,8 +472,6 @@ def WriteTgtGEMROC_TIGER_ChCfgReg_fromfile (ChCFGReg_setting_inst, GEMROC_ID_par
         for i in range (0, 64):
             ChCFGReg_setting_inst.set_target_channel(i)
             ChCFGReg_setting_inst.update_command_words()
-            if(i==0):
-               print_cmd("1576,ChCFGReg_setting_inst.update_command_words()",ChCFGReg_setting_inst.return_command_words())
             array_to_send = ChCFGReg_setting_inst.command_words
             command_echo = send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param, COMMAND_STRING, array_to_send, DEST_IP_ADDRESS, DEST_PORT_NO, log_fname_param )
     return command_echo
@@ -956,13 +912,6 @@ def Read_GEMROC_DAQ_CfgReg(gemroc_inst_param, GEMROC_ID_param, log_file_param):
     command_echo = send_GEMROC_DAQ_CMD (GEMROC_ID_param, gemroc_inst_param, COMMAND_STRING)
     return command_echo
 
-data_file = 'my_log.txt'
-my_log = open(data_file, 'w')
-
-cmd_file = 'cmd_check.txt'
-cmd_log = open(cmd_file, 'w')
-
-
 log_fname = 'GEMROC%d_interactive_cfg_log.txt' %GEMROC_ID
 log_file = open(log_fname, 'w')
 IVT_log_fname = 'GEMROC%d_IVT_log.txt' %GEMROC_ID
@@ -978,7 +927,6 @@ HOST_IP = "192.168.1.200" # FOR  GEMROC 1 - 11
 HOST_PORT = 54816+1+GEMROC_ID
 HOST_PORT_RECEIVE = 58912+1+GEMROC_ID
 
-#DEST_IP_ADDRESS = "127.0.0.1" 
 DEST_IP_ADDRESS = "192.168.1.%d" %(GEMROC_ID+16) # offset 16 is determined by Stefano's MAC
 DEST_PORT_NO = 58912+1 # STEFANO CHIOZZI - 2018-03-08 offset 0 is reserved by the MAC for a custom protocol; offset 3 is also a special debug port
 
@@ -998,7 +946,7 @@ receiveSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 receiveSock.bind((HOST_IP, HOST_PORT_RECEIVE))
 remote_IP_Address = '192.168.1.%d'%(GEMROC_ID+16)
 ##receiveSock.connect( (remote_IP_Address, 54817,) )
-##print '\new socket handling'
+##print '\nnew socket handling'
 
 ## creating an instance of the GEMROC LV configuration settings object
 ## parameter list:
@@ -1006,15 +954,11 @@ remote_IP_Address = '192.168.1.%d'%(GEMROC_ID+16)
 ##  command_string_param = 'NONE',
 ##  number_of_repetitions_param = 1,
 cfg_filename = 'GEMROC_%d_def_cfg_LV_2018.txt' %GEMROC_ID
-gemroc_LV_XX = GEMconf_classes_0410.gemroc_cmd_LV_settings(GEMROC_ID,'NONE',1,cfg_filename)
-print_cmd("GEMconf_classes_0410.gemroc_cmd_LV_settings",gemroc_LV_XX.return_command_words())
+gemroc_LV_XX = GEMconf_classes_2018v3.gemroc_cmd_LV_settings(GEMROC_ID,'NONE',1,cfg_filename)
 gemroc_LV_XX.set_FEB_PWR_EN_pattern(FEB_PWR_EN_pattern)
-print_cmd("gemroc_LV_XX.set_FEB_PWR_EN_pattern",gemroc_LV_XX.return_command_words())
 COMMAND_STRING = 'CMD_GEMROC_LV_CFG_WR'
 gemroc_LV_XX.set_gemroc_cmd_code(COMMAND_STRING,1)
-print_cmd("gemroc_LV_XX.set_gemroc_cmd_code",gemroc_LV_XX.return_command_words())
 gemroc_LV_XX.update_command_words()
-print_cmd("gemroc_LV_XX.update_command_words",gemroc_LV_XX.return_command_words())
 #keep gemroc_LV_XX.print_command_words()
 #keep gemroc_LV_XX.extract_parameters_from_UDP_packet()
 array_to_send = gemroc_LV_XX.command_words
@@ -1029,7 +973,7 @@ print 'CMD_GEMROC_LV_CFG_WR'
 ##  number_of_repetitions_param = 1,
 ##  to_ALL_TCAM_enable_param = 0,
 cfg_filename = 'GEMROC_%d_def_cfg_DAQ_2018v3.txt' %GEMROC_ID
-gemroc_DAQ_XX = GEMconf_classes_0410.gemroc_cmd_DAQ_settings(GEMROC_ID,'NONE',0,1,0,cfg_filename)
+gemroc_DAQ_XX = GEMconf_classes_2018v3.gemroc_cmd_DAQ_settings(GEMROC_ID,'NONE',0,1,0,cfg_filename)
 gemroc_DAQ_XX.extract_parameters_from_UDP_packet()
 COMMAND_STRING = 'CMD_GEMROC_DAQ_CFG_WR'
 command_echo = send_GEMROC_DAQ_CMD(GEMROC_ID, gemroc_DAQ_XX, COMMAND_STRING)
@@ -1038,14 +982,14 @@ command_echo = send_GEMROC_DAQ_CMD(GEMROC_ID, gemroc_DAQ_XX, COMMAND_STRING)
 ##    TARGET_GEMROC_ID_param = 0, 
 ##    cfg_filename_param = "default_g_cfg_2018_all_big_endian.txt"
 default_g_inst_settigs_filename = "TIGER_def_g_cfg_2018.txt"
-g_inst = GEMconf_classes_0410.g_reg_settings(GEMROC_ID,default_g_inst_settigs_filename)
+g_inst = GEMconf_classes_2018v3.g_reg_settings(GEMROC_ID,default_g_inst_settigs_filename)
 
 #### creating an instance of the channel configuration settings object
 ##    parameter list:
 ##    TARGET_GEMROC_ID_param = 0, 
 ##    cfg_filename_param = "default_ch_cfg_mainz.txt" 
 default_ch_inst_settigs_filename = "TIGER_def_ch_cfg_2018.txt"
-c_inst = GEMconf_classes_0410.ch_reg_settings(GEMROC_ID,default_ch_inst_settigs_filename)
+c_inst = GEMconf_classes_2018v3.ch_reg_settings(GEMROC_ID,default_ch_inst_settigs_filename)
 
 ## acr 2018-02-21 BEGIN write the user interface
 menu_string = '\
@@ -1079,12 +1023,9 @@ menu_string = '\
 \nEnter your command: '
 DONE = False
 def add_input(input_queue):
-   for line in open('auto_input_para.txt','r'):
-      input_queue.put(line)
-      time.sleep(1)
-#    while True:
+    while True:
         #input_queue.put(sys.stdin.read(1))
-#        input_queue.put(sys.stdin.readline())
+        input_queue.put(sys.stdin.readline())
 
 def Menu_and_prompt():
     input_queue = Queue.Queue()
@@ -1107,7 +1048,7 @@ def Menu_and_prompt():
             #os.system('cls')
             IVT_DISPLAY_ENABLE = 0
             IVT_log_file.write('\n%s' %datetime.datetime.now().strftime(fmt) )
-#            GEMROC_IVT_read_and_log(GEMROC_ID, IVT_DISPLAY_ENABLE, IVT_LOG_ENABLE, IVT_log_file)
+            GEMROC_IVT_read_and_log(GEMROC_ID, IVT_DISPLAY_ENABLE, IVT_LOG_ENABLE, IVT_log_file)
             last_update = time.time()
             #sys.stdout.write(menu_string)
         else:
@@ -1353,14 +1294,12 @@ def Menu_and_prompt():
 Menu_and_prompt()
 print "\nExit debug. Bye!"
 log_file.close()
-my_log.close()
-cmd_log.close()
 IVT_log_file.close()
 exit()
 
 
 ##cfg_filename = 'GEMROC_%d_def_cfg_LV_2018.txt' %GEMROC_ID
-##gemroc_LV_XX = GEMconf_classes_0410.gemroc_cmd_LV_settings(GEMROC_ID,'NONE',1,cfg_filename)
+##gemroc_LV_XX = GEMconf_classes_2018v3.gemroc_cmd_LV_settings(GEMROC_ID,'NONE',1,cfg_filename)
 ##gemroc_LV_XX.set_FEB_PWR_EN_pattern(FEB_PWR_EN_pattern)
 ##gemroc_LV_XX.set_timing_toFEB_delay(20, 20, 20, 20) # acr 2017-12-07 NOTE this only writes the desidered setting into the GEMROC configuration register. A specific command is needed to
 ##                                                    # actually program the delay chips
@@ -1379,7 +1318,7 @@ exit()
 
 
 ##cfg_filename = 'GEMROC_%d_def_cfg_DAQ_2018.txt' %GEMROC_ID
-##gemroc_DAQ_XX = GEMconf_classes_0410.gemroc_cmd_DAQ_settings(GEMROC_ID,'NONE',0,1,0,cfg_filename)
+##gemroc_DAQ_XX = GEMconf_classes_2018v3.gemroc_cmd_DAQ_settings(GEMROC_ID,'NONE',0,1,0,cfg_filename)
 ##gemroc_DAQ_XX.set_TP_width(3) ## acr 2017-10-03 override the default setting 
 ##gemroc_DAQ_XX.set_EN_TM_TCAM_pattern (0x01)
 ##gemroc_DAQ_XX.set_TP_Pos_nNeg (0x1)
@@ -1403,7 +1342,7 @@ exit()
 
 
 ##default_g_inst_settigs_filename = "TIGER_def_g_cfg_2018.txt"
-##g_inst = GEMconf_classes_0410.g_reg_settings(GEMROC_ID,default_g_inst_settigs_filename)
+##g_inst = GEMconf_classes_2018v3.g_reg_settings(GEMROC_ID,default_g_inst_settigs_filename)
 ##for t in range (0, 2): 
 ##    g_inst.set_target_TIGER(t)
 ##    COMMAND_STRING = 'WR'
@@ -1421,7 +1360,7 @@ exit()
 ##    time.sleep(1)
 
 ##default_ch_inst_settigs_filename = "TIGER_def_ch_cfg_2018.txt"
-##c_inst = GEMconf_classes_0410.ch_reg_settings(GEMROC_ID,default_ch_inst_settigs_filename)
+##c_inst = GEMconf_classes_2018v3.ch_reg_settings(GEMROC_ID,default_ch_inst_settigs_filename)
 ##TriggerMode_default_TP_Disabled = 0
 ##TriggerMode_default_TP_Enabled = 1
 ##Target_Ch_ID = 0

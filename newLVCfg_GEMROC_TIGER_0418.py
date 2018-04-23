@@ -924,7 +924,7 @@ IVT_log_file = open(IVT_log_fname, 'w')
 HOST_IP = "192.168.1.200" # FOR  GEMROC 1 - 11
 #HOST_IP = "127.0.0.1" # uncomment for test only
 
-input_para_check = open("input_para_check_for_0418py.txt", 'w')
+input_para_check = open("input_para_check_for_0418.txt", 'w')
 
 HOST_PORT = 54816+1+GEMROC_ID
 HOST_PORT_RECEIVE = 58912+1+GEMROC_ID
