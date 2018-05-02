@@ -32,7 +32,7 @@ while Total_Data < Total_data_size :
     hexdata = binascii.hexlify(data)
     Total_Data += len(data)
 t1=time.time()
-print 'time=%f '%(t1-t0)+'Total_Data=%d '%Total_Data+'rate=%d\n'%(Total_Data/8/(t1-t0))
+print 'time=%f '%(t1-t0)+'Total_Data bytes=%d '%Total_Data+'BW=%d\n'%(Total_Data/(t1-t0))
 out_file.close()
 binout_file.close()
 print 'finished writing file'
