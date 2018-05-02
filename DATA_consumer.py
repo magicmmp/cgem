@@ -11,7 +11,7 @@ HOST_PORT = 58912+2
 
 
 #Total_data_size = 2**24
-Total_data_size = 2**15
+Total_data_size = 2**16
 BUFSIZE = 4096
 FEB_index = 0
 data_file = 'FEB%d_data.txt'% FEB_index

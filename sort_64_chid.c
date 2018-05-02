@@ -15,13 +15,14 @@ int main()
    FILE *fw = NULL;
    unsigned char buff[65536],msg[100];
    int i,j=0;
-   long long H0,H1;
+   long long H0,H1,CH[64][2];
    int Total_Data=0;
    fp = fopen("FFF_bin.dat20180502", "r");
    fw = fopen("data.txt","w+");
    Total_Data=fread(buff,sizeof(unsigned char),16384,fp);
    H0=0;
    printf("Total_Data=%d\n",Total_Data);
+   
    for(i=0;i<Total_Data-7;i=i+8)
    { 
      H1=0;
