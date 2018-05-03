@@ -1001,6 +1001,7 @@ void DAQ_update_command_words()
            DAQ.command_words[0]+= ((DAQ.UDP_DATA_DESTINATION_IPADDR & 0xFF)<<8);
            DAQ.command_words[1]= ((DAQ.L1_latency & 0x3FF) << 20) + ((DAQ.TP_width & 0xF) << 16) + (DAQ.UpperDataScanWindowOffset & 0xFFFF);
            DAQ.command_words[2]= ((DAQ.L1_period  & 0x3FF) << 20) + ((DAQ.Periodic_L1_EN_pattern  & 0xF) << 16) + (DAQ.LowerDataScanWindowOffset & 0xFFFF);
+           printf( "\n L1_period =  %d\n",(DAQ.command_words[2] >> 20) &  0x3FF) ;
            DAQ.command_words[3]= ((DAQ.TP_period & 0x3FF) << 20) + ((DAQ.Periodic_TP_EN_pattern & 0xF) << 16) + ((DAQ.TL_nTM_ACQ & 0x1) << 11) + ((DAQ.AUTO_L1_EN_pattern & 0x1) << 10) + ((DAQ.AUTO_TP_EN_pattern & 0x1) << 9) + ((DAQ.TP_Pos_nNeg & 0x1) << 8)  + (DAQ.EN_TM_TCAM_pattern & 0xFF);
            DAQ.command_words[4]= ((DAQ.UDP_DATA_DESTINATION_IPPORT & 0xF)<<26) + ((DAQ.number_of_repetitions & 0x3FF) << 16) + ((DAQ.gemroc_cmd_code & 0xF) << 11) + ((DAQ.target_TCAM_ID & 0x3) << 8) + ((DAQ.to_ALL_TCAM_enable & 0x1) << 6);}  }
 

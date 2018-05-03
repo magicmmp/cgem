@@ -7,21 +7,61 @@
 #include <netdb.h>
 #define SIZE 2048
 //#define BUFSIZE = 4096
+
+void sort(char*s,int p1,int p2)
+{
+    int i,j,k;
+    char tmp[8];
+    for(i=0;i<p2-p1;i=i+8)
+      for(j=p1;j<p2-i;j=j+8)
+      {
+        if((s[j+6]&0x3F)>(s[j+14]&0x3F))
+        {
+          for(k=0;k<8;k++)
+            tmp[k]=s[j+k];
+          for(k=0;k<8;k++)
+            s[j+k]=s[j+k+8];
+          for(k=0;k<8;k++)
+            s[j+k+8]=tmp[k];
+        }
+      }
+}
+
+
+
  
 int main()
 {  
 
    FILE *fp = NULL;
    FILE *fw = NULL;
-   unsigned char buff[65536],msg[100];
+   unsigned char buff[2097152],msg[100];
    int i,j=0;
    long long H0,H1;
    int Total_Data=0;
    fp = fopen("FFF_bin.dat20180502", "r");
    fw = fopen("data.txt","w+");
-   Total_Data=fread(buff,sizeof(unsigned char),16384,fp);
+   fseek(fp,0L,SEEK_END);
+   i=ftell(fp);
+   fseek(fp,0L,SEEK_SET);
+   Total_Data=fread(buff,sizeof(unsigned char),i,fp);
    H0=0;
    printf("Total_Data=%d\n",Total_Data);
+   
+   for(i=0;i<Total_Data-7;)
+   {
+     int total=Total_Data-7;
+     int p1,p2;
+     while(buff[i+7]>>3==0x04&&i<total)
+       i=i+8;
+     p1=i;
+     while(buff[i+7]>>3!=0x04&&i<total)
+       i=i+8;
+     p2=i-8;
+     sort(buff,p1,p2);
+     
+   }   
+
    for(i=0;i<Total_Data-7;i=i+8)
    { 
      H1=0;

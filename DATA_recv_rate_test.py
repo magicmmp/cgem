@@ -11,28 +11,22 @@ HOST_PORT = 58912+2
 
 
 #Total_data_size = 2**24
-Total_data_size = 2**16
+Total_data_size = 2**20
 BUFSIZE = 4096
-FEB_index = 0
-data_file = 'FEB%d_data.txt'% FEB_index
-bindata_file = 'FEB%d_bin.dat'% FEB_index
-out_file = open(data_file, 'w')
-binout_file = open(bindata_file, 'wb')
 
 serverSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 serverSock.settimeout(None)
 serverSock.bind((HOST_IP, HOST_PORT))
-print 'after bind....'
+print '  data flow test:'
 s=''
-Total_Data=0
-t0=time.time()
-while Total_Data < Total_data_size :
+for i in range (0,5):
+  Total_Data=0
+  t0=time.time()
+  while Total_Data < Total_data_size :
     data,addr = serverSock.recvfrom(BUFSIZE)
-    binout_file.write(data)
-    hexdata = binascii.hexlify(data)
     Total_Data += len(data)
-t1=time.time()
-print 'time=%f '%(t1-t0)+'Total_Data bytes=%d '%Total_Data+'BW=%d\n'%(Total_Data/(t1-t0))
+  t1=time.time()
+  print '    time=%f sec '%(t1-t0)+' bytes=%d '%Total_Data+' BW=%d bytes/sec\n'%(Total_Data/(t1-t0))
 out_file.close()
 binout_file.close()
 print 'finished writing file'

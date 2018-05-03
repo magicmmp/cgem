@@ -1,27 +1,22 @@
 #include<stdio.h>
-void swap_8_bytes(char*p)
-{
-    int i;
-    char tmp[8];
-    for(i=0;i<8;i++)
-      tmp[i]=p[i];
-    for(i=0;i<8;i++)
-      p[i]=p[i+8];
-    for(i=0;i<8;i++)
-      p[i+8]=tmp[i];
 
-}
-void sort(char*s,int p1;int p2)
+void sort(char*s,int p1,int p2)
 {
-    int i,j;
+    int i,j,k;
     char tmp[8];
     for(i=0;i<p2-p1;i=i+8)
       for(j=p1;j<p2-i;j=j+8)
       {
         if(s[j]>s[j+8])
+        {
+          for(k=0;k<8;k++)
+            tmp[k]=s[j+k];
+          for(k=0;k<8;k++)
+            s[j+k]=s[j+k+8];
+          for(k=0;k<8;k++)
+            s[j+k+8]=tmp[k];
+        }
       }
-
-
 }
 
 
@@ -35,7 +30,7 @@ int main()
    for(i=0;i<32;i++)
      printf("%d ",s[i]);
    printf("\n");
-   swap_8_bytes(s);
+   sort(s,0,24);
    for(i=0;i<32;i++)
      printf("%d ",s[i]);
    printf("\n");
