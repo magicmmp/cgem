@@ -5,7 +5,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#define SIZE 2048
+#define SIZE 65536
 //#define BUFSIZE = 4096
 void int_to_hex(unsigned char* s,int w,int bits,char* s2,int p2,int p3)
 {
@@ -53,7 +53,7 @@ int main()
    char* str;
    FILE *fp = NULL;
    FILE *fw = NULL;
-   unsigned char buff[2048],buff2[2048];
+   unsigned char buff[66536],buff2[66536];
    int i,j=0;
    int Total_Data=0;
    fp = fopen("bin.dat", "wb");
@@ -75,23 +75,24 @@ int main()
 //   fread(buff,sizeof(unsigned char),1024,fp);
    while(Total_Data<SIZE)
    {
-     i=recvfrom(socket_descriptor,buff+Total_Data,2048-Total_Data,0,(struct sockaddr *)&cliaddr,&sin_len);
+     i=recvfrom(socket_descriptor,buff+Total_Data,SIZE-Total_Data,0,(struct sockaddr *)&cliaddr,&sin_len);
      Total_Data+=i;
    }
+   printf("receive data size=%d\n",Total_Data);
    fwrite(buff,sizeof(unsigned char),Total_Data,fp);
-   for(i=0;i<Total_Data-8;i=i+8)
+   for(i=0;i<Total_Data-7;i=i+8)
      for(j=0;j<8;j++)
      {
        buff2[i+j]=buff[i+7-j];  
      }
    printf("receive data from:%s,port:%d\n",inet_ntoa(cliaddr.sin_addr),cliaddr.sin_port);
-   for(i=0;i<Total_Data;i++)
+   for(i=0;i<128;i++)
    {
      printf("%02X ",buff2[i]);
      if((i+1)%8==0)
        printf("\n");
    }
-   for(i=0;i<Total_Data-8;i=i+8)
+   for(i=0;i<Total_Data-7;i=i+8)
    {
      str=buff2+i;
      if((str[0]>>3)==0x04)
