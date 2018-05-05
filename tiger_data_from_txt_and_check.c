@@ -72,6 +72,8 @@ int main(int argc,char *argv[])
            printf("chid = %d ,  %d,%d\n",chid,D[index-2]>> 48& 0x3F,D[index-1]>> 48& 0x3F);
            printf("tcos1-tcos0=%0x, tcos1=%0x, tcos0=%0x\n",(D[index-1]>> 30& 0xFFFF)-(D[index-2]>> 30& 0xFFFF),D[index-1]>> 30& 0xFFFF,D[index-2]>> 30& 0xFFFF);
            printf("ecos1-ecos0=%0x, ecos1=%0x, ecos0=%0x\n",(D[index-1]>> 20& 0x3FF)-(D[index-2]>> 20& 0x3FF),D[index-1]>> 20& 0x3FF,D[index-2]>> 20& 0x3FF);
+           j=sprintf(msg,"tigerid or chid not equal. i=%d, err_count=%d\n",i,err_count);
+           fwrite(msg,sizeof(unsigned char),j,fw);
            j=sprintf(msg,"%08X%08X TIGER %01X: EW: ChID: %02X tacID: %01X Tcoarse: %04X Ecoarse: %03X Tfine: %03X Efine: %03X\n",D[index-2]>>32,D[index-2]&0xFFFFFFFF,(D[index-2]>> 56)& 0x7,(D[index-2]>> 48)& 0x3F,(D[index-2]>>46)& 0x3,(D[index-2]>>30)&0xFFFF,(D[index-2]>> 20)& 0x3FF,(D[index-2]>> 10)& 0x3FF,D[index-2] & 0x3FF);
            fwrite(msg,sizeof(unsigned char),j,fw);
            printf("%s\n",msg);
@@ -92,6 +94,8 @@ int main(int argc,char *argv[])
            err_count++;
            printf("frame1-frame0=%d\n",(D[index]>> 15& 0xFFFF)-(D[index0]>> 15& 0xFFFF));
            printf("i=%d, err_count=%d\n",i,err_count);
+            j=sprintf(msg,"frame1-frame0=%d, i=%d, err_count=%d\n",(D[index]>> 15& 0xFFFF)-(D[index0]>> 15& 0xFFFF),i,err_count);
+           fwrite(msg,sizeof(unsigned char),j,fw);
            j=sprintf(msg,"%08X%08X TIGER %01X: EW: ChID: %02X tacID: %01X Tcoarse: %04X Ecoarse: %03X Tfine: %03X Efine: %03X\n",D[index0-2]>>32,D[index0-2]&0xFFFFFFFF,(D[index0-2]>> 56)& 0x7,(D[index0-2]>> 48)& 0x3F,(D[index0-2]>>46)& 0x3,(D[index0-2]>>30)&0xFFFF,(D[index0-2]>> 20)& 0x3FF,(D[index0-2]>> 10)& 0x3FF,D[index0-2] & 0x3FF);
            fwrite(msg,sizeof(unsigned char),j,fw);
            printf("%s\n",msg);
