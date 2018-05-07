@@ -9,7 +9,6 @@
  
 int main(int argc,char *argv[])
 {  
-
    FILE *fw = NULL;
    char msg[128];
    unsigned char buff[65536];
@@ -18,17 +17,7 @@ int main(int argc,char *argv[])
    int flag;
    int err_count,index,index0;
    long long D[6],H0,H1;
-   if (argc !=3)
-   {   
-      printf("\nsingle channel data check,input: tiger_id,chid\n");
-      exit(0);
-   }
-   else
-   {
-      tigerid =atoi(argv[1]);
-      chid = atoi(argv[2]);  
-   }
-   fw = fopen("data.txt","w+");
+
    int port=58914;
    int sin_len;
    int socket_descriptor;
@@ -40,16 +29,25 @@ int main(int argc,char *argv[])
    sin_len=sizeof(sin);
    socket_descriptor=socket(AF_INET,SOCK_DGRAM,0);
    bind(socket_descriptor,(struct sockaddr *)&sin,sizeof(sin));
+
+   if (argc !=3)
+   {   
+      printf("\nsingle channel data check,input: tiger_id,chid\n");
+      exit(0);
+   }
+   else
+   {
+      tigerid =atoi(argv[1]);
+      chid = atoi(argv[2]);  
+   }
+   fw = fopen("data.txt","w+");
    err_count=0;
-   data_len=0;
-   int times=0;
-   while(err_count<128)
-   { 
-     
+   while(err_count<1024)
+   {
      data_len=recvfrom(socket_descriptor,buff,SIZE,0,(struct sockaddr *)&cliaddr,&sin_len);
-//     printf("times=%d, data_len=%d\n",times++,data_len);
-     times++;
-     while(buff[i+7]>>3==0x04&&i<data_len-7)
+  
+   i=0;
+     while(buff[i+7]>>3==0x04&&i<data_len-6)
        i=i+8;
      index=0;
      for(H0=0;i<data_len-7;i=i+8)
@@ -65,13 +63,12 @@ int main(int argc,char *argv[])
          continue ;
        D[index]=H1;
        H0=H1;
-       index=(index+1)%6;
        if(index==2||index==5)
        { 
          flag=0;
          if((D[index-2]>> 56& 0x7)!=tigerid||(D[index-1]>> 56& 0x7)!=tigerid||(D[index]>> 56& 0x7)!=tigerid)
            flag=1;
-         if((D[index-2]>> 48& 0x3F)!=chid||(D[index-1]>> 48& 0x3F)!=chid||(D[index]>> 48& 0x3F)!=chid)
+         if((D[index-2]>> 48& 0x3F)!=chid||(D[index-1]>> 48& 0x3F)!=chid)
            flag=1;
          if((D[index-1]>> 30& 0xFFFF)-(D[index-2]>> 30& 0xFFFF)!=0x24)
            flag=1;
@@ -80,7 +77,13 @@ int main(int argc,char *argv[])
          if(flag)
          {
            err_count++;
-           printf("times=%d, err_count=%d\n",times,err_count);
+           printf("i=%d, err_count=%d\n",i,err_count);
+           printf("tigerid=%d,  %d,%d,%d\n",tigerid,D[index-2]>> 56& 0x7,D[index-1]>> 56& 0x7,D[index]>> 56& 0x7);
+           printf("chid = %d ,  %d,%d\n",chid,D[index-2]>> 48& 0x3F,D[index-1]>> 48& 0x3F);
+           printf("tcos1-tcos0=%0x, tcos1=%0x, tcos0=%0x\n",(D[index-1]>> 30& 0xFFFF)-(D[index-2]>> 30& 0xFFFF),D[index-1]>> 30& 0xFFFF,D[index-2]>> 30& 0xFFFF);
+           printf("ecos1-ecos0=%0x, ecos1=%0x, ecos0=%0x\n",(D[index-1]>> 20& 0x3FF)-(D[index-2]>> 20& 0x3FF),D[index-1]>> 20& 0x3FF,D[index-2]>> 20& 0x3FF);
+           j=sprintf(msg,"tigerid or chid not equal.input tigerid=%d, chid=0X%02X, i=%d, err_count=%d\n",tigerid,chid,i,err_count);
+           fwrite(msg,sizeof(unsigned char),j,fw);
            j=sprintf(msg,"%08X%08X TIGER %01X: EW: ChID: %02X tacID: %01X Tcoarse: %04X Ecoarse: %03X Tfine: %03X Efine: %03X\n",D[index-2]>>32,D[index-2]&0xFFFFFFFF,(D[index-2]>> 56)& 0x7,(D[index-2]>> 48)& 0x3F,(D[index-2]>>46)& 0x3,(D[index-2]>>30)&0xFFFF,(D[index-2]>> 20)& 0x3FF,(D[index-2]>> 10)& 0x3FF,D[index-2] & 0x3FF);
            fwrite(msg,sizeof(unsigned char),j,fw);
            printf("%s\n",msg);
@@ -91,14 +94,18 @@ int main(int argc,char *argv[])
            fwrite(msg,sizeof(unsigned char),j,fw);
            printf("%s\n",msg);
          }
-         if(flag==5)
+         if(index==5)
            index0=2;
          else
            index0=5;
-         if((D[index]>> 15& 0xFFFF)-(D[index0]>> 15& 0xFFFF)!=1)
+         if((D[index]>> 15& 0xFFFF)-(D[index0]>> 15& 0xFFFF)!=1&&(D[index]>> 15& 0xFFFF)!=0x0)
          {
+           
            err_count++;
-           printf("times=%d, err_count=%d\n",times,err_count);
+           printf("frame1-frame0=%d\n",(D[index]>> 15& 0xFFFF)-(D[index0]>> 15& 0xFFFF));
+           printf("i=%d, err_count=%d\n",i,err_count);
+            j=sprintf(msg,"frame1-frame0=%d, i=%d, err_count=%d\n",(D[index]>> 15& 0xFFFF)-(D[index0]>> 15& 0xFFFF),i,err_count);
+           fwrite(msg,sizeof(unsigned char),j,fw);
            j=sprintf(msg,"%08X%08X TIGER %01X: EW: ChID: %02X tacID: %01X Tcoarse: %04X Ecoarse: %03X Tfine: %03X Efine: %03X\n",D[index0-2]>>32,D[index0-2]&0xFFFFFFFF,(D[index0-2]>> 56)& 0x7,(D[index0-2]>> 48)& 0x3F,(D[index0-2]>>46)& 0x3,(D[index0-2]>>30)&0xFFFF,(D[index0-2]>> 20)& 0x3FF,(D[index0-2]>> 10)& 0x3FF,D[index0-2] & 0x3FF);
            fwrite(msg,sizeof(unsigned char),j,fw);
            printf("%s\n",msg);
@@ -119,9 +126,10 @@ int main(int argc,char *argv[])
            printf("%s\n",msg);
          }
        }
+       index=(index+1)%6;
      }
-   }
-   printf("finish.\n");
+    }
+   printf("exit.\n");
    fclose(fw);
    close(socket_descriptor);
 }
