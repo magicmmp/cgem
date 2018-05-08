@@ -12,7 +12,7 @@ int main(int argc,char *argv[])
    FILE *fw = NULL;
    char msg[128];
    unsigned char buff[65536];
-   int i,j,data_len;
+   int i,j,data_len,no;
    int chid,tigerid;
    int flag;
    int err_count,index,index0;
@@ -40,16 +40,20 @@ int main(int argc,char *argv[])
       tigerid =atoi(argv[1]);
       chid = atoi(argv[2]);  
    }
-   fw = fopen("data.txt","w+");
+   fw = fopen("data_check.txt","w+");
    err_count=0;
-   while(err_count<1024)
+   no=0;
+   index=0;
+//   int n=1;
+   while(err_count<32)
    {
      data_len=recvfrom(socket_descriptor,buff,SIZE,0,(struct sockaddr *)&cliaddr,&sin_len);
-  
-   i=0;
+     no++;
+     i=0;
      while(buff[i+7]>>3==0x04&&i<data_len-6)
        i=i+8;
-     index=0;
+//     if(n==1)
+//        n=0;
      for(H0=0;i<data_len-7;i=i+8)
      { 
        H1=0;
@@ -77,7 +81,7 @@ int main(int argc,char *argv[])
          if(flag)
          {
            err_count++;
-           printf("i=%d, err_count=%d\n",i,err_count);
+           printf("no=%d,i=%d, err_count=%d\n",no,i,err_count);
            printf("tigerid=%d,  %d,%d,%d\n",tigerid,D[index-2]>> 56& 0x7,D[index-1]>> 56& 0x7,D[index]>> 56& 0x7);
            printf("chid = %d ,  %d,%d\n",chid,D[index-2]>> 48& 0x3F,D[index-1]>> 48& 0x3F);
            printf("tcos1-tcos0=%0x, tcos1=%0x, tcos0=%0x\n",(D[index-1]>> 30& 0xFFFF)-(D[index-2]>> 30& 0xFFFF),D[index-1]>> 30& 0xFFFF,D[index-2]>> 30& 0xFFFF);
@@ -103,7 +107,7 @@ int main(int argc,char *argv[])
            
            err_count++;
            printf("frame1-frame0=%d\n",(D[index]>> 15& 0xFFFF)-(D[index0]>> 15& 0xFFFF));
-           printf("i=%d, err_count=%d\n",i,err_count);
+           printf("no=%d,i=%d, err_count=%d\n",no,i,err_count);
             j=sprintf(msg,"frame1-frame0=%d, i=%d, err_count=%d\n",(D[index]>> 15& 0xFFFF)-(D[index0]>> 15& 0xFFFF),i,err_count);
            fwrite(msg,sizeof(unsigned char),j,fw);
            j=sprintf(msg,"%08X%08X TIGER %01X: EW: ChID: %02X tacID: %01X Tcoarse: %04X Ecoarse: %03X Tfine: %03X Efine: %03X\n",D[index0-2]>>32,D[index0-2]&0xFFFFFFFF,(D[index0-2]>> 56)& 0x7,(D[index0-2]>> 48)& 0x3F,(D[index0-2]>>46)& 0x3,(D[index0-2]>>30)&0xFFFF,(D[index0-2]>> 20)& 0x3FF,(D[index0-2]>> 10)& 0x3FF,D[index0-2] & 0x3FF);

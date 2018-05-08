@@ -28,8 +28,8 @@ int main(int argc,char *argv[])
       tigerid =atoi(argv[1]);
       chid = atoi(argv[2]);  
    }
-   fp = fopen("FEB0_bin.dat", "r");
-   fw = fopen("data.txt","w+");
+   fp = fopen("bin.txt", "r");
+   fw = fopen("data_check_from_txt.txt","w+");
    fseek(fp,0L,SEEK_END);
    i=ftell(fp);
    fseek(fp,0L,SEEK_SET);

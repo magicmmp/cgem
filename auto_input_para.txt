@@ -1,9 +1,9 @@
 P 0x1
 GRST
 GW 0
-CW 0 0
+CW 0 62
 TPEnG 0 1
-TP 0 0 0 1
+TP 0 62 0 1
 SRst 0
 DRst 0
 DSTART 0x1 0x1
