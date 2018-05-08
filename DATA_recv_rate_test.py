@@ -18,7 +18,6 @@ serverSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 serverSock.settimeout(None)
 serverSock.bind((HOST_IP, HOST_PORT))
 print '  data flow test:'
-s=''
 for i in range (0,5):
   Total_Data=0
   t0=time.time()
@@ -27,7 +26,5 @@ for i in range (0,5):
     Total_Data += len(data)
   t1=time.time()
   print '    time=%f sec '%(t1-t0)+' bytes=%d '%Total_Data+' BW=%d bytes/sec\n'%(Total_Data/(t1-t0))
-out_file.close()
-binout_file.close()
-print 'finished writing file'
+print 'finish.'
 serverSock.close()

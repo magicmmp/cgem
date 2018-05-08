@@ -10,6 +10,8 @@
 int main(int argc,char *argv[])
 {  
    FILE *fw = NULL;
+   FILE *fd = NULL;
+   fw = fopen("data_check.txt","w+");
    char msg[128];
    unsigned char buff[65536];
    int i,j,data_len,no;
@@ -40,20 +42,20 @@ int main(int argc,char *argv[])
       tigerid =atoi(argv[1]);
       chid = atoi(argv[2]);  
    }
-   fw = fopen("data_check.txt","w+");
+   
    err_count=0;
    no=0;
    index=0;
-//   int n=1;
+//   int start=0;
    while(err_count<32)
    {
      data_len=recvfrom(socket_descriptor,buff,SIZE,0,(struct sockaddr *)&cliaddr,&sin_len);
      no++;
      i=0;
-     while(buff[i+7]>>3==0x04&&i<data_len-6)
+     while((buff[i+7]>>3==0x04)&&(i<data_len-6))
        i=i+8;
-//     if(n==1)
-//        n=0;
+//     if(start==0)
+//        start=1;
      for(H0=0;i<data_len-7;i=i+8)
      { 
        H1=0;
@@ -104,7 +106,6 @@ int main(int argc,char *argv[])
            index0=5;
          if((D[index]>> 15& 0xFFFF)-(D[index0]>> 15& 0xFFFF)!=1&&(D[index]>> 15& 0xFFFF)!=0x0)
          {
-           
            err_count++;
            printf("frame1-frame0=%d\n",(D[index]>> 15& 0xFFFF)-(D[index0]>> 15& 0xFFFF));
            printf("no=%d,i=%d, err_count=%d\n",no,i,err_count);
@@ -128,6 +129,7 @@ int main(int argc,char *argv[])
            j=sprintf(msg,"%08X%08X TIGER %01X: HB: Framecount: %08X SEUcount: %08X\n",D[index]>>32,D[index]&0xFFFFFFFF,(D[index]>> 56)& 0x7,(D[index]>> 15)& 0xFFFF,D[index]& 0x7FFF) ;
            fwrite(msg,sizeof(unsigned char),j,fw);      
            printf("%s\n",msg);
+       
          }
        }
        index=(index+1)%6;
