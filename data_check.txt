@@ -1,0 +1,546 @@
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=16, err_count=1
+008121B0EC849D24 TIGER 0: EW: ChID: 01 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 127 Efine: 124
+008921B0EC84712C TIGER 0: EW: ChID: 09 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 11C Efine: 12C
+008221B0EC84CD2C TIGER 0: HB: Framecount: 0000D909 SEUcount: 00004D2C
+frame1-frame0=55561, i=16, err_count=2
+0000000000000000 TIGER 0: EW: ChID: 00 tacID: 0 Tcoarse: 0000 Ecoarse: 000 Tfine: 000 Efine: 000
+0000000000000000 TIGER 0: EW: ChID: 00 tacID: 0 Tcoarse: 0000 Ecoarse: 000 Tfine: 000 Efine: 000
+0000000000000000 TIGER 0: HB: Framecount: 00000000 SEUcount: 00000000
+008121B0EC849D24 TIGER 0: EW: ChID: 01 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 127 Efine: 124
+008921B0EC84712C TIGER 0: EW: ChID: 09 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 11C Efine: 12C
+008221B0EC84CD2C TIGER 0: HB: Framecount: 0000D909 SEUcount: 00004D2C
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=40, err_count=3
+008821B0EC852143 TIGER 0: EW: ChID: 08 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 148 Efine: 143
+008021B0EC84553E TIGER 0: EW: ChID: 00 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 115 Efine: 13E
+008321B0EC84653C TIGER 0: HB: Framecount: 0000D908 SEUcount: 0000653C
+frame1-frame0=-1, i=40, err_count=4
+008121B0EC849D24 TIGER 0: EW: ChID: 01 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 127 Efine: 124
+008921B0EC84712C TIGER 0: EW: ChID: 09 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 11C Efine: 12C
+008221B0EC84CD2C TIGER 0: HB: Framecount: 0000D909 SEUcount: 00004D2C
+008821B0EC852143 TIGER 0: EW: ChID: 08 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 148 Efine: 143
+008021B0EC84553E TIGER 0: EW: ChID: 00 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 115 Efine: 13E
+008321B0EC84653C TIGER 0: HB: Framecount: 0000D908 SEUcount: 0000653C
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=64, err_count=5
+008421B0EC85412F TIGER 0: EW: ChID: 04 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 150 Efine: 12F
+008521B0EC84C146 TIGER 0: EW: ChID: 05 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 130 Efine: 146
+008621B0EC851D3A TIGER 0: HB: Framecount: 0000D90A SEUcount: 00001D3A
+frame1-frame0=2, i=64, err_count=6
+008821B0EC852143 TIGER 0: EW: ChID: 08 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 148 Efine: 143
+008021B0EC84553E TIGER 0: EW: ChID: 00 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 115 Efine: 13E
+008321B0EC84653C TIGER 0: HB: Framecount: 0000D908 SEUcount: 0000653C
+008421B0EC85412F TIGER 0: EW: ChID: 04 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 150 Efine: 12F
+008521B0EC84C146 TIGER 0: EW: ChID: 05 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 130 Efine: 146
+008621B0EC851D3A TIGER 0: HB: Framecount: 0000D90A SEUcount: 00001D3A
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=88, err_count=7
+008721B0EC851531 TIGER 0: EW: ChID: 07 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 145 Efine: 131
+008961B9EEC43D2E TIGER 0: EW: ChID: 09 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 10F Efine: 12E
+008261B9EEC48D31 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00000D31
+frame1-frame0=1151, i=88, err_count=8
+008421B0EC85412F TIGER 0: EW: ChID: 04 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 150 Efine: 12F
+008521B0EC84C146 TIGER 0: EW: ChID: 05 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 130 Efine: 146
+008621B0EC851D3A TIGER 0: HB: Framecount: 0000D90A SEUcount: 00001D3A
+008721B0EC851531 TIGER 0: EW: ChID: 07 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 145 Efine: 131
+008961B9EEC43D2E TIGER 0: EW: ChID: 09 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 10F Efine: 12E
+008261B9EEC48D31 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00000D31
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=112, err_count=9
+008161B9EEC45D24 TIGER 0: EW: ChID: 01 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 117 Efine: 124
+008861B9EEC4E943 TIGER 0: EW: ChID: 08 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 13A Efine: 143
+008061B9EEC41D42 TIGER 0: HB: Framecount: 0000DD88 SEUcount: 00001D42
+frame1-frame0=-1, i=112, err_count=10
+008721B0EC851531 TIGER 0: EW: ChID: 07 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 145 Efine: 131
+008961B9EEC43D2E TIGER 0: EW: ChID: 09 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 10F Efine: 12E
+008261B9EEC48D31 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00000D31
+008161B9EEC45D24 TIGER 0: EW: ChID: 01 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 117 Efine: 124
+008861B9EEC4E943 TIGER 0: EW: ChID: 08 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 13A Efine: 143
+008061B9EEC41D42 TIGER 0: HB: Framecount: 0000DD88 SEUcount: 00001D42
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=136, err_count=11
+008361B9EEC4493E TIGER 0: EW: ChID: 03 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 112 Efine: 13E
+008461B9EEC50532 TIGER 0: EW: ChID: 04 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 141 Efine: 132
+008661B9EEC4F142 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00007142
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=160, err_count=12
+008561B9EEC4A94A TIGER 0: EW: ChID: 05 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 12A Efine: 14A
+008761B9EEC4E536 TIGER 0: EW: ChID: 07 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 139 Efine: 136
+20000000659B0000 TIGER 0: HB: Framecount: 0000CB36 SEUcount: 00000000
+frame1-frame0=-4691, i=160, err_count=13
+008361B9EEC4493E TIGER 0: EW: ChID: 03 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 112 Efine: 13E
+008461B9EEC50532 TIGER 0: EW: ChID: 04 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 141 Efine: 132
+008661B9EEC4F142 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00007142
+008561B9EEC4A94A TIGER 0: EW: ChID: 05 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 12A Efine: 14A
+008761B9EEC4E536 TIGER 0: EW: ChID: 07 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 139 Efine: 136
+20000000659B0000 TIGER 0: HB: Framecount: 0000CB36 SEUcount: 00000000
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=184, err_count=14
+0089C1B0EC84452A TIGER 0: EW: ChID: 09 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 111 Efine: 12A
+0084C1B0EC84F129 TIGER 0: EW: ChID: 04 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 13C Efine: 129
+0088C1B0EC84ED41 TIGER 0: HB: Framecount: 0000D909 SEUcount: 00006D41
+frame1-frame0=3539, i=184, err_count=15
+008561B9EEC4A94A TIGER 0: EW: ChID: 05 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 12A Efine: 14A
+008761B9EEC4E536 TIGER 0: EW: ChID: 07 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 139 Efine: 136
+20000000659B0000 TIGER 0: HB: Framecount: 0000CB36 SEUcount: 00000000
+0089C1B0EC84452A TIGER 0: EW: ChID: 09 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 111 Efine: 12A
+0084C1B0EC84F129 TIGER 0: EW: ChID: 04 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 13C Efine: 129
+0088C1B0EC84ED41 TIGER 0: HB: Framecount: 0000D909 SEUcount: 00006D41
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=208, err_count=16
+0085C1B0EC848D41 TIGER 0: EW: ChID: 05 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 123 Efine: 141
+0086C1B0EC84E938 TIGER 0: EW: ChID: 06 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 13A Efine: 138
+0087C1B0EC84D12C TIGER 0: HB: Framecount: 0000D909 SEUcount: 0000512C
+frame1-frame0=0, i=208, err_count=17
+0089C1B0EC84452A TIGER 0: EW: ChID: 09 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 111 Efine: 12A
+0084C1B0EC84F129 TIGER 0: EW: ChID: 04 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 13C Efine: 129
+0088C1B0EC84ED41 TIGER 0: HB: Framecount: 0000D909 SEUcount: 00006D41
+0085C1B0EC848D41 TIGER 0: EW: ChID: 05 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 123 Efine: 141
+0086C1B0EC84E938 TIGER 0: EW: ChID: 06 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 13A Efine: 138
+0087C1B0EC84D12C TIGER 0: HB: Framecount: 0000D909 SEUcount: 0000512C
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=232, err_count=18
+0080C1B0EC843140 TIGER 0: EW: ChID: 00 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 10C Efine: 140
+0081C1B0EC846522 TIGER 0: EW: ChID: 01 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 119 Efine: 122
+0082C1B0EC84992F TIGER 0: HB: Framecount: 0000D909 SEUcount: 0000192F
+frame1-frame0=0, i=232, err_count=19
+0085C1B0EC848D41 TIGER 0: EW: ChID: 05 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 123 Efine: 141
+0086C1B0EC84E938 TIGER 0: EW: ChID: 06 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 13A Efine: 138
+0087C1B0EC84D12C TIGER 0: HB: Framecount: 0000D909 SEUcount: 0000512C
+0080C1B0EC843140 TIGER 0: EW: ChID: 00 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 10C Efine: 140
+0081C1B0EC846522 TIGER 0: EW: ChID: 01 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 119 Efine: 122
+0082C1B0EC84992F TIGER 0: HB: Framecount: 0000D909 SEUcount: 0000192F
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=256, err_count=20
+0083C1B0EC84453D TIGER 0: EW: ChID: 03 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 111 Efine: 13D
+008901B9EEC46928 TIGER 0: EW: ChID: 09 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 11A Efine: 128
+008401B9EEC51529 TIGER 0: HB: Framecount: 0000DD8A SEUcount: 00001529
+frame1-frame0=1153, i=256, err_count=21
+0080C1B0EC843140 TIGER 0: EW: ChID: 00 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 10C Efine: 140
+0081C1B0EC846522 TIGER 0: EW: ChID: 01 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 119 Efine: 122
+0082C1B0EC84992F TIGER 0: HB: Framecount: 0000D909 SEUcount: 0000192F
+0083C1B0EC84453D TIGER 0: EW: ChID: 03 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 111 Efine: 13D
+008901B9EEC46928 TIGER 0: EW: ChID: 09 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 11A Efine: 128
+008401B9EEC51529 TIGER 0: HB: Framecount: 0000DD8A SEUcount: 00001529
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=280, err_count=22
+008801B9EEC5113C TIGER 0: EW: ChID: 08 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 144 Efine: 13C
+008501B9EEC4B140 TIGER 0: EW: ChID: 05 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 12C Efine: 140
+008601B9EEC51136 TIGER 0: HB: Framecount: 0000DD8A SEUcount: 00001136
+frame1-frame0=0, i=280, err_count=23
+0083C1B0EC84453D TIGER 0: EW: ChID: 03 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 111 Efine: 13D
+008901B9EEC46928 TIGER 0: EW: ChID: 09 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 11A Efine: 128
+008401B9EEC51529 TIGER 0: HB: Framecount: 0000DD8A SEUcount: 00001529
+008801B9EEC5113C TIGER 0: EW: ChID: 08 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 144 Efine: 13C
+008501B9EEC4B140 TIGER 0: EW: ChID: 05 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 12C Efine: 140
+008601B9EEC51136 TIGER 0: HB: Framecount: 0000DD8A SEUcount: 00001136
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=304, err_count=24
+008701B9EEC5112F TIGER 0: EW: ChID: 07 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 144 Efine: 12F
+008001B9EEC4513D TIGER 0: EW: ChID: 00 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 114 Efine: 13D
+008101B9EEC4B125 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00003125
+frame1-frame0=-1, i=304, err_count=25
+008801B9EEC5113C TIGER 0: EW: ChID: 08 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 144 Efine: 13C
+008501B9EEC4B140 TIGER 0: EW: ChID: 05 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 12C Efine: 140
+008601B9EEC51136 TIGER 0: HB: Framecount: 0000DD8A SEUcount: 00001136
+008701B9EEC5112F TIGER 0: EW: ChID: 07 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 144 Efine: 12F
+008001B9EEC4513D TIGER 0: EW: ChID: 00 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 114 Efine: 13D
+008101B9EEC4B125 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00003125
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=328, err_count=26
+008201B9EEC4DD30 TIGER 0: EW: ChID: 02 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 137 Efine: 130
+008301B9EEC4793F TIGER 0: EW: ChID: 03 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 11E Efine: 13F
+20000000659B8000 TIGER 0: HB: Framecount: 0000CB37 SEUcount: 00000000
+frame1-frame0=-4690, i=328, err_count=27
+008701B9EEC5112F TIGER 0: EW: ChID: 07 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 144 Efine: 12F
+008001B9EEC4513D TIGER 0: EW: ChID: 00 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 114 Efine: 13D
+008101B9EEC4B125 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00003125
+008201B9EEC4DD30 TIGER 0: EW: ChID: 02 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 137 Efine: 130
+008301B9EEC4793F TIGER 0: EW: ChID: 03 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 11E Efine: 13F
+20000000659B8000 TIGER 0: HB: Framecount: 0000CB37 SEUcount: 00000000
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=352, err_count=28
+0081A1B0EC847921 TIGER 0: EW: ChID: 01 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 11E Efine: 121
+0089A1B0EC84512A TIGER 0: EW: ChID: 09 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 114 Efine: 12A
+0082A1B0EC84992B TIGER 0: HB: Framecount: 0000D909 SEUcount: 0000192B
+frame1-frame0=3538, i=352, err_count=29
+008201B9EEC4DD30 TIGER 0: EW: ChID: 02 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 137 Efine: 130
+008301B9EEC4793F TIGER 0: EW: ChID: 03 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 11E Efine: 13F
+20000000659B8000 TIGER 0: HB: Framecount: 0000CB37 SEUcount: 00000000
+0081A1B0EC847921 TIGER 0: EW: ChID: 01 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 11E Efine: 121
+0089A1B0EC84512A TIGER 0: EW: ChID: 09 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 114 Efine: 12A
+0082A1B0EC84992B TIGER 0: HB: Framecount: 0000D909 SEUcount: 0000192B
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=376, err_count=30
+0088A1B0EC84F941 TIGER 0: EW: ChID: 08 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 13E Efine: 141
+0080A1B0EC84353C TIGER 0: EW: ChID: 00 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 10D Efine: 13C
+0083A1B0EC844D39 TIGER 0: HB: Framecount: 0000D908 SEUcount: 00004D39
+frame1-frame0=-1, i=376, err_count=31
+0081A1B0EC847921 TIGER 0: EW: ChID: 01 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 11E Efine: 121
+0089A1B0EC84512A TIGER 0: EW: ChID: 09 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 114 Efine: 12A
+0082A1B0EC84992B TIGER 0: HB: Framecount: 0000D909 SEUcount: 0000192B
+0088A1B0EC84F941 TIGER 0: EW: ChID: 08 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 13E Efine: 141
+0080A1B0EC84353C TIGER 0: EW: ChID: 00 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 10D Efine: 13C
+0083A1B0EC844D39 TIGER 0: HB: Framecount: 0000D908 SEUcount: 00004D39
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=400, err_count=32
+0084A1B0EC85192B TIGER 0: EW: ChID: 04 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 146 Efine: 12B
+0085A1B0EC849D3E TIGER 0: EW: ChID: 05 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 127 Efine: 13E
+0086A1B0EC84F938 TIGER 0: HB: Framecount: 0000D909 SEUcount: 00007938
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=424, err_count=33
+0087A1B0EC84ED2B TIGER 0: EW: ChID: 07 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 13B Efine: 12B
+0082E1B9EEC4892C TIGER 0: EW: ChID: 02 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 122 Efine: 12C
+0081E1B9EEC45921 TIGER 0: HB: Framecount: 0000DD88 SEUcount: 00005921
+frame1-frame0=1151, i=424, err_count=34
+0084A1B0EC85192B TIGER 0: EW: ChID: 04 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 146 Efine: 12B
+0085A1B0EC849D3E TIGER 0: EW: ChID: 05 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 127 Efine: 13E
+0086A1B0EC84F938 TIGER 0: HB: Framecount: 0000D909 SEUcount: 00007938
+0087A1B0EC84ED2B TIGER 0: EW: ChID: 07 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 13B Efine: 12B
+0082E1B9EEC4892C TIGER 0: EW: ChID: 02 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 122 Efine: 12C
+0081E1B9EEC45921 TIGER 0: HB: Framecount: 0000DD88 SEUcount: 00005921
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=448, err_count=35
+0089E1B9EEC4452C TIGER 0: EW: ChID: 09 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 111 Efine: 12C
+0088E1B9EEC4E540 TIGER 0: EW: ChID: 08 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 139 Efine: 140
+0080E1B9EEC4253F TIGER 0: HB: Framecount: 0000DD88 SEUcount: 0000253F
+frame1-frame0=0, i=448, err_count=36
+0087A1B0EC84ED2B TIGER 0: EW: ChID: 07 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 13B Efine: 12B
+0082E1B9EEC4892C TIGER 0: EW: ChID: 02 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 122 Efine: 12C
+0081E1B9EEC45921 TIGER 0: HB: Framecount: 0000DD88 SEUcount: 00005921
+0089E1B9EEC4452C TIGER 0: EW: ChID: 09 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 111 Efine: 12C
+0088E1B9EEC4E540 TIGER 0: EW: ChID: 08 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 139 Efine: 140
+0080E1B9EEC4253F TIGER 0: HB: Framecount: 0000DD88 SEUcount: 0000253F
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=472, err_count=37
+0083E1B9EEC4453D TIGER 0: EW: ChID: 03 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 111 Efine: 13D
+0084E1B9EEC5012F TIGER 0: EW: ChID: 04 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 140 Efine: 12F
+0085E1B9EEC4A548 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00002548
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=496, err_count=38
+0086E1B9EEC4F13E TIGER 0: EW: ChID: 06 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 13C Efine: 13E
+0087E1B9EEC4E534 TIGER 0: EW: ChID: 07 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 139 Efine: 134
+20000000659C0000 TIGER 0: HB: Framecount: 0000CB38 SEUcount: 00000000
+frame1-frame0=-4689, i=496, err_count=39
+0083E1B9EEC4453D TIGER 0: EW: ChID: 03 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 111 Efine: 13D
+0084E1B9EEC5012F TIGER 0: EW: ChID: 04 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 140 Efine: 12F
+0085E1B9EEC4A548 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00002548
+0086E1B9EEC4F13E TIGER 0: EW: ChID: 06 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 13C Efine: 13E
+0087E1B9EEC4E534 TIGER 0: EW: ChID: 07 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 139 Efine: 134
+20000000659C0000 TIGER 0: HB: Framecount: 0000CB38 SEUcount: 00000000
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=520, err_count=40
+008241B0EC84A52F TIGER 0: EW: ChID: 02 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 129 Efine: 12F
+008941B0EC84592E TIGER 0: EW: ChID: 09 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 116 Efine: 12E
+008141B0EC847926 TIGER 0: HB: Framecount: 0000D908 SEUcount: 00007926
+frame1-frame0=3536, i=520, err_count=41
+0086E1B9EEC4F13E TIGER 0: EW: ChID: 06 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 13C Efine: 13E
+0087E1B9EEC4E534 TIGER 0: EW: ChID: 07 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 139 Efine: 134
+20000000659C0000 TIGER 0: HB: Framecount: 0000CB38 SEUcount: 00000000
+008241B0EC84A52F TIGER 0: EW: ChID: 02 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 129 Efine: 12F
+008941B0EC84592E TIGER 0: EW: ChID: 09 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 116 Efine: 12E
+008141B0EC847926 TIGER 0: HB: Framecount: 0000D908 SEUcount: 00007926
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=544, err_count=42
+008841B0EC850541 TIGER 0: EW: ChID: 08 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 141 Efine: 141
+008341B0EC845D3D TIGER 0: EW: ChID: 03 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 117 Efine: 13D
+008441B0EC85212D TIGER 0: HB: Framecount: 0000D90A SEUcount: 0000212D
+frame1-frame0=2, i=544, err_count=43
+008241B0EC84A52F TIGER 0: EW: ChID: 02 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 129 Efine: 12F
+008941B0EC84592E TIGER 0: EW: ChID: 09 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 116 Efine: 12E
+008141B0EC847926 TIGER 0: HB: Framecount: 0000D908 SEUcount: 00007926
+008841B0EC850541 TIGER 0: EW: ChID: 08 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 141 Efine: 141
+008341B0EC845D3D TIGER 0: EW: ChID: 03 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 117 Efine: 13D
+008441B0EC85212D TIGER 0: HB: Framecount: 0000D90A SEUcount: 0000212D
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=568, err_count=44
+008541B0EC84A944 TIGER 0: EW: ChID: 05 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 12A Efine: 144
+008641B0EC85013D TIGER 0: EW: ChID: 06 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 140 Efine: 13D
+008741B0EC84F130 TIGER 0: HB: Framecount: 0000D909 SEUcount: 00007130
+frame1-frame0=-1, i=568, err_count=45
+008841B0EC850541 TIGER 0: EW: ChID: 08 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 141 Efine: 141
+008341B0EC845D3D TIGER 0: EW: ChID: 03 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 117 Efine: 13D
+008441B0EC85212D TIGER 0: HB: Framecount: 0000D90A SEUcount: 0000212D
+008541B0EC84A944 TIGER 0: EW: ChID: 05 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 12A Efine: 144
+008641B0EC85013D TIGER 0: EW: ChID: 06 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 140 Efine: 13D
+008741B0EC84F130 TIGER 0: HB: Framecount: 0000D909 SEUcount: 00007130
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=592, err_count=46
+008041B0EC843D44 TIGER 0: EW: ChID: 00 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 10F Efine: 144
+008981B9EEC4412A TIGER 0: EW: ChID: 09 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 110 Efine: 12A
+008181B9EEC46521 TIGER 0: HB: Framecount: 0000DD88 SEUcount: 00006521
+frame1-frame0=1151, i=592, err_count=47
+008541B0EC84A944 TIGER 0: EW: ChID: 05 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 12A Efine: 144
+008641B0EC85013D TIGER 0: EW: ChID: 06 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 140 Efine: 13D
+008741B0EC84F130 TIGER 0: HB: Framecount: 0000D909 SEUcount: 00007130
+008041B0EC843D44 TIGER 0: EW: ChID: 00 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 10F Efine: 144
+008981B9EEC4412A TIGER 0: EW: ChID: 09 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 110 Efine: 12A
+008181B9EEC46521 TIGER 0: HB: Framecount: 0000DD88 SEUcount: 00006521
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=616, err_count=48
+008281B9EEC4892B TIGER 0: EW: ChID: 02 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 122 Efine: 12B
+008881B9EEC4E53F TIGER 0: EW: ChID: 08 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 139 Efine: 13F
+008381B9EEC4453B TIGER 0: HB: Framecount: 0000DD88 SEUcount: 0000453B
+frame1-frame0=0, i=616, err_count=49
+008041B0EC843D44 TIGER 0: EW: ChID: 00 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 10F Efine: 144
+008981B9EEC4412A TIGER 0: EW: ChID: 09 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 110 Efine: 12A
+008181B9EEC46521 TIGER 0: HB: Framecount: 0000DD88 SEUcount: 00006521
+008281B9EEC4892B TIGER 0: EW: ChID: 02 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 122 Efine: 12B
+008881B9EEC4E53F TIGER 0: EW: ChID: 08 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 139 Efine: 13F
+008381B9EEC4453B TIGER 0: HB: Framecount: 0000DD88 SEUcount: 0000453B
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=640, err_count=50
+008481B9EEC50D2D TIGER 0: EW: ChID: 04 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 143 Efine: 12D
+008581B9EEC4A543 TIGER 0: EW: ChID: 05 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 129 Efine: 143
+008681B9EEC4F53C TIGER 0: HB: Framecount: 0000DD89 SEUcount: 0000753C
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=664, err_count=51
+008781B9EEC4E531 TIGER 0: EW: ChID: 07 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 139 Efine: 131
+008081B9EEC43543 TIGER 0: EW: ChID: 00 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 10D Efine: 143
+20000000659C8000 TIGER 0: HB: Framecount: 0000CB39 SEUcount: 00000000
+frame1-frame0=-4688, i=664, err_count=52
+008481B9EEC50D2D TIGER 0: EW: ChID: 04 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 143 Efine: 12D
+008581B9EEC4A543 TIGER 0: EW: ChID: 05 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 129 Efine: 143
+008681B9EEC4F53C TIGER 0: HB: Framecount: 0000DD89 SEUcount: 0000753C
+008781B9EEC4E531 TIGER 0: EW: ChID: 07 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 139 Efine: 131
+008081B9EEC43543 TIGER 0: EW: ChID: 00 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 10D Efine: 143
+20000000659C8000 TIGER 0: HB: Framecount: 0000CB39 SEUcount: 00000000
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=688, err_count=53
+008121B0EC84A524 TIGER 0: EW: ChID: 01 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 129 Efine: 124
+008921B0EC847D2C TIGER 0: EW: ChID: 09 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 11F Efine: 12C
+008021B0EC84653F TIGER 0: HB: Framecount: 0000D908 SEUcount: 0000653F
+frame1-frame0=3535, i=688, err_count=54
+008781B9EEC4E531 TIGER 0: EW: ChID: 07 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 139 Efine: 131
+008081B9EEC43543 TIGER 0: EW: ChID: 00 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 10D Efine: 143
+20000000659C8000 TIGER 0: HB: Framecount: 0000CB39 SEUcount: 00000000
+008121B0EC84A524 TIGER 0: EW: ChID: 01 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 129 Efine: 124
+008921B0EC847D2C TIGER 0: EW: ChID: 09 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 11F Efine: 12C
+008021B0EC84653F TIGER 0: HB: Framecount: 0000D908 SEUcount: 0000653F
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=712, err_count=55
+008221B0EC84D52C TIGER 0: EW: ChID: 02 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 135 Efine: 12C
+008321B0EC84753C TIGER 0: EW: ChID: 03 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 11D Efine: 13C
+008821B0EC852D43 TIGER 0: HB: Framecount: 0000D90A SEUcount: 00002D43
+frame1-frame0=2, i=712, err_count=56
+008121B0EC84A524 TIGER 0: EW: ChID: 01 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 129 Efine: 124
+008921B0EC847D2C TIGER 0: EW: ChID: 09 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 11F Efine: 12C
+008021B0EC84653F TIGER 0: HB: Framecount: 0000D908 SEUcount: 0000653F
+008221B0EC84D52C TIGER 0: EW: ChID: 02 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 135 Efine: 12C
+008321B0EC84753C TIGER 0: EW: ChID: 03 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 11D Efine: 13C
+008821B0EC852D43 TIGER 0: HB: Framecount: 0000D90A SEUcount: 00002D43
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=736, err_count=57
+008421B0EC85412C TIGER 0: EW: ChID: 04 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 150 Efine: 12C
+008521B0EC84C944 TIGER 0: EW: ChID: 05 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 132 Efine: 144
+008621B0EC852D39 TIGER 0: HB: Framecount: 0000D90A SEUcount: 00002D39
+frame1-frame0=0, i=736, err_count=58
+008221B0EC84D52C TIGER 0: EW: ChID: 02 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 135 Efine: 12C
+008321B0EC84753C TIGER 0: EW: ChID: 03 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 11D Efine: 13C
+008821B0EC852D43 TIGER 0: HB: Framecount: 0000D90A SEUcount: 00002D43
+008421B0EC85412C TIGER 0: EW: ChID: 04 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 150 Efine: 12C
+008521B0EC84C944 TIGER 0: EW: ChID: 05 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 132 Efine: 144
+008621B0EC852D39 TIGER 0: HB: Framecount: 0000D90A SEUcount: 00002D39
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=760, err_count=59
+008721B0EC852530 TIGER 0: EW: ChID: 07 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 149 Efine: 130
+008161B9EEC45520 TIGER 0: EW: ChID: 01 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 115 Efine: 120
+008961B9EEC4492A TIGER 0: HB: Framecount: 0000DD88 SEUcount: 0000492A
+frame1-frame0=1150, i=760, err_count=60
+008421B0EC85412C TIGER 0: EW: ChID: 04 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 150 Efine: 12C
+008521B0EC84C944 TIGER 0: EW: ChID: 05 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 132 Efine: 144
+008621B0EC852D39 TIGER 0: HB: Framecount: 0000D90A SEUcount: 00002D39
+008721B0EC852530 TIGER 0: EW: ChID: 07 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 149 Efine: 130
+008161B9EEC45520 TIGER 0: EW: ChID: 01 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 115 Efine: 120
+008961B9EEC4492A TIGER 0: HB: Framecount: 0000DD88 SEUcount: 0000492A
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=784, err_count=61
+008261B9EEC4912D TIGER 0: EW: ChID: 02 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 124 Efine: 12D
+008061B9EEC4213C TIGER 0: EW: ChID: 00 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 108 Efine: 13C
+008361B9EEC44939 TIGER 0: HB: Framecount: 0000DD88 SEUcount: 00004939
+frame1-frame0=0, i=784, err_count=62
+008721B0EC852530 TIGER 0: EW: ChID: 07 tacID: 0 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 149 Efine: 130
+008161B9EEC45520 TIGER 0: EW: ChID: 01 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 115 Efine: 120
+008961B9EEC4492A TIGER 0: HB: Framecount: 0000DD88 SEUcount: 0000492A
+008261B9EEC4912D TIGER 0: EW: ChID: 02 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 124 Efine: 12D
+008061B9EEC4213C TIGER 0: EW: ChID: 00 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 108 Efine: 13C
+008361B9EEC44939 TIGER 0: HB: Framecount: 0000DD88 SEUcount: 00004939
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=808, err_count=63
+008861B9EEC4E93F TIGER 0: EW: ChID: 08 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 13A Efine: 13F
+008461B9EEC5092C TIGER 0: EW: ChID: 04 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 142 Efine: 12C
+008561B9EEC4AD45 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00002D45
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=832, err_count=64
+008661B9EEC4ED3D TIGER 0: EW: ChID: 06 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 13B Efine: 13D
+008761B9EEC4ED30 TIGER 0: EW: ChID: 07 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 13B Efine: 130
+20000000659D0000 TIGER 0: HB: Framecount: 0000CB3A SEUcount: 00000000
+frame1-frame0=-4687, i=832, err_count=65
+008861B9EEC4E93F TIGER 0: EW: ChID: 08 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 13A Efine: 13F
+008461B9EEC5092C TIGER 0: EW: ChID: 04 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 142 Efine: 12C
+008561B9EEC4AD45 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00002D45
+008661B9EEC4ED3D TIGER 0: EW: ChID: 06 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 13B Efine: 13D
+008761B9EEC4ED30 TIGER 0: EW: ChID: 07 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 13B Efine: 130
+20000000659D0000 TIGER 0: HB: Framecount: 0000CB3A SEUcount: 00000000
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=856, err_count=66
+0081C1B0EC847123 TIGER 0: EW: ChID: 01 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 11C Efine: 123
+0089C1B0EC84512D TIGER 0: EW: ChID: 09 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 114 Efine: 12D
+0082C1B0EC84A12E TIGER 0: HB: Framecount: 0000D909 SEUcount: 0000212E
+frame1-frame0=3535, i=856, err_count=67
+008661B9EEC4ED3D TIGER 0: EW: ChID: 06 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 13B Efine: 13D
+008761B9EEC4ED30 TIGER 0: EW: ChID: 07 tacID: 1 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 13B Efine: 130
+20000000659D0000 TIGER 0: HB: Framecount: 0000CB3A SEUcount: 00000000
+0081C1B0EC847123 TIGER 0: EW: ChID: 01 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 11C Efine: 123
+0089C1B0EC84512D TIGER 0: EW: ChID: 09 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 114 Efine: 12D
+0082C1B0EC84A12E TIGER 0: HB: Framecount: 0000D909 SEUcount: 0000212E
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=880, err_count=68
+0088C1B0EC84FD43 TIGER 0: EW: ChID: 08 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 13F Efine: 143
+0080C1B0EC84353F TIGER 0: EW: ChID: 00 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 10D Efine: 13F
+0083C1B0EC84513B TIGER 0: HB: Framecount: 0000D908 SEUcount: 0000513B
+frame1-frame0=-1, i=880, err_count=69
+0081C1B0EC847123 TIGER 0: EW: ChID: 01 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 11C Efine: 123
+0089C1B0EC84512D TIGER 0: EW: ChID: 09 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 114 Efine: 12D
+0082C1B0EC84A12E TIGER 0: HB: Framecount: 0000D909 SEUcount: 0000212E
+0088C1B0EC84FD43 TIGER 0: EW: ChID: 08 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 13F Efine: 143
+0080C1B0EC84353F TIGER 0: EW: ChID: 00 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 10D Efine: 13F
+0083C1B0EC84513B TIGER 0: HB: Framecount: 0000D908 SEUcount: 0000513B
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=904, err_count=70
+0084C1B0EC850D2E TIGER 0: EW: ChID: 04 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 143 Efine: 12E
+0085C1B0EC849D43 TIGER 0: EW: ChID: 05 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 127 Efine: 143
+0086C1B0EC84F93A TIGER 0: HB: Framecount: 0000D909 SEUcount: 0000793A
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=928, err_count=71
+0087C1B0EC84DD2F TIGER 0: EW: ChID: 07 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 137 Efine: 12F
+008201B9EEC4C129 TIGER 0: EW: ChID: 02 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 130 Efine: 129
+008101B9EEC49521 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00001521
+frame1-frame0=1152, i=928, err_count=72
+0084C1B0EC850D2E TIGER 0: EW: ChID: 04 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 143 Efine: 12E
+0085C1B0EC849D43 TIGER 0: EW: ChID: 05 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 127 Efine: 143
+0086C1B0EC84F93A TIGER 0: HB: Framecount: 0000D909 SEUcount: 0000793A
+0087C1B0EC84DD2F TIGER 0: EW: ChID: 07 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 137 Efine: 12F
+008201B9EEC4C129 TIGER 0: EW: ChID: 02 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 130 Efine: 129
+008101B9EEC49521 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00001521
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=952, err_count=73
+008901B9EEC4712A TIGER 0: EW: ChID: 09 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 11C Efine: 12A
+008801B9EEC5193F TIGER 0: EW: ChID: 08 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 146 Efine: 13F
+008001B9EEC4513D TIGER 0: HB: Framecount: 0000DD88 SEUcount: 0000513D
+frame1-frame0=-1, i=952, err_count=74
+0087C1B0EC84DD2F TIGER 0: EW: ChID: 07 tacID: 3 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 137 Efine: 12F
+008201B9EEC4C129 TIGER 0: EW: ChID: 02 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 130 Efine: 129
+008101B9EEC49521 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00001521
+008901B9EEC4712A TIGER 0: EW: ChID: 09 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 11C Efine: 12A
+008801B9EEC5193F TIGER 0: EW: ChID: 08 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 146 Efine: 13F
+008001B9EEC4513D TIGER 0: HB: Framecount: 0000DD88 SEUcount: 0000513D
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=976, err_count=75
+008301B9EEC46D3B TIGER 0: EW: ChID: 03 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 11B Efine: 13B
+008401B9EEC5412E TIGER 0: EW: ChID: 04 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 150 Efine: 12E
+008501B9EEC4D945 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00005945
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=1000, err_count=76
+008601B9EEC5253A TIGER 0: EW: ChID: 06 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 149 Efine: 13A
+008701B9EEC52533 TIGER 0: EW: ChID: 07 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 149 Efine: 133
+20000000659D8000 TIGER 0: HB: Framecount: 0000CB3B SEUcount: 00000000
+frame1-frame0=-4686, i=1000, err_count=77
+008301B9EEC46D3B TIGER 0: EW: ChID: 03 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 11B Efine: 13B
+008401B9EEC5412E TIGER 0: EW: ChID: 04 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 150 Efine: 12E
+008501B9EEC4D945 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00005945
+008601B9EEC5253A TIGER 0: EW: ChID: 06 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 149 Efine: 13A
+008701B9EEC52533 TIGER 0: EW: ChID: 07 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 149 Efine: 133
+20000000659D8000 TIGER 0: HB: Framecount: 0000CB3B SEUcount: 00000000
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=1024, err_count=78
+0081A1B0EC847125 TIGER 0: EW: ChID: 01 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 11C Efine: 125
+0089A1B0EC84492D TIGER 0: EW: ChID: 09 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 112 Efine: 12D
+0082A1B0EC84992F TIGER 0: HB: Framecount: 0000D909 SEUcount: 0000192F
+frame1-frame0=3534, i=1024, err_count=79
+008601B9EEC5253A TIGER 0: EW: ChID: 06 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 149 Efine: 13A
+008701B9EEC52533 TIGER 0: EW: ChID: 07 tacID: 0 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 149 Efine: 133
+20000000659D8000 TIGER 0: HB: Framecount: 0000CB3B SEUcount: 00000000
+0081A1B0EC847125 TIGER 0: EW: ChID: 01 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 11C Efine: 125
+0089A1B0EC84492D TIGER 0: EW: ChID: 09 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 112 Efine: 12D
+0082A1B0EC84992F TIGER 0: HB: Framecount: 0000D909 SEUcount: 0000192F
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=1048, err_count=80
+0083A1B0EC84453C TIGER 0: EW: ChID: 03 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 111 Efine: 13C
+0088A1B0EC84ED45 TIGER 0: EW: ChID: 08 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 13B Efine: 145
+0084A1B0EC85112E TIGER 0: HB: Framecount: 0000D90A SEUcount: 0000112E
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=1072, err_count=81
+0085A1B0EC84A144 TIGER 0: EW: ChID: 05 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 128 Efine: 144
+0086A1B0EC84ED3C TIGER 0: EW: ChID: 06 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 13B Efine: 13C
+0087A1B0EC84E130 TIGER 0: HB: Framecount: 0000D909 SEUcount: 00006130
+frame1-frame0=-1, i=1072, err_count=82
+0083A1B0EC84453C TIGER 0: EW: ChID: 03 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 111 Efine: 13C
+0088A1B0EC84ED45 TIGER 0: EW: ChID: 08 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 13B Efine: 145
+0084A1B0EC85112E TIGER 0: HB: Framecount: 0000D90A SEUcount: 0000112E
+0085A1B0EC84A144 TIGER 0: EW: ChID: 05 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 128 Efine: 144
+0086A1B0EC84ED3C TIGER 0: EW: ChID: 06 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 13B Efine: 13C
+0087A1B0EC84E130 TIGER 0: HB: Framecount: 0000D909 SEUcount: 00006130
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=1096, err_count=83
+0080A1B0EC843141 TIGER 0: EW: ChID: 00 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 10C Efine: 141
+0081E1B9EEC47522 TIGER 0: EW: ChID: 01 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 11D Efine: 122
+0089E1B9EEC4552B TIGER 0: HB: Framecount: 0000DD88 SEUcount: 0000552B
+frame1-frame0=1151, i=1096, err_count=84
+0085A1B0EC84A144 TIGER 0: EW: ChID: 05 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 128 Efine: 144
+0086A1B0EC84ED3C TIGER 0: EW: ChID: 06 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 13B Efine: 13C
+0087A1B0EC84E130 TIGER 0: HB: Framecount: 0000D909 SEUcount: 00006130
+0080A1B0EC843141 TIGER 0: EW: ChID: 00 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 10C Efine: 141
+0081E1B9EEC47522 TIGER 0: EW: ChID: 01 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 11D Efine: 122
+0089E1B9EEC4552B TIGER 0: HB: Framecount: 0000DD88 SEUcount: 0000552B
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=1120, err_count=85
+0082E1B9EEC4A12C TIGER 0: EW: ChID: 02 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 128 Efine: 12C
+0088E1B9EEC4FD40 TIGER 0: EW: ChID: 08 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 13F Efine: 140
+0083E1B9EEC4593C TIGER 0: HB: Framecount: 0000DD88 SEUcount: 0000593C
+frame1-frame0=0, i=1120, err_count=86
+0080A1B0EC843141 TIGER 0: EW: ChID: 00 tacID: 2 Tcoarse: 86C3 Ecoarse: 2C8 Tfine: 10C Efine: 141
+0081E1B9EEC47522 TIGER 0: EW: ChID: 01 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 11D Efine: 122
+0089E1B9EEC4552B TIGER 0: HB: Framecount: 0000DD88 SEUcount: 0000552B
+0082E1B9EEC4A12C TIGER 0: EW: ChID: 02 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 128 Efine: 12C
+0088E1B9EEC4FD40 TIGER 0: EW: ChID: 08 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 13F Efine: 140
+0083E1B9EEC4593C TIGER 0: HB: Framecount: 0000DD88 SEUcount: 0000593C
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=1144, err_count=87
+0084E1B9EEC5112D TIGER 0: EW: ChID: 04 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 144 Efine: 12D
+0085E1B9EEC4B546 TIGER 0: EW: ChID: 05 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 12D Efine: 146
+0086E1B9EEC5053C TIGER 0: HB: Framecount: 0000DD8A SEUcount: 0000053C
+frame1-frame0=2, i=1144, err_count=88
+0082E1B9EEC4A12C TIGER 0: EW: ChID: 02 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 128 Efine: 12C
+0088E1B9EEC4FD40 TIGER 0: EW: ChID: 08 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 13F Efine: 140
+0083E1B9EEC4593C TIGER 0: HB: Framecount: 0000DD88 SEUcount: 0000593C
+0084E1B9EEC5112D TIGER 0: EW: ChID: 04 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 144 Efine: 12D
+0085E1B9EEC4B546 TIGER 0: EW: ChID: 05 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 12D Efine: 146
+0086E1B9EEC5053C TIGER 0: HB: Framecount: 0000DD8A SEUcount: 0000053C
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=1168, err_count=89
+0087E1B9EEC50932 TIGER 0: EW: ChID: 07 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 142 Efine: 132
+0080E1B9EEC44944 TIGER 0: EW: ChID: 00 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 112 Efine: 144
+20000000659E0000 TIGER 0: HB: Framecount: 0000CB3C SEUcount: 00000000
+frame1-frame0=-4686, i=1168, err_count=90
+0084E1B9EEC5112D TIGER 0: EW: ChID: 04 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 144 Efine: 12D
+0085E1B9EEC4B546 TIGER 0: EW: ChID: 05 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 12D Efine: 146
+0086E1B9EEC5053C TIGER 0: HB: Framecount: 0000DD8A SEUcount: 0000053C
+0087E1B9EEC50932 TIGER 0: EW: ChID: 07 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 142 Efine: 132
+0080E1B9EEC44944 TIGER 0: EW: ChID: 00 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 112 Efine: 144
+20000000659E0000 TIGER 0: HB: Framecount: 0000CB3C SEUcount: 00000000
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=1192, err_count=91
+008141B0EC846524 TIGER 0: EW: ChID: 01 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 119 Efine: 124
+008941B0EC84492D TIGER 0: EW: ChID: 09 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 112 Efine: 12D
+008241B0EC84952F TIGER 0: HB: Framecount: 0000D909 SEUcount: 0000152F
+frame1-frame0=3533, i=1192, err_count=92
+0087E1B9EEC50932 TIGER 0: EW: ChID: 07 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 142 Efine: 132
+0080E1B9EEC44944 TIGER 0: EW: ChID: 00 tacID: 3 Tcoarse: 86E7 Ecoarse: 2EC Tfine: 112 Efine: 144
+20000000659E0000 TIGER 0: HB: Framecount: 0000CB3C SEUcount: 00000000
+008141B0EC846524 TIGER 0: EW: ChID: 01 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 119 Efine: 124
+008941B0EC84492D TIGER 0: EW: ChID: 09 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 112 Efine: 12D
+008241B0EC84952F TIGER 0: HB: Framecount: 0000D909 SEUcount: 0000152F
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=1216, err_count=93
+008341B0EC84513C TIGER 0: EW: ChID: 03 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 114 Efine: 13C
+008841B0EC84F144 TIGER 0: EW: ChID: 08 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 13C Efine: 144
+008441B0EC850D2D TIGER 0: HB: Framecount: 0000D90A SEUcount: 00000D2D
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=1240, err_count=94
+008541B0EC849D45 TIGER 0: EW: ChID: 05 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 127 Efine: 145
+008641B0EC84F13E TIGER 0: EW: ChID: 06 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 13C Efine: 13E
+008741B0EC84E130 TIGER 0: HB: Framecount: 0000D909 SEUcount: 00006130
+frame1-frame0=-1, i=1240, err_count=95
+008341B0EC84513C TIGER 0: EW: ChID: 03 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 114 Efine: 13C
+008841B0EC84F144 TIGER 0: EW: ChID: 08 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 13C Efine: 144
+008441B0EC850D2D TIGER 0: HB: Framecount: 0000D90A SEUcount: 00000D2D
+008541B0EC849D45 TIGER 0: EW: ChID: 05 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 127 Efine: 145
+008641B0EC84F13E TIGER 0: EW: ChID: 06 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 13C Efine: 13E
+008741B0EC84E130 TIGER 0: HB: Framecount: 0000D909 SEUcount: 00006130
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=1264, err_count=96
+008041B0EC842D40 TIGER 0: EW: ChID: 00 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 10B Efine: 140
+008181B9EEC46D22 TIGER 0: EW: ChID: 01 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 11B Efine: 122
+008981B9EEC4452B TIGER 0: HB: Framecount: 0000DD88 SEUcount: 0000452B
+frame1-frame0=1151, i=1264, err_count=97
+008541B0EC849D45 TIGER 0: EW: ChID: 05 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 127 Efine: 145
+008641B0EC84F13E TIGER 0: EW: ChID: 06 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 13C Efine: 13E
+008741B0EC84E130 TIGER 0: HB: Framecount: 0000D909 SEUcount: 00006130
+008041B0EC842D40 TIGER 0: EW: ChID: 00 tacID: 1 Tcoarse: 06C3 Ecoarse: 2C8 Tfine: 10B Efine: 140
+008181B9EEC46D22 TIGER 0: EW: ChID: 01 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 11B Efine: 122
+008981B9EEC4452B TIGER 0: HB: Framecount: 0000DD88 SEUcount: 0000452B
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=1288, err_count=98
+008281B9EEC4952C TIGER 0: EW: ChID: 02 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 125 Efine: 12C
+008381B9EEC4513B TIGER 0: EW: ChID: 03 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 114 Efine: 13B
+008881B9EEC4F542 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00007542
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=1312, err_count=99
+008481B9EEC5112E TIGER 0: EW: ChID: 04 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 144 Efine: 12E
+008581B9EEC4A944 TIGER 0: EW: ChID: 05 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 12A Efine: 144
+008681B9EEC4F93D TIGER 0: HB: Framecount: 0000DD89 SEUcount: 0000793D
+frame1-frame0=0, i=1312, err_count=100
+008281B9EEC4952C TIGER 0: EW: ChID: 02 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 125 Efine: 12C
+008381B9EEC4513B TIGER 0: EW: ChID: 03 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 114 Efine: 13B
+008881B9EEC4F542 TIGER 0: HB: Framecount: 0000DD89 SEUcount: 00007542
+008481B9EEC5112E TIGER 0: EW: ChID: 04 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 144 Efine: 12E
+008581B9EEC4A944 TIGER 0: EW: ChID: 05 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 12A Efine: 144
+008681B9EEC4F93D TIGER 0: HB: Framecount: 0000DD89 SEUcount: 0000793D
+tigerid or chid not equal.input tigerid=0, chid=0X02, i=1336, err_count=101
+008781B9EEC4F532 TIGER 0: EW: ChID: 07 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 13D Efine: 132
+008081B9EEC43D45 TIGER 0: EW: ChID: 00 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 10F Efine: 145
+20000000659E8000 TIGER 0: HB: Framecount: 0000CB3D SEUcount: 00000000
+frame1-frame0=-4684, i=1336, err_count=102
+008481B9EEC5112E TIGER 0: EW: ChID: 04 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 144 Efine: 12E
+008581B9EEC4A944 TIGER 0: EW: ChID: 05 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 12A Efine: 144
+008681B9EEC4F93D TIGER 0: HB: Framecount: 0000DD89 SEUcount: 0000793D
+008781B9EEC4F532 TIGER 0: EW: ChID: 07 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 13D Efine: 132
+008081B9EEC43D45 TIGER 0: EW: ChID: 00 tacID: 2 Tcoarse: 06E7 Ecoarse: 2EC Tfine: 10F Efine: 145
+20000000659E8000 TIGER 0: HB: Framecount: 0000CB3D SEUcount: 00000000

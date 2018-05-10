@@ -11,11 +11,10 @@ int main(int argc,char *argv[])
 {  
    FILE *fw = NULL;
    FILE *fd = NULL;
-   fd = fopen("xxdata.txt","w+");
    fw = fopen("data_check.txt","w+");
    char msg[128];
    unsigned char buff[65536];
-   int i,j,k,data_len,no;
+   int i,j,data_len,no;
    int chid,tigerid;
    int flag;
    int err_count,index,index0;
@@ -46,60 +45,18 @@ int main(int argc,char *argv[])
    
    err_count=0;
    no=0;
-   int start=0;
    index=0;
 //   int start=0;
-   while(err_count<64)
+   while(err_count<32)
    {
      data_len=recvfrom(socket_descriptor,buff,SIZE,0,(struct sockaddr *)&cliaddr,&sin_len);
      no++;
      i=0;
-     if(no==10240)
-     {
-       fclose(fd);
-       printf("\nfile xxdata.txt closed\n");
-     }
-     if(no<10240)
-     {
-       if(i==0)
-       {
-         j=sprintf(msg,"no=%d, data_len=%d\n",no,data_len);
-         fwrite(msg,sizeof(unsigned char),j,fd);
-       }
-       for(k=0;k<data_len-6;k=k+8)
-     {
-       H1=0;
-       for(j=k+7;j>k;j--)
-       {
-         H1=H1+buff[j];
-         H1=H1<<8;
-       }
-       H1=H1+buff[j];
-     
-       if(H1>>59==0x04)
-       {
-         j=sprintf(msg,"%08X%08X TIGER %01X: HB: Framecount: %08X SEUcount: %08X\n",H1>>32,H1&0xFFFFFFFF,(H1>> 56)& 0x7,(H1>> 15)& 0xFFFF,H1& 0x7FFF) ;
-         fwrite(msg,sizeof(unsigned char),j,fd);
-       }
-       if(H1>>59==0x08)
-       {
-         j=sprintf(msg,"%08X%08X TIGER %01X: CW: ChID: %02X CounterWord: %016X\n",H1>>32,H1&0xFFFFFFFF,(H1>> 56)& 0x7,(H1>> 48)& 0x3FF,H1& 0x00FFFFFF) ;
-         fwrite(msg,sizeof(unsigned char),j,fd);
-       }
-       if(H1>>59==0x00)
-       {
-         j=sprintf(msg,"%08X%08X TIGER %01X: EW: ChID: %02X tacID: %01X Tcoarse: %04X Ecoarse: %03X Tfine: %03X Efine: %03X\n",H1>>32,H1&0xFFFFFFFF,(H1>> 56)& 0x7,(H1>> 48)& 0x3F,(H1>>46)& 0x3,(H1>>30)&0xFFFF,(H1>> 20)& 0x3FF,(H1>> 10)& 0x3FF,H1 & 0x3FF);
-         fwrite(msg,sizeof(unsigned char),j,fd);
-       }
-     }  
-    }
-     while((buff[i+7]>>3==0x04)&&(i<data_len-6)&&start==0)
+     while((buff[i+7]>>3==0x04)&&(i<data_len-6))
        i=i+8;
-     if(start==0)
-        start=1;
 //     if(start==0)
 //        start=1;
-     for(;i<data_len-7;i=i+8)
+     for(H0=0;i<data_len-7;i=i+8)
      { 
        H1=0;
        for(j=i+7;j>i;j--)
@@ -147,8 +104,7 @@ int main(int argc,char *argv[])
            index0=2;
          else
            index0=5;
-//         if((D[index]>> 15& 0xFFFF)-(D[index0]>> 15& 0xFFFF)!=1)
-         if((D[index]>> 15& 0xFFFF)-(D[index0]>> 15& 0xFFFF)!=1&&!((D[index]>> 15& 0xFFFF)==0x0&&(D[index0]>> 15& 0xFFFF)==0xFFFF))  //framecount not overflow
+         if((D[index]>> 15& 0xFFFF)-(D[index0]>> 15& 0xFFFF)!=1&&(D[index]>> 15& 0xFFFF)!=0x0)
          {
            err_count++;
            printf("frame1-frame0=%d\n",(D[index]>> 15& 0xFFFF)-(D[index0]>> 15& 0xFFFF));

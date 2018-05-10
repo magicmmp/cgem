@@ -24,6 +24,7 @@ for i in range (0,5):
   while Total_Data < Total_data_size :
     data,addr = serverSock.recvfrom(BUFSIZE)
     Total_Data += len(data)
+#    print len(data)
   t1=time.time()
   print '    time=%f sec '%(t1-t0)+' bytes=%d '%Total_Data+' BW=%d bytes/sec\n'%(Total_Data/(t1-t0))
 print 'finish.'
