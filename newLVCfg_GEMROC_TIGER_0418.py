@@ -9,6 +9,7 @@
 import socket
 import string
 import time
+#import GEMconf_classes_2018v3
 import GEMconf_classes_2018v3_0418 #acr 2018-02-19 import GEMconf_classes_2018
 import struct
 import binascii

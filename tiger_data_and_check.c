@@ -27,7 +27,8 @@ int main(int argc,char *argv[])
    struct sockaddr_in sin,cliaddr;
    bzero(&sin,sizeof(sin));
    sin.sin_family=AF_INET;
-   sin.sin_addr.s_addr=inet_addr("192.168.1.200");
+   sin.sin_addr.s_addr=inet_addr("127.0.0.1");
+ //  sin.sin_addr.s_addr=inet_addr("192.168.1.200");
    sin.sin_port=htons(port);
    sin_len=sizeof(sin);
    socket_descriptor=socket(AF_INET,SOCK_DGRAM,0);

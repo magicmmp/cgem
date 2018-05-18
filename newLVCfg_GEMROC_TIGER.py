@@ -949,13 +949,13 @@ IVT_log_file = open(IVT_log_fname, 'w')
 ## NOTE: STEFANO CHIOZZI - 2018-03-08 A SECOND IP ADDRESS (E.G. 192.168.1.201) CAN BE ASSIGNED TO THE NIC
 ##                                    AND A SECOND SET OF INSTANCES OF THIS CODE (WITH DIFFERENT PORTS) CAN ACCESS THE SECOND SET OF GEMROC BOARDS (12 to 22) THROUGH IT
 ##HOST_IP = "192.168.1.200" # FOR  GEMROC 1 - 11
-HOST_IP = "192.168.1.200" # FOR  GEMROC 1 - 11
-#HOST_IP = "127.0.0.1" # uncomment for test only
+#HOST_IP = "192.168.1.200" # FOR  GEMROC 1 - 11
+HOST_IP = "127.0.0.1" # uncomment for test only
 
 HOST_PORT = 54816+1+GEMROC_ID
 HOST_PORT_RECEIVE = 58912+1+GEMROC_ID
-#DEST_IP_ADDRESS = "127.0.0.1"
-DEST_IP_ADDRESS = "192.168.1.%d" %(GEMROC_ID+16) # offset 16 is determined by Stefano's MAC
+DEST_IP_ADDRESS = "127.0.0.1"
+#DEST_IP_ADDRESS = "192.168.1.%d" %(GEMROC_ID+16) # offset 16 is determined by Stefano's MAC
 DEST_PORT_NO = 58912+1 # STEFANO CHIOZZI - 2018-03-08 offset 0 is reserved by the MAC for a custom protocol; offset 3 is also a special debug port
 
 # BEGIN uncomment for test only
@@ -1051,9 +1051,11 @@ menu_string = '\
 \nEnter your command: '
 DONE = False
 def add_input(input_queue):
-    while True:
-        #input_queue.put(sys.stdin.read(1))
-        input_queue.put(sys.stdin.readline())
+    for line in open('auto_input_para.txt','r'):
+      input_queue.put(line)
+      time.sleep(1)
+   # while True:
+   #     input_queue.put(sys.stdin.readline())
 
 def Menu_and_prompt():
     input_queue = Queue.Queue()

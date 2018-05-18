@@ -13,6 +13,7 @@ GEMROC_CMD_LV_Num_Of_PktWords = 12 # acr 2018-01-15
 GEMROC_CMD_DAQ_Num_of_params = 15 ## ACR 2018-03-15 AT IHEP: ADDED UDP_DATA_DESTINATION_IPADDR AND UDP_DATA_DESTINATION_IPPORT; GEMROC_CMD_DAQ_Num_of_params = 13 # acr 2018-01-15
 GEMROC_CMD_DAQ_Num_Of_PktWords = 5 # acr 2018-01-15
 
+arr = 'print_parameter_array.txt'
 # acr 2018-01-25 introduced swap function for little endian parameter values
 def swap_order_N_bits( Hex_data, N_bits ):
     #"function_docstring"
@@ -20,6 +21,13 @@ def swap_order_N_bits( Hex_data, N_bits ):
     for i in range(0,N_bits):
         if (Hex_data >> i) & 1: temp |= 1 << (N_bits - 1 - i)
     return temp
+
+def print_array(info,filename,array):
+    fx = open(arr, 'a')
+    msg= '\n%s, file name:%s,  arrar_len=%d\n'%(info,filename,len(array))
+    fx.write(msg)
+    fx.write(str(array))
+    fx.close()
 
 ###CCCCCCCCCCCCCCCC###     CLASS g_reg_settings BEGIN  ###CCCCCCCCCCCCCCCC######CCCCCCCCCCCCCCCC######CCCCCCCCCCCCCCCC######CCCCCCCCCCCCCCCC######CCCCCCCCCCCCCCCC###
 class g_reg_settings: # purpose: organize the Global Configuration Register Settings in an array format which can be sent over Ethernet or optical link
@@ -33,6 +41,7 @@ class g_reg_settings: # purpose: organize the Global Configuration Register Sett
       self.parameter_array = [0 for i in range(37)] # acr 2018-01-25 [0 for i in range(38)] 
       with open(self.cfg_filename, "r") as f:
          self.parameter_array = map(int, f)
+      print_array("g_reg_settings init",self.cfg_filename,self.parameter_array)
       self.BufferBias = self.parameter_array [0] ## BufferBias_param; default 0
       self.TDCVcasN        = swap_order_N_bits(self.parameter_array [1],4)  # acr 2018-01-25 ## TDCVcasN_param; default 0
       self.TDCVcasP        = swap_order_N_bits(self.parameter_array [2],5)  # acr 2018-01-25 ## TDCVcasP_param; default 0
@@ -124,7 +133,7 @@ class g_reg_settings: # purpose: organize the Global Configuration Register Sett
       self.parameter_array = [0 for i in range(37)] # acr 2018-01-25 [0 for i in range(38)]
       with open(GCFGReg_def_fname_param, "r") as f:
          self.parameter_array = map(int, f)
-         f.close()
+      print_array("g_reg_settings reload_gcfg_settings_from_file",GCFGReg_def_fname_param,self.parameter_array)
       self.BufferBias = self.parameter_array [0] ## BufferBias_param; default 0
       self.TDCVcasN        = swap_order_N_bits(self.parameter_array [1],4)  # acr 2018-01-25 ## TDCVcasN_param; default 0
       self.TDCVcasP        = swap_order_N_bits(self.parameter_array [2],5)  # acr 2018-01-25 ## TDCVcasP_param; default 0
@@ -279,6 +288,7 @@ class ch_reg_settings: # purpose: organize the Channel Configuration Register Se
       self.parameter_array = [0 for i in range(30)]
       with open(self.cfg_filename, "r") as f:
          self.parameter_array = map(int, f)
+      print_array("ch_reg_settings init",self.cfg_filename,self.parameter_array)
       self.DisableHyst = self.parameter_array [0]  ## DisableHyst_param
       self.T2Hyst = self.parameter_array [1]  ## T2Hyst_param
       self.T1Hyst = self.parameter_array [2]  ## T1Hyst_param
@@ -351,6 +361,7 @@ class ch_reg_settings: # purpose: organize the Channel Configuration Register Se
       self.parameter_array = [0 for i in range(30)] # acr 2018-01-25 [0 for i in range(38)]
       with open(ChCFGReg_def_fname_param, "r") as f:
          self.parameter_array = map(int, f)
+      print_array("ch_reg_settings reload_chcfg_settings_from_file",ChCFGReg_def_fname_param,self.parameter_array)
       self.DisableHyst = self.parameter_array [0]  ## DisableHyst_param
       self.T2Hyst = self.parameter_array [1]  ## T2Hyst_param
       self.T1Hyst = self.parameter_array [2]  ## T1Hyst_param
@@ -491,6 +502,7 @@ class gemroc_cmd_LV_settings(object): # purpose: organize the GEMROC Configurati
       self.parameter_array = [0 for i in range(GEMROC_CMD_LV_Num_of_params-1)] # acr 2018-01-15
       with open(self.cfg_filename, "r") as f:
          self.parameter_array = map(int, f)
+      print_array("gemroc_cmd_LV_settings init",self.cfg_filename,self.parameter_array)
       # acr 2018-01-15 NOTE: position of parameters in parameter file and index in parameter array redefined on the basis of GEMROC_CMD_LV_Num_of_params
       # setting of delay of timing signals to TIGER FEB0 in xns units (relative to TIGER_CLK_LVDS)   
       self.TIMING_DLY_FEB0 = self.parameter_array [GEMROC_CMD_LV_Num_of_params-1] # acr 2018-01-15 last parameter written in default configuration file
@@ -687,6 +699,7 @@ class gemroc_cmd_DAQ_settings(object): # purpose: organize the GEMROC Configurat
       self.parameter_array = [0 for i in range(GEMROC_CMD_DAQ_Num_of_params-1)] # acr 2018-01-15
       with open(self.cfg_filename, "r") as f:
          self.parameter_array = map(int, f)
+      print_array("gemroc_cmd_DAQ_settings init",self.cfg_filename,self.parameter_array)
       # acr 2018-01-15 NOTE: position of parameters in parameter file and index in parameter array redefined on the basis of GEMROC_CMD_DAQ_Num_of_params
       #Note: TCAM = Tiger Configuration/ Acquisition Module
       self.EN_TM_TCAM_pattern = self.parameter_array [GEMROC_CMD_DAQ_Num_of_params-1] # acr 2018-01-15 last parameter written in default configuration file # 8 bit field; EN_TM_TCAM[7..0] Enable the target TCAM to generate Trigger Matched data packets 

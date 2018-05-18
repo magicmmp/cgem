@@ -7,5 +7,5 @@ while 1:
     i=i+1
     data="data is from python.times=%d"% i
     clientSock.sendto(data, ('192.168.1.201', 58914))
-    time.sleep(1)
+    time.sleep(2)
 clientSock.close()

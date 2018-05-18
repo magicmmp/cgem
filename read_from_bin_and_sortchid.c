@@ -39,7 +39,7 @@ int main()
    int i,j=0;
    long long H0,H1;
    int Total_Data=0;
-   fp = fopen("FEB0_bin.dat", "r");
+   fp = fopen("FEB0_bin_single_chid.dat", "r");
    fw = fopen("data.txt","w+");
    fseek(fp,0L,SEEK_END);
    i=ftell(fp);
