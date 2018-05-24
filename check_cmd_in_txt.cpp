@@ -6,7 +6,7 @@ using namespace std;
 
 int main()  
 {  
-ifstream f1("my_log.txt",ios::in);  
+ifstream f1("my_vx_log.txt",ios::in);  
 ifstream f2("my_c_log.txt",ios::in);
 ofstream f3("jie_guo_for_cmd_check.txt",ios::out);  
 string s1,s2,cmd1,cmd2;

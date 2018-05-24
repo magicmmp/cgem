@@ -27,6 +27,8 @@ def print_array(info,filename,array):
     msg= '\n%s, file name:%s,  arrar_len=%d\n'%(info,filename,len(array))
     fx.write(msg)
     fx.write(str(array))
+    if info == "ch_reg_settings reload_chcfg_settings_from_file":
+      fx.write('\n')
     fx.close()
 
 ###CCCCCCCCCCCCCCCC###     CLASS g_reg_settings BEGIN  ###CCCCCCCCCCCCCCCC######CCCCCCCCCCCCCCCC######CCCCCCCCCCCCCCCC######CCCCCCCCCCCCCCCC######CCCCCCCCCCCCCCCC###
@@ -699,7 +701,6 @@ class gemroc_cmd_DAQ_settings(object): # purpose: organize the GEMROC Configurat
       self.parameter_array = [0 for i in range(GEMROC_CMD_DAQ_Num_of_params-1)] # acr 2018-01-15
       with open(self.cfg_filename, "r") as f:
          self.parameter_array = map(int, f)
-      print_array("gemroc_cmd_DAQ_settings init",self.cfg_filename,self.parameter_array)
       # acr 2018-01-15 NOTE: position of parameters in parameter file and index in parameter array redefined on the basis of GEMROC_CMD_DAQ_Num_of_params
       #Note: TCAM = Tiger Configuration/ Acquisition Module
       self.EN_TM_TCAM_pattern = self.parameter_array [GEMROC_CMD_DAQ_Num_of_params-1] # acr 2018-01-15 last parameter written in default configuration file # 8 bit field; EN_TM_TCAM[7..0] Enable the target TCAM to generate Trigger Matched data packets 
@@ -719,7 +720,9 @@ class gemroc_cmd_DAQ_settings(object): # purpose: organize the GEMROC Configurat
       self.UDP_DATA_DESTINATION_IPPORT = self.parameter_array [GEMROC_CMD_DAQ_Num_of_params-14] # latency with respect to the event of BES-III L1 trigger (in units of BES-III clk cycles); range: 0..1023
       self.UDP_DATA_DESTINATION_IPADDR = self.parameter_array [GEMROC_CMD_DAQ_Num_of_params-15] # latency with respect to the event of BES-III L1 trigger (in units of BES-III clk cycles); range: 0..1023
       self.command_string = command_string_param
+      para_msg= ",  DAQ.EN_TM_TCAM_pattern=%d,self.UDP_DATA_DESTINATION_IPPORT=%d,self.UDP_DATA_DESTINATION_IPADDR=%d "%(self.EN_TM_TCAM_pattern,self.UDP_DATA_DESTINATION_IPPORT,self.UDP_DATA_DESTINATION_IPADDR)
       self.target_TCAM_ID = TCAM_ID_param
+      print_array("gemroc_cmd_DAQ_settings init"+para_msg,self.cfg_filename,self.parameter_array)
       self.to_ALL_TCAM_enable = to_ALL_TCAM_enable_param
       self.number_of_repetitions = number_of_repetitions_param
       self.command_list = [ 'NONE',

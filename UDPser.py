@@ -23,10 +23,13 @@ BUFSIZE = 4096
 clientSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 receiveSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 ##clientSock.bind((HOST_IP, HOST_PORT))
+n=1
 receiveSock.bind((HOST_IP, HOST_PORT_RECEIVE))
 while 1:
     data,addr = receiveSock.recvfrom(BUFSIZE)
-##    print 'receive:%08X\n' % data
+    if n==1:
+      print 'receive data from ' + str(addr) + '\n'
+      n=0
     clientSock.sendto(data, ('127.0.0.1', 58916))
 ##print 'send:',buffer_to_sen
 clientSock.close()

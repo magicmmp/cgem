@@ -5,8 +5,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-//#define HOST_IP "127.0.0.1"
-#define HOST_IP "192.168.1.200"
+#define HOST_IP "127.0.0.1"
+//#define HOST_IP "192.168.1.200"
 #define BUFSIZE 4096 
       unsigned int command_code_shift = 11; 
       unsigned int target_TIGER_ID_shift = 8; 
@@ -912,6 +912,8 @@ void DAQ_init(  unsigned int TARGET_GEMROC_ID_param,
       DAQ.L1_latency = DAQ.parameter_array [GEMROC_CMD_DAQ_Num_of_params-13];
       DAQ.UDP_DATA_DESTINATION_IPPORT = DAQ.parameter_array [GEMROC_CMD_DAQ_Num_of_params-14];
       DAQ.UDP_DATA_DESTINATION_IPADDR = DAQ.parameter_array [GEMROC_CMD_DAQ_Num_of_params-15];
+      printf("DAQ.EN_TM_TCAM_pattern=%d\n",DAQ.EN_TM_TCAM_pattern);
+      printf("DAQ.UDP_DATA_DESTINATION_IPADDR=%d,DAQ.UDP_DATA_DESTINATION_IPPORT=%d\n",DAQ.UDP_DATA_DESTINATION_IPADDR,DAQ.UDP_DATA_DESTINATION_IPPORT);
       DAQ.command_string = command_string_param;
       DAQ.target_TCAM_ID = TCAM_ID_param;
       DAQ.to_ALL_TCAM_enable = to_ALL_TCAM_enable_param;
@@ -1638,13 +1640,13 @@ FEB_PWR_EN_pattern = TARGET_FEB_PWR_PATTERN_param;
 
       HOST_PORT=54817+GEMROC_ID;
       HOST_PORT_RECEIVE=58913+GEMROC_ID;
-      sprintf(DEST_IP_ADDRESS,"192.168.1.%d",(GEMROC_ID+16)) ;
-//      sprintf(DEST_IP_ADDRESS,"127.0.0.%d",1) ;
+//      sprintf(DEST_IP_ADDRESS,"192.168.1.%d",(GEMROC_ID+16)) ;
+      sprintf(DEST_IP_ADDRESS,"127.0.0.%d",1) ;
       DEST_PORT_NO = 58913;
    fd_cmd = fopen("c_cmd_check.txt","w+");
    fw = fopen("my_c_log.txt","w+");
    fd_read_para=fopen("auto_input_para.txt","r");
-   file_name= fopen("check_c_para_class.txt","w+");
+   file_name= fopen("print_c_parameter_array.txt","w+");//to check parameter_array.
     bzero(&sin_dest,sizeof(sin_dest));
     sin_dest.sin_family=AF_INET;
     sin_dest.sin_addr.s_addr=inet_addr(DEST_IP_ADDRESS);
