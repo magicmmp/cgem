@@ -297,488 +297,6 @@ unsigned int swap_order_N_bits(unsigned int Hex_data,unsigned int N_bits)
     return temp;  }
 
 
-void send_GEMROC_CFG_CMD_PKT( unsigned int TARGET_GEMROC_ID_param, 
-                              void*array_to_send_param, int cmdlen,char*DEST_IP_ADDRESS_PARAM, unsigned int DEST_PORT_NO_PARAM)
-{  
-    int i,j;
-    memcpy(buff,array_to_send_param,cmdlen);
-    for(i=0;i<cmdlen;i=i+4)
-      for(j=0;j<4;j++)
-        buff2[i+j]=buff[i+3-j];
-    sin_dest.sin_addr.s_addr=inet_addr(DEST_IP_ADDRESS_PARAM);
-    sin_dest.sin_port=htons(DEST_PORT_NO_PARAM);
-    sendto(socket_descriptor,buff2,cmdlen,0,(struct sockaddr *)&sin_dest,sin_len);
-    recvfrom(socket_descriptor1,buff,cmdlen,0,NULL,NULL);
-}
-
-void send_TIGER_GCFG_Reg_CMD_PKT(unsigned int TIGER_ID_param, void*array_to_send_param, int cmdlen,
-                                 char*DEST_IP_ADDRESS_PARAM, unsigned int DEST_PORT_NO_PARAM)
-{
-    int i,j;
-    memcpy(buff,array_to_send_param,cmdlen);
-    for(i=0;i<cmdlen;i=i+4)
-      for(j=0;j<4;j++)
-        buff2[i+j]=buff[i+3-j];
-    sin_dest.sin_addr.s_addr=inet_addr(DEST_IP_ADDRESS_PARAM);
-    sin_dest.sin_port=htons(DEST_PORT_NO_PARAM);
-    sendto(socket_descriptor,buff2,cmdlen,0,(struct sockaddr *)&sin_dest,sin_len);
-    recvfrom(socket_descriptor1,buff,cmdlen,0,NULL,NULL);
-}
-
-void send_TIGER_Ch_CFG_Reg_CMD_PKT(unsigned int TIGER_ID_param,void*array_to_send_param,int cmdlen,
-                                   char*DEST_IP_ADDRESS_PARAM, unsigned int DEST_PORT_NO_PARAM)
-{
-    int i,j;
-    memcpy(buff,array_to_send_param,cmdlen);
-    for(i=0;i<cmdlen;i=i+4)
-      for(j=0;j<4;j++)
-        buff2[i+j]=buff[i+3-j];
-    sin_dest.sin_addr.s_addr=inet_addr(DEST_IP_ADDRESS_PARAM);
-    sin_dest.sin_port=htons(DEST_PORT_NO_PARAM);
-    sendto(socket_descriptor,buff2,cmdlen,0,(struct sockaddr *)&sin_dest,sin_len);
-    recvfrom(socket_descriptor1,buff,cmdlen,0,NULL,NULL);
-}
-
-void GEMROC_IVT_read_and_log(unsigned int GEMROC_ID_param, unsigned int display_enable_param, 
-                             unsigned int log_enable_param)
-{  
-    gemroc_set_target_GEMROC(GEMROC_ID_param);
-    gemroc_set_gemroc_cmd_code("CMD_GEMROC_LV_IVT_READ",1);
-    gemroc_update_command_words();
-    send_GEMROC_CFG_CMD_PKT( GEMROC_ID_param,gemroc.command_words,sizeof(gemroc.command_words), DEST_IP_ADDRESS, DEST_PORT_NO );
-}
-
-void send_GEMROC_LV_CMD (unsigned int GEMROC_ID_param, char*COMMAND_STRING_PARAM)
-{
-    gemroc_set_target_GEMROC(GEMROC_ID_param);
-    gemroc_set_gemroc_cmd_code(COMMAND_STRING_PARAM,1);
-    gemroc_update_command_words();
-    send_GEMROC_CFG_CMD_PKT( GEMROC_ID_param,gemroc.command_words,sizeof(gemroc.command_words), DEST_IP_ADDRESS, DEST_PORT_NO );  }
-
-void FEBPwrEnPattern_set(unsigned int GEMROC_ID_param, unsigned int FEB_PWREN_pattern_param)
-{
-    gemroc_set_target_GEMROC(GEMROC_ID_param);
-    gemroc_set_FEB_PWR_EN_pattern(FEB_PWREN_pattern_param);
-    send_GEMROC_LV_CMD (GEMROC_ID_param,"CMD_GEMROC_LV_CFG_WR");  }
-
-void set_FEB_timing_delays(unsigned int GEMROC_ID_param, unsigned int FEB3_TDly, unsigned int FEB2_TDly,
-                           unsigned int FEB1_TDly, unsigned int FEB0_TDly)
-{
-    gemroc_set_target_GEMROC(GEMROC_ID_param);
-    gemroc_set_timing_toFEB_delay(FEB3_TDly, FEB2_TDly, FEB1_TDly, FEB0_TDly);
-    send_GEMROC_LV_CMD(GEMROC_ID_param,"CMD_GEMROC_LV_CFG_WR");  }
-
-void send_GEMROC_DAQ_CMD(unsigned int GEMROC_ID_param,char*COMMAND_STRING_PARAM)
-{
-    DAQ_set_target_GEMROC(GEMROC_ID_param);
-    DAQ_set_gemroc_cmd_code(COMMAND_STRING_PARAM,1);
-    DAQ_update_command_words();
-    send_GEMROC_CFG_CMD_PKT( GEMROC_ID_param,DAQ.command_words,sizeof(DAQ.command_words), DEST_IP_ADDRESS, DEST_PORT_NO );}
-
-void  ResetTgtGEMROC_ALL_TIGER_GCfgReg(unsigned int GEMROC_ID_param)
-{
-    send_GEMROC_DAQ_CMD(GEMROC_ID_param,"CMD_GEMROC_DAQ_TIGER_GCFGREG_RESET");
-    sleep(2);
-}
-
-void WriteTgtGEMROC_TIGER_GCfgReg_fromfile(unsigned int GEMROC_ID_param, unsigned int TIGER_ID_param)
-{
-    g_reg_reload_gcfg_settings_from_file();
-    g_reg_set_target_GEMROC(GEMROC_ID_param);
-    g_reg_set_target_TIGER(TIGER_ID_param);
-    g_reg_set_command_code("WR");
-    g_reg_update_command_words();
-    send_TIGER_GCFG_Reg_CMD_PKT( TIGER_ID_param,g_reg.command_words,sizeof(g_reg.command_words),DEST_IP_ADDRESS, DEST_PORT_NO);
-}
-
-void set_FE_TPEnable(unsigned int GEMROC_ID_param, unsigned int TIGER_ID_param,
-                      unsigned int FE_TPEnable_param)
-{
-    g_reg_set_FE_TPEnable(FE_TPEnable_param);
-    g_reg_set_target_GEMROC(GEMROC_ID_param);
-    g_reg_set_target_TIGER(TIGER_ID_param);
-    char*COMMAND_STRING = "WR";
-    g_reg_set_command_code(COMMAND_STRING);
-    g_reg_update_command_words();
-    send_TIGER_GCFG_Reg_CMD_PKT( TIGER_ID_param,g_reg.command_words,sizeof(g_reg.command_words),DEST_IP_ADDRESS, DEST_PORT_NO);
-}
-
-void ReadTgtGEMROC_TIGER_GCfgReg (unsigned int  GEMROC_ID_param, 
-                                   unsigned int TIGER_ID_param)
-{
-    g_reg_set_target_GEMROC(GEMROC_ID_param);
-    g_reg_set_target_TIGER(TIGER_ID_param);
-    char*COMMAND_STRING = "RD";
-    g_reg_set_command_code(COMMAND_STRING);
-    g_reg_update_command_words();
-    send_TIGER_GCFG_Reg_CMD_PKT( TIGER_ID_param, g_reg.command_words,sizeof(g_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO);   }
-//4-16 17:09
-void WriteTgtGEMROC_TIGER_ChCfgReg_fromfile (unsigned int  GEMROC_ID_param, 
-          unsigned int TIGER_ID_param, unsigned int channel_ID_param)
-{   int i;
-    ch_reg_reload_chcfg_settings_from_file();
-    ch_reg_set_target_GEMROC(GEMROC_ID_param);
-    ch_reg_set_target_TIGER(TIGER_ID_param);
-    ch_reg_set_to_ALL_param (0);
-    char*COMMAND_STRING = "WR";
-    ch_reg_set_command_code(COMMAND_STRING);
-    if (channel_ID_param < 64)  {
-        ch_reg_set_target_channel(channel_ID_param);
-        ch_reg_update_command_words();
-        send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,ch_reg.command_words,sizeof(ch_reg.command_words),DEST_IP_ADDRESS,DEST_PORT_NO) ; }
-    else {
-        for(i=0;i<64;i++)
-       {
-            ch_reg_set_target_channel(i);
-            ch_reg_update_command_words();
-            send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,ch_reg.command_words,sizeof(ch_reg.command_words),DEST_IP_ADDRESS,DEST_PORT_NO);  }  }  }
-
-//4-16 17:15
-void ReadTgtGEMROC_TIGER_ChCfgReg ( unsigned int GEMROC_ID_param, unsigned int TIGER_ID_param, 
-                                    unsigned int channel_ID_param, unsigned int verbose_mode)
-{   int i;
-    ch_reg_set_target_GEMROC(GEMROC_ID_param);
-    ch_reg_set_target_TIGER(TIGER_ID_param);
-    ch_reg_set_target_channel(channel_ID_param);
-    char*COMMAND_STRING = "RD";
-    ch_reg_set_command_code(COMMAND_STRING);
-    if (channel_ID_param < 64){
-        ch_reg_set_target_channel(channel_ID_param);
-        ch_reg_update_command_words();
-        send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO);
-        if (verbose_mode == 1); }
-    else
-        for(i=0;i<64;i++){
-            ch_reg_set_target_channel(i);
-            ch_reg_update_command_words();
-            send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO);
-            if (verbose_mode == 1);;}
-}
-
-void Set_GEMROC_TIGER_ch_TPEn ( unsigned int GEMROC_ID_param, unsigned int TIGER_ID_param,
-          unsigned int  Channel_ID_param, unsigned int TP_disable_FE_param, unsigned int TriggerMode_param)
-{   int i;
-    ch_reg_set_target_GEMROC(GEMROC_ID_param);
-    ch_reg_set_target_TIGER(TIGER_ID_param);
-    ch_reg_set_to_ALL_param (0);
-    char*COMMAND_STRING = "WR";
-    ch_reg_set_command_code(COMMAND_STRING);
-    if (Channel_ID_param < 64){
-        ch_reg_set_target_channel(Channel_ID_param);
-        ch_reg_set_TP_disable_FE(TP_disable_FE_param);
-        ch_reg.TriggerMode = TriggerMode_param;
-        ch_reg_update_command_words();
-        send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO) ;}
-    else
-        for(i=0;i<64;i++){
-            ch_reg_set_target_channel(i);
-            ch_reg_set_TP_disable_FE(TP_disable_FE_param);
-            ch_reg.TriggerMode = TriggerMode_param;
-            ch_reg_update_command_words();
-            send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO );}
-}
-
-
-void Set_Vth_T1 ( unsigned int GEMROC_ID_param, unsigned int TIGER_ID_param, 
-            unsigned int Channel_ID_param, unsigned int VthT1_param)
-{    int i;
-    ch_reg_set_target_GEMROC(GEMROC_ID_param);
-    ch_reg_set_target_TIGER(TIGER_ID_param);
-    ch_reg_set_to_ALL_param (0);
-    ch_reg_set_Vth_T1(VthT1_param);
-    char*COMMAND_STRING = "WR";
-    ch_reg_set_command_code(COMMAND_STRING);
-    if (Channel_ID_param < 64){
-        ch_reg_set_target_channel(Channel_ID_param);
-        ch_reg_update_command_words();
-        send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param, ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO);}
-    else
-        for(i=0;i<64;i++) {
-            ch_reg_set_target_channel(i);
-            ch_reg_update_command_words();
-            send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO);  }    }
-
-void set_AVcasp_global( unsigned int GEMROC_ID_param, unsigned int TIGER_ID_param,
-                        unsigned int AVcasp_global_param)
-{
-    g_reg_set_target_GEMROC(GEMROC_ID_param);
-    g_reg_set_target_TIGER(TIGER_ID_param);
-    g_reg_set_AVcasp_global(AVcasp_global_param);
-    char*COMMAND_STRING = "WR";
-    g_reg_set_command_code(COMMAND_STRING);
-    g_reg_update_command_words();
-    send_TIGER_GCFG_Reg_CMD_PKT( TIGER_ID_param, g_reg.command_words,sizeof(g_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO);
-}
-void SynchReset_to_TgtFEB( unsigned int GEMROC_ID_param, unsigned int TargetFEB_param, unsigned int To_ALL_param)
-{
-    DAQ_set_target_GEMROC(GEMROC_ID_param);
-    DAQ_set_target_TCAM_ID(TargetFEB_param, To_ALL_param);
-    char*COMMAND_STRING = "CMD_GEMROC_DAQ_TIGER_SYNCH_RST";
-    send_GEMROC_DAQ_CMD(GEMROC_ID_param, COMMAND_STRING);
-}
-void SynchReset_to_TgtTCAM( unsigned int GEMROC_ID_param, unsigned int TargetTCAM_param, unsigned int To_ALL_param)
-{
-    DAQ_set_target_GEMROC(GEMROC_ID_param);
-    DAQ_set_target_TCAM_ID(TargetTCAM_param, To_ALL_param);
-    char*COMMAND_STRING = "CMD_GEMROC_DAQ_TCAM_SYNCH_RST";
-    send_GEMROC_DAQ_CMD(GEMROC_ID_param,COMMAND_STRING);
-}
-
-void DAQ_set_and_TL_start(unsigned int GEMROC_ID_param, 
-                           unsigned int TCAM_Enable_pattern_param, unsigned int Per_FEB_TP_Enable_pattern_param)
-{
-    DAQ_set_target_GEMROC(GEMROC_ID_param);
-    DAQ_set_EN_TM_TCAM_pattern (TCAM_Enable_pattern_param);
-    DAQ_set_TP_width(5);
-    DAQ_set_AUTO_TP_EN_pattern(0x0);
-    DAQ_set_Periodic_TP_EN_pattern(Per_FEB_TP_Enable_pattern_param);
-    DAQ_set_TL_nTM_ACQ(1);
-    DAQ_set_TP_Pos_nNeg(1);
-    DAQ_set_TP_period(8);
-    char*COMMAND_STRING = "CMD_GEMROC_DAQ_CFG_WR";
-    send_GEMROC_DAQ_CMD(GEMROC_ID_param,COMMAND_STRING);
-}
-void Set_OV_OC_OT_PWR_CUT_EN_FLAGS( unsigned int GEMROC_ID_param, unsigned int FEB_OVC_EN_pattern_param, 
-       unsigned int FEB_OVV_EN_pattern_param, unsigned int FEB_OVT_EN_pattern_param,unsigned int ROC_OVT_EN_param)
-{
-    gemroc.FEB_OVC_EN_pattern = FEB_OVC_EN_pattern_param & 0xF;
-    gemroc.FEB_OVV_EN_pattern = FEB_OVV_EN_pattern_param & 0xF;
-    gemroc.FEB_OVT_EN_pattern = FEB_OVT_EN_pattern_param & 0xF;
-    gemroc.ROC_OVT_EN = ROC_OVT_EN_param & 0x1;
-    char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
-    send_GEMROC_LV_CMD (GEMROC_ID_param, COMMAND_STRING);
-}
-
-void Set_OVVA_LIMIT( unsigned int GEMROC_ID_param, unsigned int FEB3_OVVA_thr_param, unsigned int FEB2_OVVA_thr_param,
-             unsigned int  FEB1_OVVA_thr_param, unsigned int FEB0_OVVA_thr_param)
-{
-    unsigned int FEB3_OVVA_thr_Unsigned8;
-    unsigned int FEB2_OVVA_thr_Unsigned8;
-    unsigned int FEB1_OVVA_thr_Unsigned8;
-    unsigned int FEB0_OVVA_thr_Unsigned8;
-    float  Vout_atten_factor = 0.5;
-    unsigned int V_ADC_data_shift = 4;
-    float shifted_V_ADC_res_mV_1LSB = 0.305 * 16;
-    unsigned int FEB3_OVVA_thr_int = (FEB3_OVVA_thr_param * Vout_atten_factor)/shifted_V_ADC_res_mV_1LSB;
-    if (FEB3_OVVA_thr_int <= 511)
-        FEB3_OVVA_thr_Unsigned8 = FEB3_OVVA_thr_int;
-    else
-        FEB3_OVVA_thr_Unsigned8 = 511;
-    unsigned int FEB2_OVVA_thr_int = ((FEB2_OVVA_thr_param * Vout_atten_factor)/shifted_V_ADC_res_mV_1LSB);
-    if (FEB2_OVVA_thr_int <= 511)
-        FEB2_OVVA_thr_Unsigned8 = FEB2_OVVA_thr_int;
-    else
-        FEB2_OVVA_thr_Unsigned8 = 511;
-    unsigned int FEB1_OVVA_thr_int = (FEB1_OVVA_thr_param * Vout_atten_factor)/shifted_V_ADC_res_mV_1LSB;
-    if (FEB1_OVVA_thr_int <= 511)
-        FEB1_OVVA_thr_Unsigned8 = FEB1_OVVA_thr_int;
-    else
-        FEB1_OVVA_thr_Unsigned8 = 511;
-    unsigned int FEB0_OVVA_thr_int = (FEB0_OVVA_thr_param * Vout_atten_factor)/shifted_V_ADC_res_mV_1LSB;
-    if (FEB0_OVVA_thr_int <= 511)
-        FEB0_OVVA_thr_Unsigned8 = FEB0_OVVA_thr_int;
-    else
-        FEB0_OVVA_thr_Unsigned8 = 511;
-    gemroc.A_OVV_LIMIT_FEB3 = FEB3_OVVA_thr_Unsigned8;
-    gemroc.A_OVV_LIMIT_FEB2 = FEB2_OVVA_thr_Unsigned8;
-    gemroc.A_OVV_LIMIT_FEB1 = FEB1_OVVA_thr_Unsigned8;
-    gemroc.A_OVV_LIMIT_FEB0 = FEB0_OVVA_thr_Unsigned8;
-    char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
-    send_GEMROC_LV_CMD (GEMROC_ID_param, COMMAND_STRING);
-}
-
-void Set_OVVD_LIMIT( unsigned int GEMROC_ID_param, unsigned int FEB3_OVVD_thr_param, unsigned int FEB2_OVVD_thr_param,
-                           unsigned int  FEB1_OVVD_thr_param, unsigned int FEB0_OVVD_thr_param)
-{   
-    unsigned int FEB3_OVVD_thr_Unsigned8;
-    unsigned int FEB2_OVVD_thr_Unsigned8;
-    unsigned int FEB1_OVVD_thr_Unsigned8;
-    unsigned int FEB0_OVVD_thr_Unsigned8;
-    float Vout_atten_factor = 0.5;
-    unsigned int V_ADC_data_shift = 4;
-    float shifted_V_ADC_res_mV_1LSB = 0.305 *16;
-    unsigned int FEB3_OVVD_thr_int = (FEB3_OVVD_thr_param * Vout_atten_factor)/shifted_V_ADC_res_mV_1LSB;
-    if (FEB3_OVVD_thr_int <= 511)
-        FEB3_OVVD_thr_Unsigned8 = FEB3_OVVD_thr_int;
-    else
-        FEB3_OVVD_thr_Unsigned8 = 511;
-    unsigned int FEB2_OVVD_thr_int =(FEB2_OVVD_thr_param * Vout_atten_factor)/shifted_V_ADC_res_mV_1LSB;
-    if (FEB2_OVVD_thr_int <= 511)
-        FEB2_OVVD_thr_Unsigned8 = FEB2_OVVD_thr_int;
-    else
-        FEB2_OVVD_thr_Unsigned8 = 511;
-    unsigned int FEB1_OVVD_thr_int = (FEB1_OVVD_thr_param * Vout_atten_factor)/shifted_V_ADC_res_mV_1LSB;
-    if (FEB1_OVVD_thr_int <= 511)
-        FEB1_OVVD_thr_Unsigned8 = FEB1_OVVD_thr_int;
-    else
-        FEB1_OVVD_thr_Unsigned8 = 511;
-    unsigned int FEB0_OVVD_thr_int = (FEB0_OVVD_thr_param * Vout_atten_factor)/shifted_V_ADC_res_mV_1LSB;
-    if (FEB0_OVVD_thr_int <= 511)
-        FEB0_OVVD_thr_Unsigned8 = FEB0_OVVD_thr_int;
-    else
-        FEB0_OVVD_thr_Unsigned8 = 511;
-    gemroc.D_OVV_LIMIT_FEB3 = FEB3_OVVD_thr_Unsigned8;
-    gemroc.D_OVV_LIMIT_FEB2 = FEB2_OVVD_thr_Unsigned8;
-    gemroc.D_OVV_LIMIT_FEB1 = FEB1_OVVD_thr_Unsigned8;
-    gemroc.D_OVV_LIMIT_FEB0 = FEB0_OVVD_thr_Unsigned8;
-    char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
-    send_GEMROC_LV_CMD (GEMROC_ID_param, COMMAND_STRING);
-}
-void Set_OVCA_LIMIT(unsigned int GEMROC_ID_param, unsigned int FEB3_OVCA_thr_param, unsigned int FEB2_OVCA_thr_param,
-                    unsigned int  FEB1_OVCA_thr_param, unsigned int FEB0_OVCA_thr_param)
-{
-    float IADC_conv_fact_INA_GAIN_50 = 8.13;
-    float IADC_conv_fact_INA_GAIN_200 = 8.13 / 4 ;
-    float IADC_conv_fact_INA_GAIN;
-    unsigned int FEB3_OVCA_thr_U9;
-    unsigned int FEB2_OVCA_thr_U9;
-    unsigned int FEB1_OVCA_thr_U9;
-    unsigned int FEB0_OVCA_thr_U9;
-    if ( GEMROC_ID < 3)
-        IADC_conv_fact_INA_GAIN = IADC_conv_fact_INA_GAIN_50;
-    else
-        IADC_conv_fact_INA_GAIN = IADC_conv_fact_INA_GAIN_200;
-    unsigned int FEB3_OVCA_thr_int = FEB3_OVCA_thr_param / IADC_conv_fact_INA_GAIN;
-    if (FEB3_OVCA_thr_int <= 511)
-        FEB3_OVCA_thr_U9 = FEB3_OVCA_thr_int;
-    else
-        FEB3_OVCA_thr_U9 = 511;
-    int FEB2_OVCA_thr_int = FEB2_OVCA_thr_param / IADC_conv_fact_INA_GAIN;
-    if (FEB2_OVCA_thr_int <= 511)
-        FEB2_OVCA_thr_U9 = FEB2_OVCA_thr_int;
-    else
-        FEB2_OVCA_thr_U9 = 511;
-    int FEB1_OVCA_thr_int = FEB1_OVCA_thr_param / IADC_conv_fact_INA_GAIN;
-    if (FEB1_OVCA_thr_int <= 511)
-        FEB1_OVCA_thr_U9 = FEB1_OVCA_thr_int;
-    else
-        FEB1_OVCA_thr_U9 = 511;
-    int FEB0_OVCA_thr_int = FEB0_OVCA_thr_param / IADC_conv_fact_INA_GAIN;
-    if (FEB0_OVCA_thr_int <= 511)
-        FEB0_OVCA_thr_U9 = FEB0_OVCA_thr_int;
-    else
-        FEB0_OVCA_thr_U9 = 511;
-    gemroc.A_OVC_LIMIT_FEB3 = FEB3_OVCA_thr_U9;
-    gemroc.A_OVC_LIMIT_FEB2 = FEB2_OVCA_thr_U9;
-    gemroc.A_OVC_LIMIT_FEB1 = FEB1_OVCA_thr_U9;
-    gemroc.A_OVC_LIMIT_FEB0 = FEB0_OVCA_thr_U9;
-    char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
-    send_GEMROC_LV_CMD (GEMROC_ID_param, COMMAND_STRING);
-}
-void Set_OVCD_LIMIT( unsigned int GEMROC_ID_param, unsigned int FEB3_OVCD_thr_param, unsigned int FEB2_OVCD_thr_param,
-                     unsigned int  FEB1_OVCD_thr_param,unsigned int  FEB0_OVCD_thr_param)
-{
-    float IADC_conv_fact_INA_GAIN_50 = 8.13;
-    float IADC_conv_fact_INA_GAIN_200 = 8.13 / 4 ;
-    float IADC_conv_fact_INA_GAIN;
-    int FEB3_OVCD_thr_U9; 
-    int FEB2_OVCD_thr_U9;
-    int FEB1_OVCD_thr_U9;
-    int FEB0_OVCD_thr_U9;
-    if ( GEMROC_ID < 3)
-        IADC_conv_fact_INA_GAIN = IADC_conv_fact_INA_GAIN_50;
-    else
-        IADC_conv_fact_INA_GAIN = IADC_conv_fact_INA_GAIN_200;
-    int FEB3_OVCD_thr_int = FEB3_OVCD_thr_param / IADC_conv_fact_INA_GAIN;
-    if (FEB3_OVCD_thr_int <= 511)
-        FEB3_OVCD_thr_U9 = FEB3_OVCD_thr_int;
-    else
-        FEB3_OVCD_thr_U9 = 511;
-    int FEB2_OVCD_thr_int = FEB2_OVCD_thr_param / IADC_conv_fact_INA_GAIN;
-    if (FEB2_OVCD_thr_int <= 511)
-        FEB2_OVCD_thr_U9 = FEB2_OVCD_thr_int;
-    else
-        FEB2_OVCD_thr_U9 = 511;
-    int FEB1_OVCD_thr_int = FEB1_OVCD_thr_param / IADC_conv_fact_INA_GAIN;
-    if (FEB1_OVCD_thr_int <= 511)
-        FEB1_OVCD_thr_U9 = FEB1_OVCD_thr_int;
-    else
-        FEB1_OVCD_thr_U9 = 511;
-    int FEB0_OVCD_thr_int = FEB0_OVCD_thr_param / IADC_conv_fact_INA_GAIN;
-    if (FEB0_OVCD_thr_int <= 511)
-        FEB0_OVCD_thr_U9 = FEB0_OVCD_thr_int;
-    else
-        FEB0_OVCD_thr_U9 = 511;
-    gemroc.D_OVC_LIMIT_FEB3 = FEB3_OVCD_thr_U9;
-    gemroc.D_OVC_LIMIT_FEB2 = FEB2_OVCD_thr_U9;
-    gemroc.D_OVC_LIMIT_FEB1 = FEB1_OVCD_thr_U9;
-    gemroc.D_OVC_LIMIT_FEB0 = FEB0_OVCD_thr_U9;
-    char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
-    send_GEMROC_LV_CMD (GEMROC_ID_param, COMMAND_STRING);
-}
-//2018-4-19 11:20
-void Set_OVTF_LIMIT(int GEMROC_ID_param, int FEB3_OVTF_thr_param,int FEB2_OVTF_thr_param, 
-                     int FEB1_OVTF_thr_param, int FEB0_OVTF_thr_param)
-{
-    float T_ref_PT1000 = 25.0;
-    float V_ADC_at_25C = 247.2;
-    float ADC_res_mV_1LSB = 0.305;
-    int   T_ADC_data_shift = 2;
-    float calibration_offset_mV_FEB3 = 1.0;
-    float calibration_offset_mV_FEB2 = 1.0;
-    float calibration_offset_mV_FEB1 = 1.0;
-    float calibration_offset_mV_FEB0 = 1.0;
-    float shifted_T_ADC_res_mV_1LSB = ADC_res_mV_1LSB * 4;
-    float deltaT_over_deltaV_ratio = 1.283;
-    int FEB3_OVTF_thr_Unsigned8;
-    int FEB2_OVTF_thr_Unsigned8;
-    int FEB1_OVTF_thr_Unsigned8;
-    int FEB0_OVTF_thr_Unsigned8;
-    int FEB3_OVTF_thr_int = (((FEB3_OVTF_thr_param - T_ref_PT1000)/deltaT_over_deltaV_ratio)+V_ADC_at_25C-calibration_offset_mV_FEB3)/shifted_T_ADC_res_mV_1LSB ;
-    if (FEB3_OVTF_thr_int <= 255)
-        FEB3_OVTF_thr_Unsigned8 = FEB3_OVTF_thr_int;
-    else
-        FEB3_OVTF_thr_Unsigned8 = 255;
-    int FEB2_OVTF_thr_int = (((FEB2_OVTF_thr_param - T_ref_PT1000)/deltaT_over_deltaV_ratio)+V_ADC_at_25C-calibration_offset_mV_FEB2)/shifted_T_ADC_res_mV_1LSB ;
-    if (FEB2_OVTF_thr_int <= 255)
-        FEB2_OVTF_thr_Unsigned8 = FEB2_OVTF_thr_int;
-    else
-        FEB2_OVTF_thr_Unsigned8 = 255;
-    int FEB1_OVTF_thr_int =(((FEB1_OVTF_thr_param - T_ref_PT1000)/deltaT_over_deltaV_ratio)+V_ADC_at_25C-calibration_offset_mV_FEB1)/shifted_T_ADC_res_mV_1LSB ;
-    if (FEB1_OVTF_thr_int <= 255)
-        FEB1_OVTF_thr_Unsigned8 = FEB1_OVTF_thr_int;
-    else
-        FEB1_OVTF_thr_Unsigned8 = 255;
-    int FEB0_OVTF_thr_int = (((FEB0_OVTF_thr_param - T_ref_PT1000)/deltaT_over_deltaV_ratio)+V_ADC_at_25C-calibration_offset_mV_FEB0)/shifted_T_ADC_res_mV_1LSB ;
-    if (FEB0_OVTF_thr_int <= 255)
-        FEB0_OVTF_thr_Unsigned8 = FEB0_OVTF_thr_int;
-    else
-        FEB0_OVTF_thr_Unsigned8 = 255;
-    gemroc.OVT_LIMIT_FEB3 = FEB3_OVTF_thr_Unsigned8;
-    gemroc.OVT_LIMIT_FEB2 = FEB2_OVTF_thr_Unsigned8;
-    gemroc.OVT_LIMIT_FEB1 = FEB1_OVTF_thr_Unsigned8;
-    gemroc.OVT_LIMIT_FEB0 = FEB0_OVTF_thr_Unsigned8;
-    char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
-    send_GEMROC_LV_CMD (GEMROC_ID_param, COMMAND_STRING);
-}
-void set_ROC_OVT_LIMIT( int GEMROC_ID_param, int ROC_OVT_thr_param)
-{
-    int ROC_OVT_thr_Unsigned6;
-    if (ROC_OVT_thr_param <= 63)
-        ROC_OVT_thr_Unsigned6 = ROC_OVT_thr_param;
-    else
-        ROC_OVT_thr_Unsigned6 = 63;
-    gemroc.ROC_OVT_LIMIT = ROC_OVT_thr_Unsigned6;
-    char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
-    send_GEMROC_LV_CMD (GEMROC_ID_param,COMMAND_STRING);
-}
-
-void Read_GEMROC_LV_CfgReg(int GEMROC_ID_param)
-{
-    char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_RD";
-    send_GEMROC_LV_CMD(GEMROC_ID_param, COMMAND_STRING);
-}
-void Read_GEMROC_DAQ_CfgReg( int GEMROC_ID_param)
-{
-    char*COMMAND_STRING = "CMD_GEMROC_DAQ_CFG_RD";
-    send_GEMROC_DAQ_CMD (GEMROC_ID_param,COMMAND_STRING);
-}
-
-
-
-
-
-
 
 void DAQ_init(  unsigned int TARGET_GEMROC_ID_param,          
                 char* command_string_param,
@@ -1374,6 +892,485 @@ void g_reg_update_command_words()
 }
 
 
+void send_GEMROC_CFG_CMD_PKT( unsigned int TARGET_GEMROC_ID_param, 
+                              void*array_to_send_param, int cmdlen,char*DEST_IP_ADDRESS_PARAM, unsigned int DEST_PORT_NO_PARAM)
+{  
+    int i,j;
+    memcpy(buff,array_to_send_param,cmdlen);
+    for(i=0;i<cmdlen;i=i+4)
+      for(j=0;j<4;j++)
+        buff2[i+j]=buff[i+3-j];
+    sin_dest.sin_addr.s_addr=inet_addr(DEST_IP_ADDRESS_PARAM);
+    sin_dest.sin_port=htons(DEST_PORT_NO_PARAM);
+    sendto(socket_descriptor,buff2,cmdlen,0,(struct sockaddr *)&sin_dest,sin_len);
+    recvfrom(socket_descriptor1,buff,cmdlen,0,NULL,NULL);
+}
+
+void send_TIGER_GCFG_Reg_CMD_PKT(unsigned int TIGER_ID_param, void*array_to_send_param, int cmdlen,
+                                 char*DEST_IP_ADDRESS_PARAM, unsigned int DEST_PORT_NO_PARAM)
+{
+    int i,j;
+    memcpy(buff,array_to_send_param,cmdlen);
+    for(i=0;i<cmdlen;i=i+4)
+      for(j=0;j<4;j++)
+        buff2[i+j]=buff[i+3-j];
+    sin_dest.sin_addr.s_addr=inet_addr(DEST_IP_ADDRESS_PARAM);
+    sin_dest.sin_port=htons(DEST_PORT_NO_PARAM);
+    sendto(socket_descriptor,buff2,cmdlen,0,(struct sockaddr *)&sin_dest,sin_len);
+    recvfrom(socket_descriptor1,buff,cmdlen,0,NULL,NULL);
+}
+
+void send_TIGER_Ch_CFG_Reg_CMD_PKT(unsigned int TIGER_ID_param,void*array_to_send_param,int cmdlen,
+                                   char*DEST_IP_ADDRESS_PARAM, unsigned int DEST_PORT_NO_PARAM)
+{
+    int i,j;
+    memcpy(buff,array_to_send_param,cmdlen);
+    for(i=0;i<cmdlen;i=i+4)
+      for(j=0;j<4;j++)
+        buff2[i+j]=buff[i+3-j];
+    sin_dest.sin_addr.s_addr=inet_addr(DEST_IP_ADDRESS_PARAM);
+    sin_dest.sin_port=htons(DEST_PORT_NO_PARAM);
+    sendto(socket_descriptor,buff2,cmdlen,0,(struct sockaddr *)&sin_dest,sin_len);
+    recvfrom(socket_descriptor1,buff,cmdlen,0,NULL,NULL);
+}
+
+void GEMROC_IVT_read_and_log(unsigned int GEMROC_ID_param, unsigned int display_enable_param, 
+                             unsigned int log_enable_param)
+{  
+    gemroc_set_target_GEMROC(GEMROC_ID_param);
+    gemroc_set_gemroc_cmd_code("CMD_GEMROC_LV_IVT_READ",1);
+    gemroc_update_command_words();
+    send_GEMROC_CFG_CMD_PKT( GEMROC_ID_param,gemroc.command_words,sizeof(gemroc.command_words), DEST_IP_ADDRESS, DEST_PORT_NO );
+}
+
+void send_GEMROC_LV_CMD (unsigned int GEMROC_ID_param, char*COMMAND_STRING_PARAM)
+{
+    gemroc_set_target_GEMROC(GEMROC_ID_param);
+    gemroc_set_gemroc_cmd_code(COMMAND_STRING_PARAM,1);
+    gemroc_update_command_words();
+    send_GEMROC_CFG_CMD_PKT( GEMROC_ID_param,gemroc.command_words,sizeof(gemroc.command_words), DEST_IP_ADDRESS, DEST_PORT_NO );  }
+
+void FEBPwrEnPattern_set(unsigned int GEMROC_ID_param, unsigned int FEB_PWREN_pattern_param)
+{
+    gemroc_set_target_GEMROC(GEMROC_ID_param);
+    gemroc_set_FEB_PWR_EN_pattern(FEB_PWREN_pattern_param);
+    send_GEMROC_LV_CMD (GEMROC_ID_param,"CMD_GEMROC_LV_CFG_WR");  }
+
+void set_FEB_timing_delays(unsigned int GEMROC_ID_param, unsigned int FEB3_TDly, unsigned int FEB2_TDly,
+                           unsigned int FEB1_TDly, unsigned int FEB0_TDly)
+{
+    gemroc_set_target_GEMROC(GEMROC_ID_param);
+    gemroc_set_timing_toFEB_delay(FEB3_TDly, FEB2_TDly, FEB1_TDly, FEB0_TDly);
+    send_GEMROC_LV_CMD(GEMROC_ID_param,"CMD_GEMROC_LV_CFG_WR");  }
+
+void send_GEMROC_DAQ_CMD(unsigned int GEMROC_ID_param,char*COMMAND_STRING_PARAM)
+{
+    DAQ_set_target_GEMROC(GEMROC_ID_param);
+    DAQ_set_gemroc_cmd_code(COMMAND_STRING_PARAM,1);
+    DAQ_update_command_words();
+    send_GEMROC_CFG_CMD_PKT( GEMROC_ID_param,DAQ.command_words,sizeof(DAQ.command_words), DEST_IP_ADDRESS, DEST_PORT_NO );}
+
+void  ResetTgtGEMROC_ALL_TIGER_GCfgReg(unsigned int GEMROC_ID_param)
+{
+    send_GEMROC_DAQ_CMD(GEMROC_ID_param,"CMD_GEMROC_DAQ_TIGER_GCFGREG_RESET");
+    sleep(1);
+}
+
+void WriteTgtGEMROC_TIGER_GCfgReg_fromfile(unsigned int GEMROC_ID_param, unsigned int TIGER_ID_param)
+{
+    g_reg_reload_gcfg_settings_from_file();
+    g_reg_set_target_GEMROC(GEMROC_ID_param);
+    g_reg_set_target_TIGER(TIGER_ID_param);
+    g_reg_set_command_code("WR");
+    g_reg_update_command_words();
+    send_TIGER_GCFG_Reg_CMD_PKT( TIGER_ID_param,g_reg.command_words,sizeof(g_reg.command_words),DEST_IP_ADDRESS, DEST_PORT_NO);
+}
+
+void set_FE_TPEnable(unsigned int GEMROC_ID_param, unsigned int TIGER_ID_param,
+                      unsigned int FE_TPEnable_param)
+{
+    g_reg_set_FE_TPEnable(FE_TPEnable_param);
+    g_reg_set_target_GEMROC(GEMROC_ID_param);
+    g_reg_set_target_TIGER(TIGER_ID_param);
+    char*COMMAND_STRING = "WR";
+    g_reg_set_command_code(COMMAND_STRING);
+    g_reg_update_command_words();
+    send_TIGER_GCFG_Reg_CMD_PKT( TIGER_ID_param,g_reg.command_words,sizeof(g_reg.command_words),DEST_IP_ADDRESS, DEST_PORT_NO);
+}
+
+void ReadTgtGEMROC_TIGER_GCfgReg (unsigned int  GEMROC_ID_param, 
+                                   unsigned int TIGER_ID_param)
+{
+    g_reg_set_target_GEMROC(GEMROC_ID_param);
+    g_reg_set_target_TIGER(TIGER_ID_param);
+    char*COMMAND_STRING = "RD";
+    g_reg_set_command_code(COMMAND_STRING);
+    g_reg_update_command_words();
+    send_TIGER_GCFG_Reg_CMD_PKT( TIGER_ID_param, g_reg.command_words,sizeof(g_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO);   }
+//4-16 17:09
+void WriteTgtGEMROC_TIGER_ChCfgReg_fromfile (unsigned int  GEMROC_ID_param, 
+          unsigned int TIGER_ID_param, unsigned int channel_ID_param)
+{   int i;
+    ch_reg_reload_chcfg_settings_from_file();
+    ch_reg_set_target_GEMROC(GEMROC_ID_param);
+    ch_reg_set_target_TIGER(TIGER_ID_param);
+    ch_reg_set_to_ALL_param (0);
+    char*COMMAND_STRING = "WR";
+    ch_reg_set_command_code(COMMAND_STRING);
+    if (channel_ID_param < 64)  {
+        ch_reg_set_target_channel(channel_ID_param);
+        ch_reg_update_command_words();
+        send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,ch_reg.command_words,sizeof(ch_reg.command_words),DEST_IP_ADDRESS,DEST_PORT_NO) ; }
+    else {
+        for(i=0;i<64;i++)
+       {
+            ch_reg_set_target_channel(i);
+            ch_reg_update_command_words();
+            send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,ch_reg.command_words,sizeof(ch_reg.command_words),DEST_IP_ADDRESS,DEST_PORT_NO);  }  }  }
+
+//4-16 17:15
+void ReadTgtGEMROC_TIGER_ChCfgReg ( unsigned int GEMROC_ID_param, unsigned int TIGER_ID_param, 
+                                    unsigned int channel_ID_param, unsigned int verbose_mode)
+{   int i;
+    ch_reg_set_target_GEMROC(GEMROC_ID_param);
+    ch_reg_set_target_TIGER(TIGER_ID_param);
+    ch_reg_set_target_channel(channel_ID_param);
+    char*COMMAND_STRING = "RD";
+    ch_reg_set_command_code(COMMAND_STRING);
+    if (channel_ID_param < 64){
+        ch_reg_set_target_channel(channel_ID_param);
+        ch_reg_update_command_words();
+        send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO);
+        if (verbose_mode == 1); }
+    else
+        for(i=0;i<64;i++){
+            ch_reg_set_target_channel(i);
+            ch_reg_update_command_words();
+            send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO);
+            if (verbose_mode == 1);;}
+}
+
+void Set_GEMROC_TIGER_ch_TPEn ( unsigned int GEMROC_ID_param, unsigned int TIGER_ID_param,
+          unsigned int  Channel_ID_param, unsigned int TP_disable_FE_param, unsigned int TriggerMode_param)
+{   int i;
+    ch_reg_set_target_GEMROC(GEMROC_ID_param);
+    ch_reg_set_target_TIGER(TIGER_ID_param);
+    ch_reg_set_to_ALL_param (0);
+    char*COMMAND_STRING = "WR";
+    ch_reg_set_command_code(COMMAND_STRING);
+    if (Channel_ID_param < 64){
+        ch_reg_set_target_channel(Channel_ID_param);
+        ch_reg_set_TP_disable_FE(TP_disable_FE_param);
+        ch_reg.TriggerMode = TriggerMode_param;
+        ch_reg_update_command_words();
+        send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO) ;}
+    else
+        for(i=0;i<64;i++){
+            ch_reg_set_target_channel(i);
+            ch_reg_set_TP_disable_FE(TP_disable_FE_param);
+            ch_reg.TriggerMode = TriggerMode_param;
+            ch_reg_update_command_words();
+            send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO );}
+}
+
+
+void Set_Vth_T1 ( unsigned int GEMROC_ID_param, unsigned int TIGER_ID_param, 
+            unsigned int Channel_ID_param, unsigned int VthT1_param)
+{    int i;
+    ch_reg_set_target_GEMROC(GEMROC_ID_param);
+    ch_reg_set_target_TIGER(TIGER_ID_param);
+    ch_reg_set_to_ALL_param (0);
+    ch_reg_set_Vth_T1(VthT1_param);
+    char*COMMAND_STRING = "WR";
+    ch_reg_set_command_code(COMMAND_STRING);
+    if (Channel_ID_param < 64){
+        ch_reg_set_target_channel(Channel_ID_param);
+        ch_reg_update_command_words();
+        send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param, ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO);}
+    else
+        for(i=0;i<64;i++) {
+            ch_reg_set_target_channel(i);
+            ch_reg_update_command_words();
+            send_TIGER_Ch_CFG_Reg_CMD_PKT(TIGER_ID_param,ch_reg.command_words,sizeof(ch_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO);  }    }
+
+void set_AVcasp_global( unsigned int GEMROC_ID_param, unsigned int TIGER_ID_param,
+                        unsigned int AVcasp_global_param)
+{
+    g_reg_set_target_GEMROC(GEMROC_ID_param);
+    g_reg_set_target_TIGER(TIGER_ID_param);
+    g_reg_set_AVcasp_global(AVcasp_global_param);
+    char*COMMAND_STRING = "WR";
+    g_reg_set_command_code(COMMAND_STRING);
+    g_reg_update_command_words();
+    send_TIGER_GCFG_Reg_CMD_PKT( TIGER_ID_param, g_reg.command_words,sizeof(g_reg.command_words), DEST_IP_ADDRESS, DEST_PORT_NO);
+}
+void SynchReset_to_TgtFEB( unsigned int GEMROC_ID_param, unsigned int TargetFEB_param, unsigned int To_ALL_param)
+{
+    DAQ_set_target_GEMROC(GEMROC_ID_param);
+    DAQ_set_target_TCAM_ID(TargetFEB_param, To_ALL_param);
+    char*COMMAND_STRING = "CMD_GEMROC_DAQ_TIGER_SYNCH_RST";
+    send_GEMROC_DAQ_CMD(GEMROC_ID_param, COMMAND_STRING);
+}
+void SynchReset_to_TgtTCAM( unsigned int GEMROC_ID_param, unsigned int TargetTCAM_param, unsigned int To_ALL_param)
+{
+    DAQ_set_target_GEMROC(GEMROC_ID_param);
+    DAQ_set_target_TCAM_ID(TargetTCAM_param, To_ALL_param);
+    char*COMMAND_STRING = "CMD_GEMROC_DAQ_TCAM_SYNCH_RST";
+    send_GEMROC_DAQ_CMD(GEMROC_ID_param,COMMAND_STRING);
+}
+
+void DAQ_set_and_TL_start(unsigned int GEMROC_ID_param, 
+                           unsigned int TCAM_Enable_pattern_param, unsigned int Per_FEB_TP_Enable_pattern_param)
+{
+    DAQ_set_target_GEMROC(GEMROC_ID_param);
+    DAQ_set_EN_TM_TCAM_pattern (TCAM_Enable_pattern_param);
+    DAQ_set_TP_width(5);
+    DAQ_set_AUTO_TP_EN_pattern(0x0);
+    DAQ_set_Periodic_TP_EN_pattern(Per_FEB_TP_Enable_pattern_param);
+    DAQ_set_TL_nTM_ACQ(1);
+    DAQ_set_TP_Pos_nNeg(1);
+    DAQ_set_TP_period(8);
+    char*COMMAND_STRING = "CMD_GEMROC_DAQ_CFG_WR";
+    send_GEMROC_DAQ_CMD(GEMROC_ID_param,COMMAND_STRING);
+}
+void Set_OV_OC_OT_PWR_CUT_EN_FLAGS( unsigned int GEMROC_ID_param, unsigned int FEB_OVC_EN_pattern_param, 
+       unsigned int FEB_OVV_EN_pattern_param, unsigned int FEB_OVT_EN_pattern_param,unsigned int ROC_OVT_EN_param)
+{
+    gemroc.FEB_OVC_EN_pattern = FEB_OVC_EN_pattern_param & 0xF;
+    gemroc.FEB_OVV_EN_pattern = FEB_OVV_EN_pattern_param & 0xF;
+    gemroc.FEB_OVT_EN_pattern = FEB_OVT_EN_pattern_param & 0xF;
+    gemroc.ROC_OVT_EN = ROC_OVT_EN_param & 0x1;
+    char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
+    send_GEMROC_LV_CMD (GEMROC_ID_param, COMMAND_STRING);
+}
+
+void Set_OVVA_LIMIT( unsigned int GEMROC_ID_param, unsigned int FEB3_OVVA_thr_param, unsigned int FEB2_OVVA_thr_param,
+             unsigned int  FEB1_OVVA_thr_param, unsigned int FEB0_OVVA_thr_param)
+{
+    unsigned int FEB3_OVVA_thr_Unsigned8;
+    unsigned int FEB2_OVVA_thr_Unsigned8;
+    unsigned int FEB1_OVVA_thr_Unsigned8;
+    unsigned int FEB0_OVVA_thr_Unsigned8;
+    float  Vout_atten_factor = 0.5;
+    unsigned int V_ADC_data_shift = 4;
+    float shifted_V_ADC_res_mV_1LSB = 0.305 * 16;
+    unsigned int FEB3_OVVA_thr_int = (FEB3_OVVA_thr_param * Vout_atten_factor)/shifted_V_ADC_res_mV_1LSB;
+    if (FEB3_OVVA_thr_int <= 511)
+        FEB3_OVVA_thr_Unsigned8 = FEB3_OVVA_thr_int;
+    else
+        FEB3_OVVA_thr_Unsigned8 = 511;
+    unsigned int FEB2_OVVA_thr_int = ((FEB2_OVVA_thr_param * Vout_atten_factor)/shifted_V_ADC_res_mV_1LSB);
+    if (FEB2_OVVA_thr_int <= 511)
+        FEB2_OVVA_thr_Unsigned8 = FEB2_OVVA_thr_int;
+    else
+        FEB2_OVVA_thr_Unsigned8 = 511;
+    unsigned int FEB1_OVVA_thr_int = (FEB1_OVVA_thr_param * Vout_atten_factor)/shifted_V_ADC_res_mV_1LSB;
+    if (FEB1_OVVA_thr_int <= 511)
+        FEB1_OVVA_thr_Unsigned8 = FEB1_OVVA_thr_int;
+    else
+        FEB1_OVVA_thr_Unsigned8 = 511;
+    unsigned int FEB0_OVVA_thr_int = (FEB0_OVVA_thr_param * Vout_atten_factor)/shifted_V_ADC_res_mV_1LSB;
+    if (FEB0_OVVA_thr_int <= 511)
+        FEB0_OVVA_thr_Unsigned8 = FEB0_OVVA_thr_int;
+    else
+        FEB0_OVVA_thr_Unsigned8 = 511;
+    gemroc.A_OVV_LIMIT_FEB3 = FEB3_OVVA_thr_Unsigned8;
+    gemroc.A_OVV_LIMIT_FEB2 = FEB2_OVVA_thr_Unsigned8;
+    gemroc.A_OVV_LIMIT_FEB1 = FEB1_OVVA_thr_Unsigned8;
+    gemroc.A_OVV_LIMIT_FEB0 = FEB0_OVVA_thr_Unsigned8;
+    char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
+    send_GEMROC_LV_CMD (GEMROC_ID_param, COMMAND_STRING);
+}
+
+void Set_OVVD_LIMIT( unsigned int GEMROC_ID_param, unsigned int FEB3_OVVD_thr_param, unsigned int FEB2_OVVD_thr_param,
+                           unsigned int  FEB1_OVVD_thr_param, unsigned int FEB0_OVVD_thr_param)
+{   
+    unsigned int FEB3_OVVD_thr_Unsigned8;
+    unsigned int FEB2_OVVD_thr_Unsigned8;
+    unsigned int FEB1_OVVD_thr_Unsigned8;
+    unsigned int FEB0_OVVD_thr_Unsigned8;
+    float Vout_atten_factor = 0.5;
+    unsigned int V_ADC_data_shift = 4;
+    float shifted_V_ADC_res_mV_1LSB = 0.305 *16;
+    unsigned int FEB3_OVVD_thr_int = (FEB3_OVVD_thr_param * Vout_atten_factor)/shifted_V_ADC_res_mV_1LSB;
+    if (FEB3_OVVD_thr_int <= 511)
+        FEB3_OVVD_thr_Unsigned8 = FEB3_OVVD_thr_int;
+    else
+        FEB3_OVVD_thr_Unsigned8 = 511;
+    unsigned int FEB2_OVVD_thr_int =(FEB2_OVVD_thr_param * Vout_atten_factor)/shifted_V_ADC_res_mV_1LSB;
+    if (FEB2_OVVD_thr_int <= 511)
+        FEB2_OVVD_thr_Unsigned8 = FEB2_OVVD_thr_int;
+    else
+        FEB2_OVVD_thr_Unsigned8 = 511;
+    unsigned int FEB1_OVVD_thr_int = (FEB1_OVVD_thr_param * Vout_atten_factor)/shifted_V_ADC_res_mV_1LSB;
+    if (FEB1_OVVD_thr_int <= 511)
+        FEB1_OVVD_thr_Unsigned8 = FEB1_OVVD_thr_int;
+    else
+        FEB1_OVVD_thr_Unsigned8 = 511;
+    unsigned int FEB0_OVVD_thr_int = (FEB0_OVVD_thr_param * Vout_atten_factor)/shifted_V_ADC_res_mV_1LSB;
+    if (FEB0_OVVD_thr_int <= 511)
+        FEB0_OVVD_thr_Unsigned8 = FEB0_OVVD_thr_int;
+    else
+        FEB0_OVVD_thr_Unsigned8 = 511;
+    gemroc.D_OVV_LIMIT_FEB3 = FEB3_OVVD_thr_Unsigned8;
+    gemroc.D_OVV_LIMIT_FEB2 = FEB2_OVVD_thr_Unsigned8;
+    gemroc.D_OVV_LIMIT_FEB1 = FEB1_OVVD_thr_Unsigned8;
+    gemroc.D_OVV_LIMIT_FEB0 = FEB0_OVVD_thr_Unsigned8;
+    char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
+    send_GEMROC_LV_CMD (GEMROC_ID_param, COMMAND_STRING);
+}
+void Set_OVCA_LIMIT(unsigned int GEMROC_ID_param, unsigned int FEB3_OVCA_thr_param, unsigned int FEB2_OVCA_thr_param,
+                    unsigned int  FEB1_OVCA_thr_param, unsigned int FEB0_OVCA_thr_param)
+{
+    float IADC_conv_fact_INA_GAIN_50 = 8.13;
+    float IADC_conv_fact_INA_GAIN_200 = 8.13 / 4 ;
+    float IADC_conv_fact_INA_GAIN;
+    unsigned int FEB3_OVCA_thr_U9;
+    unsigned int FEB2_OVCA_thr_U9;
+    unsigned int FEB1_OVCA_thr_U9;
+    unsigned int FEB0_OVCA_thr_U9;
+    if ( GEMROC_ID < 3)
+        IADC_conv_fact_INA_GAIN = IADC_conv_fact_INA_GAIN_50;
+    else
+        IADC_conv_fact_INA_GAIN = IADC_conv_fact_INA_GAIN_200;
+    unsigned int FEB3_OVCA_thr_int = FEB3_OVCA_thr_param / IADC_conv_fact_INA_GAIN;
+    if (FEB3_OVCA_thr_int <= 511)
+        FEB3_OVCA_thr_U9 = FEB3_OVCA_thr_int;
+    else
+        FEB3_OVCA_thr_U9 = 511;
+    int FEB2_OVCA_thr_int = FEB2_OVCA_thr_param / IADC_conv_fact_INA_GAIN;
+    if (FEB2_OVCA_thr_int <= 511)
+        FEB2_OVCA_thr_U9 = FEB2_OVCA_thr_int;
+    else
+        FEB2_OVCA_thr_U9 = 511;
+    int FEB1_OVCA_thr_int = FEB1_OVCA_thr_param / IADC_conv_fact_INA_GAIN;
+    if (FEB1_OVCA_thr_int <= 511)
+        FEB1_OVCA_thr_U9 = FEB1_OVCA_thr_int;
+    else
+        FEB1_OVCA_thr_U9 = 511;
+    int FEB0_OVCA_thr_int = FEB0_OVCA_thr_param / IADC_conv_fact_INA_GAIN;
+    if (FEB0_OVCA_thr_int <= 511)
+        FEB0_OVCA_thr_U9 = FEB0_OVCA_thr_int;
+    else
+        FEB0_OVCA_thr_U9 = 511;
+    gemroc.A_OVC_LIMIT_FEB3 = FEB3_OVCA_thr_U9;
+    gemroc.A_OVC_LIMIT_FEB2 = FEB2_OVCA_thr_U9;
+    gemroc.A_OVC_LIMIT_FEB1 = FEB1_OVCA_thr_U9;
+    gemroc.A_OVC_LIMIT_FEB0 = FEB0_OVCA_thr_U9;
+    char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
+    send_GEMROC_LV_CMD (GEMROC_ID_param, COMMAND_STRING);
+}
+void Set_OVCD_LIMIT( unsigned int GEMROC_ID_param, unsigned int FEB3_OVCD_thr_param, unsigned int FEB2_OVCD_thr_param,
+                     unsigned int  FEB1_OVCD_thr_param,unsigned int  FEB0_OVCD_thr_param)
+{
+    float IADC_conv_fact_INA_GAIN_50 = 8.13;
+    float IADC_conv_fact_INA_GAIN_200 = 8.13 / 4 ;
+    float IADC_conv_fact_INA_GAIN;
+    int FEB3_OVCD_thr_U9; 
+    int FEB2_OVCD_thr_U9;
+    int FEB1_OVCD_thr_U9;
+    int FEB0_OVCD_thr_U9;
+    if ( GEMROC_ID < 3)
+        IADC_conv_fact_INA_GAIN = IADC_conv_fact_INA_GAIN_50;
+    else
+        IADC_conv_fact_INA_GAIN = IADC_conv_fact_INA_GAIN_200;
+    int FEB3_OVCD_thr_int = FEB3_OVCD_thr_param / IADC_conv_fact_INA_GAIN;
+    if (FEB3_OVCD_thr_int <= 511)
+        FEB3_OVCD_thr_U9 = FEB3_OVCD_thr_int;
+    else
+        FEB3_OVCD_thr_U9 = 511;
+    int FEB2_OVCD_thr_int = FEB2_OVCD_thr_param / IADC_conv_fact_INA_GAIN;
+    if (FEB2_OVCD_thr_int <= 511)
+        FEB2_OVCD_thr_U9 = FEB2_OVCD_thr_int;
+    else
+        FEB2_OVCD_thr_U9 = 511;
+    int FEB1_OVCD_thr_int = FEB1_OVCD_thr_param / IADC_conv_fact_INA_GAIN;
+    if (FEB1_OVCD_thr_int <= 511)
+        FEB1_OVCD_thr_U9 = FEB1_OVCD_thr_int;
+    else
+        FEB1_OVCD_thr_U9 = 511;
+    int FEB0_OVCD_thr_int = FEB0_OVCD_thr_param / IADC_conv_fact_INA_GAIN;
+    if (FEB0_OVCD_thr_int <= 511)
+        FEB0_OVCD_thr_U9 = FEB0_OVCD_thr_int;
+    else
+        FEB0_OVCD_thr_U9 = 511;
+    gemroc.D_OVC_LIMIT_FEB3 = FEB3_OVCD_thr_U9;
+    gemroc.D_OVC_LIMIT_FEB2 = FEB2_OVCD_thr_U9;
+    gemroc.D_OVC_LIMIT_FEB1 = FEB1_OVCD_thr_U9;
+    gemroc.D_OVC_LIMIT_FEB0 = FEB0_OVCD_thr_U9;
+    char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
+    send_GEMROC_LV_CMD (GEMROC_ID_param, COMMAND_STRING);
+}
+//2018-4-19 11:20
+void Set_OVTF_LIMIT(int GEMROC_ID_param, int FEB3_OVTF_thr_param,int FEB2_OVTF_thr_param, 
+                     int FEB1_OVTF_thr_param, int FEB0_OVTF_thr_param)
+{
+    float T_ref_PT1000 = 25.0;
+    float V_ADC_at_25C = 247.2;
+    float ADC_res_mV_1LSB = 0.305;
+    int   T_ADC_data_shift = 2;
+    float calibration_offset_mV_FEB3 = 1.0;
+    float calibration_offset_mV_FEB2 = 1.0;
+    float calibration_offset_mV_FEB1 = 1.0;
+    float calibration_offset_mV_FEB0 = 1.0;
+    float shifted_T_ADC_res_mV_1LSB = ADC_res_mV_1LSB * 4;
+    float deltaT_over_deltaV_ratio = 1.283;
+    int FEB3_OVTF_thr_Unsigned8;
+    int FEB2_OVTF_thr_Unsigned8;
+    int FEB1_OVTF_thr_Unsigned8;
+    int FEB0_OVTF_thr_Unsigned8;
+    int FEB3_OVTF_thr_int = (((FEB3_OVTF_thr_param - T_ref_PT1000)/deltaT_over_deltaV_ratio)+V_ADC_at_25C-calibration_offset_mV_FEB3)/shifted_T_ADC_res_mV_1LSB ;
+    if (FEB3_OVTF_thr_int <= 255)
+        FEB3_OVTF_thr_Unsigned8 = FEB3_OVTF_thr_int;
+    else
+        FEB3_OVTF_thr_Unsigned8 = 255;
+    int FEB2_OVTF_thr_int = (((FEB2_OVTF_thr_param - T_ref_PT1000)/deltaT_over_deltaV_ratio)+V_ADC_at_25C-calibration_offset_mV_FEB2)/shifted_T_ADC_res_mV_1LSB ;
+    if (FEB2_OVTF_thr_int <= 255)
+        FEB2_OVTF_thr_Unsigned8 = FEB2_OVTF_thr_int;
+    else
+        FEB2_OVTF_thr_Unsigned8 = 255;
+    int FEB1_OVTF_thr_int =(((FEB1_OVTF_thr_param - T_ref_PT1000)/deltaT_over_deltaV_ratio)+V_ADC_at_25C-calibration_offset_mV_FEB1)/shifted_T_ADC_res_mV_1LSB ;
+    if (FEB1_OVTF_thr_int <= 255)
+        FEB1_OVTF_thr_Unsigned8 = FEB1_OVTF_thr_int;
+    else
+        FEB1_OVTF_thr_Unsigned8 = 255;
+    int FEB0_OVTF_thr_int = (((FEB0_OVTF_thr_param - T_ref_PT1000)/deltaT_over_deltaV_ratio)+V_ADC_at_25C-calibration_offset_mV_FEB0)/shifted_T_ADC_res_mV_1LSB ;
+    if (FEB0_OVTF_thr_int <= 255)
+        FEB0_OVTF_thr_Unsigned8 = FEB0_OVTF_thr_int;
+    else
+        FEB0_OVTF_thr_Unsigned8 = 255;
+    gemroc.OVT_LIMIT_FEB3 = FEB3_OVTF_thr_Unsigned8;
+    gemroc.OVT_LIMIT_FEB2 = FEB2_OVTF_thr_Unsigned8;
+    gemroc.OVT_LIMIT_FEB1 = FEB1_OVTF_thr_Unsigned8;
+    gemroc.OVT_LIMIT_FEB0 = FEB0_OVTF_thr_Unsigned8;
+    char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
+    send_GEMROC_LV_CMD (GEMROC_ID_param, COMMAND_STRING);
+}
+void set_ROC_OVT_LIMIT( int GEMROC_ID_param, int ROC_OVT_thr_param)
+{
+    int ROC_OVT_thr_Unsigned6;
+    if (ROC_OVT_thr_param <= 63)
+        ROC_OVT_thr_Unsigned6 = ROC_OVT_thr_param;
+    else
+        ROC_OVT_thr_Unsigned6 = 63;
+    gemroc.ROC_OVT_LIMIT = ROC_OVT_thr_Unsigned6;
+    char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_WR";
+    send_GEMROC_LV_CMD (GEMROC_ID_param,COMMAND_STRING);
+}
+
+void Read_GEMROC_LV_CfgReg(int GEMROC_ID_param)
+{
+    char*COMMAND_STRING = "CMD_GEMROC_LV_CFG_RD";
+    send_GEMROC_LV_CMD(GEMROC_ID_param, COMMAND_STRING);
+}
+void Read_GEMROC_DAQ_CfgReg( int GEMROC_ID_param)
+{
+    char*COMMAND_STRING = "CMD_GEMROC_DAQ_CFG_RD";
+    send_GEMROC_DAQ_CMD (GEMROC_ID_param,COMMAND_STRING);
+}
+
+
+
 
 
 int main(int argc,char *argv[])
@@ -1577,7 +1574,7 @@ GEMROC_IVT_read_and_log(GEMROC_ID,1, IVT_LOG_ENABLE);
       if(cmd_para[0]==4)
        {
         Set_Vth_T1 (GEMROC_ID,cmd_para[1],cmd_para[2],cmd_para[3]);
-        sleep(2);
+        sleep(1);
         printf("%s %d %d %d\n",cmd_string,cmd_para[1],cmd_para[2],cmd_para[3]);
        }
     if(strcmp(cmd_string,"AVCaspGset")==0||strcmp(cmd_string,"AV")==0)
