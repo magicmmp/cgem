@@ -7,16 +7,16 @@
 #include <netdb.h>
 #define HOST_IP "127.0.0.1"
 //#define HOST_IP "192.168.1.200"
-      const int GEMROC_CMD_LV_Num_of_params=31;
-      const int GEMROC_CMD_LV_Num_Of_PktWords = 12; 
-      const int GEMROC_CMD_DAQ_Num_of_params= 15;
-      const int GEMROC_CMD_DAQ_Num_Of_PktWords= 5; 
-      const unsigned int command_code_shift = 11; 
-      const unsigned int target_TIGER_ID_shift = 8; 
+#define GEMROC_CMD_LV_Num_of_params 31
+#define GEMROC_CMD_LV_Num_Of_PktWords 12 
+#define GEMROC_CMD_DAQ_Num_of_params 15
+#define GEMROC_CMD_DAQ_Num_Of_PktWords 5 
+      unsigned int command_code_shift = 11; 
+      unsigned int target_TIGER_ID_shift = 8; 
       unsigned int default_arg_needed = 0;
       unsigned int TARGET_GEMROC_ID_param = 0;
       unsigned int TARGET_FEB_PWR_PATTERN_param = 0;
-      const unsigned int IVT_LOG_PERIOD_SECONDS = 20;
+      unsigned int IVT_LOG_PERIOD_SECONDS = 20;
       unsigned int IVT_LOG_ENABLE = 1;
       unsigned int GEMROC_ID;
       unsigned int FEB_PWR_EN_pattern;

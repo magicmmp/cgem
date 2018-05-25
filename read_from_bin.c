@@ -39,6 +39,8 @@ int main()
    int i,j=0;
    long long H0,H1;
    int Total_Data=0;
+   char* ptr="test for char pointer";
+   printf("%s\n",ptr);
    fp = fopen("FEB0_bin.dat", "r");
    fw = fopen("data.txt","w+");
    fseek(fp,0L,SEEK_END);

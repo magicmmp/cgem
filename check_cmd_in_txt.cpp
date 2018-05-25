@@ -6,18 +6,18 @@ using namespace std;
 
 int main()  
 {  
-ifstream f1("my_vx_log.txt",ios::in);  
+ifstream f1("my_UDPser_log.txt",ios::in);  
 ifstream f2("my_c_log.txt",ios::in);
 ofstream f3("jie_guo_for_cmd_check.txt",ios::out);  
 string s1,s2,cmd1,cmd2;
 int i,j,num,len;  
-if (!f1.is_open()||!f2.is_open())  
+if (!f1.is_open()||!f2.is_open()||!f3.is_open())  
 {  
   cout <<"open file fail"<<endl;  
     }  
 getline(f1,s1);
 getline(f2,s2);
-for(i=0;i<140;++i)
+for(i=0;i<150;++i)
 {
 getline(f1,s1);
 getline(f2,s2);
@@ -32,13 +32,6 @@ f3<<s2<<endl;
 f3<<cmd2<<endl;
 }
 }
-/*   while(getline(myfile,temp))  
-    {  
-
-        outfile << temp;  
-        outfile << endl;
-    }  
-*/
     f1.close();  
     f2.close(); 
     f3.close(); 
