@@ -26,7 +26,7 @@
       char DEST_IP_ADDRESS[14];
       unsigned int DEST_PORT_NO ;
       unsigned char buff[48],buff2[48],cmd_message[256];
-      int sin_len;
+      int sin_len,len;
       int socket_descriptor,socket_descriptor1;
       struct sockaddr_in sin_dest,send_addr,recv_addr;
  
@@ -210,6 +210,7 @@ g_reg_para g_reg;
 ch_reg_para ch_reg;
 gemroc_para gemroc;
 DAQ_para DAQ; 
+FILE *fd_read_para=NULL;
 
 int char_type(char c)
 {
@@ -1376,8 +1377,6 @@ int main(int argc,char *argv[])
 {  
   char line[128],cmd_string[32];
   unsigned int cmd_para[10];
-  int    sockfd;
-  struct sockaddr_in    servaddr; 
 if (argc < 3)
 {    printf("\n GEMROC_TIGER_CFG argument list: <Target_GEMROC: 1 thru 22> <Target_FEB_PWR_EN_pattern(Hex):0x0 thru 0xF>\n"); 
     default_arg_needed = 1;}
@@ -1399,6 +1398,7 @@ FEB_PWR_EN_pattern = TARGET_FEB_PWR_PATTERN_param;
 //      sprintf(DEST_IP_ADDRESS,"192.168.1.%d",(GEMROC_ID+16)) ;
       sprintf(DEST_IP_ADDRESS,"127.0.0.%d",1) ;
       DEST_PORT_NO = 58913;
+   fd_read_para=fopen("auto_input_para.txt","r");
     bzero(&sin_dest,sizeof(sin_dest));
     sin_dest.sin_family=AF_INET;
     sin_dest.sin_addr.s_addr=inet_addr(DEST_IP_ADDRESS);
@@ -1418,21 +1418,6 @@ FEB_PWR_EN_pattern = TARGET_FEB_PWR_PATTERN_param;
     recv_addr.sin_port=htons(HOST_PORT_RECEIVE);
     socket_descriptor1=socket(AF_INET,SOCK_DGRAM,0);
     bind(socket_descriptor1,(struct sockaddr *)&recv_addr,sizeof(recv_addr));
-    
-    memset(&servaddr, 0, sizeof(servaddr));
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(8000);
-    inet_pton(AF_INET,"127.0.0.1", &servaddr.sin_addr);
-    if( (sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-    {
-      printf("create tcp socket error.\n");
-      exit(1);
-    }
-    if( connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0)
-    {
-      printf("connect error.\n");
-      exit(1);
-    }
 
     gemroc_init(GEMROC_ID,"NONE",1);
     gemroc_set_FEB_PWR_EN_pattern(FEB_PWR_EN_pattern);
@@ -1446,23 +1431,17 @@ g_reg_init(GEMROC_ID);
 ch_reg_init(GEMROC_ID);
 
 GEMROC_IVT_read_and_log(GEMROC_ID,1, IVT_LOG_ENABLE);
-  while(1)
+  while(!feof(fd_read_para))
 {  
-  line[0]='n';
-  line[1]='N';
-  send(sockfd,line, 2,0);
   memset(cmd_string,0, sizeof(cmd_string));
   memset(line,0, sizeof(line));
-  recv(sockfd, line, 128,0) ;
+  fgets(line, sizeof(line), fd_read_para);
   extract_para_from_line(line,strlen(line),cmd_string,cmd_para);
   if(cmd_para[0]>0)
   {
     if(strcmp(cmd_string,"quit")==0 ||strcmp(cmd_string ,"q")==0||strcmp(cmd_string,"Quit")==0||strcmp(cmd_string,"Q")==0)
     {  
        printf("%s\n",cmd_string);
-       line[0]='q';
-       line[1]='Q';
-       send(sockfd,line, 2,0);
        break;
     }
     if(strcmp(cmd_string,"PEW")==0 ||strcmp(cmd_string,"P")==0)
@@ -1635,8 +1614,9 @@ GEMROC_IVT_read_and_log(GEMROC_ID,1, IVT_LOG_ENABLE);
   }   
 }
 
-close(sockfd);
+
 close(socket_descriptor);
 close(socket_descriptor1);
+fclose(fd_read_para);
 
 }
