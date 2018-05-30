@@ -91,29 +91,21 @@ if(para_info[0][0]==1)
 
 
 
-int main(int argc, char** argv)
+int main()
 {  
     char line[128],cmd_string[32];
     unsigned int cmd_para[10];
     int    sockfd;
-    int i,len;
+    int i;
     struct sockaddr_in    servaddr;
-    if( (sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-    {
-      printf("create socket error: %s(errno: %d)\n", strerror(errno),errno);
-      exit(1);
-    }
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
     memset(&servaddr, 0, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(8000);
     inet_pton(AF_INET,"127.0.0.1", &servaddr.sin_addr);
     
-    if( connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0)
-    {
-      printf("connect error: %s(errno: %d)\n",strerror(errno),errno);
-      exit(1);
-    }
+    connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
     memset(cmd_string,0, sizeof(cmd_string));
     while(1)
     {
@@ -132,7 +124,7 @@ int main(int argc, char** argv)
         send(sockfd,line, 2,0);
         memset(cmd_string,0, sizeof(cmd_string));
         memset(line,0, sizeof(line));
-        len = recv(sockfd, line, 128,0) ;
+        recv(sockfd, line, 128,0) ;
         extract_para_from_line(line,strlen(line),cmd_string,cmd_para);
         if(cmd_para[0]>0)
         {

@@ -18,7 +18,8 @@ int main(int argc, char** argv)
     FILE *fd_read_para=NULL;
     int len;
     int    socket_fd, connect_fd;
-    struct sockaddr_in     servaddr;
+    struct sockaddr_in   cliaddr,  servaddr;
+    socklen_t cli_len = sizeof(cliaddr);
     fd_read_para=fopen("auto_input_para.txt","r");
     if( (socket_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1 )
     {
@@ -27,7 +28,11 @@ int main(int argc, char** argv)
     }
     memset(&servaddr, 0, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    printf("input = 1,vxworks;  else itself\n");
+    if(argc==2 && atoi(argv[1])==1)
+      servaddr.sin_addr.s_addr = inet_addr("192.168.1.200");
+    else
+      servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     servaddr.sin_port = htons(DEFAULT_PORT);
 
     if( bind(socket_fd, (struct sockaddr*)&servaddr, sizeof(servaddr)) == -1)
@@ -41,10 +46,12 @@ int main(int argc, char** argv)
       exit(0);
     }
     printf("\n======waiting for client's request======\n");
-    if( (connect_fd = accept(socket_fd, (struct sockaddr*)NULL, NULL)) == -1)
+    if( (connect_fd = accept(socket_fd, (struct sockaddr*)&cliaddr, &cli_len)) == -1)
     {
       printf("accept socket error: %s(errno: %d)",strerror(errno),errno);
     }
+    else
+      printf("accept connect: %s,port:%d\n",inet_ntoa(cliaddr.sin_addr),cliaddr.sin_port);
     while(1)
     {
       memset(line,0, sizeof(line));
