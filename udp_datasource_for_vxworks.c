@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
         buf[i]=n;
       n++;
       sendto(socket_descriptor,buf,sizeof(buf),0,(struct sockaddr *)&address,sizeof(address));
-      for(delay=0;delay<65536*1024;delay++); 
+      for(delay=0;delay<65536*4096;delay++); 
     }   
     close(socket_descriptor);  
     printf("Messages Sent\n");    

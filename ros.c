@@ -35,7 +35,7 @@ struct GE_ppc
 struct Header h;
 struct GE_ppc ppc;
 int    fd_cmdack,fd_stainfo,fd_data;
-struct sockaddr_in    servaddr,local_addr;
+struct sockaddr_in    servaddr,local_addr,vxaddr;
 const char *g_strCmd[15]={"LOAD","PRCF","CONF","SYN1","SYN2",
                           "SYN3","SYN4","PREP","SATR","SPTR",
                           "STOP","UNCF","UNPC","UNLD","EXIT"};
@@ -52,7 +52,7 @@ void *cmdack()
     ppc.info_len=sizeof(ppc);
     ppc.module_type=0xf1;
     ppc.PPC_id=240;
-    ppc.ROS_ip=local_addr.sin_addr.s_addr;
+    ppc.ROS_ip=htonl(local_addr.sin_addr.s_addr);
     ppc.ROS_port=8800;
     memset(config0, 0, sizeof(config0));
     memcpy(config0, &h, sizeof(h)) ;
@@ -80,16 +80,21 @@ void *data_recv()
     int i;
     char buff[3200];
     int connect_fd;
-    int len;
+    int len,sin_len;
     if( listen(fd_data, 10) == -1)
     {
       printf("listen socket fd_data error.\n");
     }
-    if( (connect_fd = accept(fd_data, NULL, NULL)) == -1)
+    if( (connect_fd = accept(fd_data, (struct sockaddr *)&vxaddr,&sin_len)) == -1)
     {
       printf("accept socket error.");
     }
-   
+    printf("accept connection from vxworks,IP=%s,port=%d.\n",inet_ntoa(vxaddr.sin_addr),vxaddr.sin_port);
+    len=recv(fd_data,buff,3200,0);
+    printf("recv from fd_data : %s, len=%d.\n",buff,len);
+    len=-1;
+    while(len==-1)
+      len=recv(fd_data,buff,3200,0);
     while(1)
     {   
        len=recv(fd_data,buff,3200,0);
