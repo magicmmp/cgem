@@ -46,7 +46,7 @@ void *cmdack()
     char echo[16];
     char config[256];
     char config0[256];
-    h.All_len=sizeof(h)+sizeof(ppc);
+    h.All_len=sizeof(h)+sizeof(ppc)+4;
     h.crate_id=240;
     h.crate_len=sizeof(h);
     ppc.info_len=sizeof(ppc);
@@ -56,7 +56,7 @@ void *cmdack()
     ppc.ROS_port=8800;
     memset(config0, 0, sizeof(config0));
     memcpy(config0, &h, sizeof(h)) ;
-    memcpy(config0+sizeof(h), &ppc, sizeof(ppc)) ;
+    memcpy(config0+sizeof(h)+4, &ppc, sizeof(ppc)) ;
     for(i=0;i<256;i=i+4)
       for(j=0;j<4;j++)
         config[i+j]=config0[i+3-j];
