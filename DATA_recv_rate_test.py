@@ -2,7 +2,7 @@ import socket
 import string
 import binascii
 import time
-HOST_IP = "127.0.0.1"
+HOST_IP = "192.168.1.200"
 HOST_PORT = 58912+2
 ####FF_PORT => SLV(58880, 16), -- S.C. 2018-03-08: FF_PORT sends data to UDP port group 58880+0..58880+15 (base pattern 0xNNN[0] = 0xE600)
 ##HOST_PORT = 58880+2
@@ -27,5 +27,5 @@ for i in range (0,5):
 #    print len(data)
   t1=time.time()
   print '    time=%f sec '%(t1-t0)+' bytes=%d '%Total_Data+' BW=%d bytes/sec\n'%(Total_Data/(t1-t0))
-print 'finish.'
+print '  finish.'
 serverSock.close()

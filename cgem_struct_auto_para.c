@@ -5,8 +5,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
-#define HOST_IP "127.0.0.1"
-//#define HOST_IP "192.168.1.200"
+//#define HOST_IP "127.0.0.1"
+#define HOST_IP "192.168.1.200"
 #define BUFSIZE 4096 
       unsigned int command_code_shift = 11; 
       unsigned int target_TIGER_ID_shift = 8; 
@@ -291,7 +291,8 @@ if(para_info[0][0]==1)
             cmd_para[i]=cmd_para[i]+(line[k]-55)*n;
           else
             cmd_para[i]=cmd_para[i]+(line[k]-87)*n;
-        }  }  }
+        }  } 
+ }
 
 void write_array_to_txt(char*msg,int*array,int arraylen)
  {  
@@ -356,6 +357,8 @@ void send_GEMROC_CFG_CMD_PKT( unsigned int TARGET_GEMROC_ID_param, char*info,
                               void*array_to_send_param, int cmdlen,char*DEST_IP_ADDRESS_PARAM, unsigned int DEST_PORT_NO_PARAM)
 {  
     int i,j;
+    struct sockaddr_in cliadd;
+    int cli_len;
     memcpy(buff,array_to_send_param,cmdlen);
     for(i=0;i<cmdlen;i=i+4)
       for(j=0;j<4;j++)
@@ -370,7 +373,8 @@ void send_GEMROC_CFG_CMD_PKT( unsigned int TARGET_GEMROC_ID_param, char*info,
     for(i=0;i<cmdlen;i++)
       j+=sprintf(cmd_message+j,"%02x",buff2[i]);
     fwrite(cmd_message,sizeof(unsigned char),cmdlen<<1,fw);
-    recvfrom(socket_descriptor1,buff,cmdlen,0,NULL,NULL);
+    recvfrom(socket_descriptor1,buff,cmdlen,0,(struct sockaddr *)&cliadd,&cli_len);
+/*    printf("send_GEMROC_CFG_CMD_PKT, receive echo from:%s,port:%d\n",inet_ntoa(cliadd.sin_addr),cliadd.sin_port); */
     j=sprintf(cmd_message,"\nnum:%d, %s\n",num,"echo:"); // C4996
     fwrite(cmd_message,sizeof(unsigned char),j,fw);
     j=0;
@@ -1640,8 +1644,8 @@ FEB_PWR_EN_pattern = TARGET_FEB_PWR_PATTERN_param;
 
       HOST_PORT=54817+GEMROC_ID;
       HOST_PORT_RECEIVE=58913+GEMROC_ID;
-//      sprintf(DEST_IP_ADDRESS,"192.168.1.%d",(GEMROC_ID+16)) ;
-      sprintf(DEST_IP_ADDRESS,"127.0.0.%d",1) ;
+      sprintf(DEST_IP_ADDRESS,"192.168.1.%d",(GEMROC_ID+16)) ;
+//      sprintf(DEST_IP_ADDRESS,"127.0.0.%d",1) ;
       DEST_PORT_NO = 58913;
    fd_cmd = fopen("c_cmd_check.txt","w+");
    fw = fopen("my_c_log.txt","w+");

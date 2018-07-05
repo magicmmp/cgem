@@ -1,10 +1,33 @@
 P 0x1
 GRST
 GW 0
-CW 0 6
+CW 0 64
 TPEnG 0 1
+TP 0 0 0 1
+TP 0 1 0 1
+TP 0 2 0 1
+TP 0 3 0 1
+TP 0 4 0 1
+TP 0 5 0 1
 TP 0 6 0 1
+TP 0 7 0 1
+TP 0 8 0 1
+TP 0 9 0 1
 SRst 0
 DRst 0
 DSTART 0x1 0x1
 Q
+
+ P 0x1 
+ GRST
+ GW 0
+ GW 1
+ CW 0 64
+ CW 1 64
+ TPEnG 0 1
+ TPEnG 1 1
+ TP 0 0 0 1
+ TP 1 1 0 1
+ SRst 0
+ DSTART 0X3 0XF
+ Q
