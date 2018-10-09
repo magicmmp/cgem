@@ -103,17 +103,21 @@ int main(int argc, char** argv)
 
 
     bzero(&address,sizeof(address));  
-    address.sin_family=AF_INET;  
-    address.sin_addr.s_addr=inet_addr("127.0.0.1");
-    address.sin_port=htons(58915);  
+    address.sin_family=AF_INET; 
+    printf("Input para =0 ,send to 127.0.0.1,else to vxWorks.\n");
+    if(argc==2 && atoi(argv[1])==0)
+        address.sin_addr.s_addr=inet_addr("127.0.0.1");
+    else
+        address.sin_addr.s_addr=inet_addr("192.168.1.201");
+ 
+    address.sin_port=htons(58914);  
     socket_descriptor=socket(AF_INET,SOCK_DGRAM,0);
-    int n=0;
-    while(n<100)  
+    
+    while(1)  
     {
 	  change_para(&PARA,data,M,buff,BUFFSIZE);
       sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
-      usleep(100); 
-		n++;
+      usleep(100);
     }   
     close(socket_descriptor);  
     printf("Messages Sent\n");    
