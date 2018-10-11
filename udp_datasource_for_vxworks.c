@@ -32,7 +32,7 @@ int main(int argc, char** argv)
       n++;
       sendto(socket_descriptor,buf,sizeof(buf),0,(struct sockaddr *)&address,sizeof(address));
       
-      usleep(100); 
+      sleep(5); 
     }   
     close(socket_descriptor);  
     printf("Messages Sent\n");    

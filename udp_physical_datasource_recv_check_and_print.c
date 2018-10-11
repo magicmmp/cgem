@@ -217,10 +217,10 @@ int data_check(unsigned char*buff,unsigned int buflen,unsigned int* PRE_COUNT)
 
 
 
-int main()
+int main(int argc, char** argv)
 {  
    unsigned char buff[BUFFSIZE];
-   int port=58915;
+   int port=58914;
    int sin_len;
    int socket_descriptor;
 	int bufflen;
@@ -229,7 +229,13 @@ int main()
    struct sockaddr_in sin,cliaddr;
    bzero(&sin,sizeof(sin));
    sin.sin_family=AF_INET;
-   sin.sin_addr.s_addr=inet_addr("127.0.0.1");
+
+    printf("Input para =0 ,bind 127.0.0.1,else bind 192.168.1.200.\n");
+    if(argc==2 && atoi(argv[1])==0)
+        sin.sin_addr.s_addr=inet_addr("127.0.0.1");
+    else
+        sin.sin_addr.s_addr=inet_addr("192.168.1.200");
+
    sin.sin_port=htons(port);
    sin_len=sizeof(sin);
    socket_descriptor=socket(AF_INET,SOCK_DGRAM,0);

@@ -117,7 +117,7 @@ int main(int argc, char** argv)
     {
 	  change_para(&PARA,data,M,buff,BUFFSIZE);
       sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
-      usleep(100);
+      sleep(10);
     }   
     close(socket_descriptor);  
     printf("Messages Sent\n");    
