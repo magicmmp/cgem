@@ -6,7 +6,9 @@
 #include <arpa/inet.h>  
 #include <netdb.h>   
 
+/** hit count=50 **/
 const int N=10;
+/** need 106 of int length **/
 const int M=26;
 const int BUFFSIZE=104;
 typedef struct {
@@ -30,7 +32,7 @@ typedef struct {
 
 void change_para(para *p,unsigned int*data,int datalen,unsigned char*buff,int buflen)
 {
-    /*һ֡µıäÉÖ£¬¿ÉԵÝöä¶¼ÔÕÀ£¬ÆËµÄں¯ÊÍÉÖ¡£*/
+
     int i,tmp;
     for(i=0;i<datalen;i++)
         data[i]=0;
@@ -56,13 +58,14 @@ void change_para(para *p,unsigned int*data,int datalen,unsigned char*buff,int bu
     data[i]=((p->TIGER_ID &0x7)<<27)+ ((p->LOCAL_L1_COUNT&0x7)<<24)+((p->CH_ID&0x3f)<<18)+ (p->LAST_COUNT_WORD_FROM_TIGER_DATA&0x3ffff);
     p->LAST_COUNT_WORD_FROM_TIGER_DATA++;
     p->LOCAL_L1_COUNT++;
+    /*sequence*/
     i++;
     data[i]=(0x1<<30) + ((p->GEMROC_ID&0x1f)<<20)+ ((p->UDP_packet_count>>28)&0xfffff);
     i++;
     data[i]=(0x1<<30) + (p->UDP_packet_count & 0xfffffff);
     p->UDP_packet_count++;
     memcpy(buff,(char*)data,buflen);
-    /*LinuxÊ¸ß»Ô¸ߵØ·£¬µØ»Ôµ͵Ø·*/
+
     for(i=0;i<buflen;i=i+4)
     {
         tmp=buff[i];
@@ -80,7 +83,7 @@ int main(int argc, char** argv)
     int socket_descriptor;
     struct sockaddr_in address;
 
-	para PARA;
+    para PARA;
     unsigned int data[M];
     unsigned char buff[BUFFSIZE];
 

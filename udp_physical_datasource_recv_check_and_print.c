@@ -6,10 +6,12 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <sys/time.h>
+
 const int  BUFFSIZE=2096;
- 
-int data_check(unsigned char*buff,unsigned int buflen,unsigned int* PRE_COUNT)
+
+int data_check(unsigned char*buff,unsigned int buflen,unsigned int* PRE_COUNT,int print_enable)
 {
+    /* error return -1,else return 0*/
     /*Header*/
     unsigned int header_flag;
     unsigned int STATUS_BITS;    /*is 0*/
@@ -17,14 +19,14 @@ int data_check(unsigned char*buff,unsigned int buflen,unsigned int* PRE_COUNT)
     unsigned int HIT_COUNT;
     unsigned int Timestamp;
     /*data*/
-    unsigned int D_TIGER_ID;  /*Ê¾ݲ¿·ֵıäTIGER_ID*/
+    unsigned int D_TIGER_ID;  /*TIGER_ID*/
     unsigned int LAST_TIGER_FRAME_NUMBER;
     long long RAW_DATA;
     /*Tailer*/
     unsigned int tailer_flag;
     unsigned int LOCAL_L1_FRAMENUM;
     unsigned int GEMROC_ID;
-    unsigned int T_TIGER_ID; /*tailer²¿·ֵıäTIGER_ID*/
+    unsigned int T_TIGER_ID; /*tailer TIGER_ID*/
     unsigned int CH_ID;
     unsigned int LAST_COUNT_WORD_FROM_TIGER_DATA;
     /*UDP Sequence Counter*/
@@ -77,12 +79,13 @@ int data_check(unsigned char*buff,unsigned int buflen,unsigned int* PRE_COUNT)
  *         return -1;
  *                 */
     }
+
     if(*PRE_COUNT+1 != LOCAL_L1_COUNT)
     {
-       printf("*PRE_COUNT= %u, LOCAL_L1_COUNT= %u, error .\n",*PRE_COUNT,LOCAL_L1_COUNT);
-                          /*
-                                  return -1;
-                                          */
+        printf("*PRE_COUNT= %u, LOCAL_L1_COUNT= %u, error .\n",*PRE_COUNT,LOCAL_L1_COUNT);
+        /*
+ *         return -1;
+ *                 */
     }
     *PRE_COUNT= LOCAL_L1_COUNT;
     /* tailer part */
@@ -103,9 +106,10 @@ int data_check(unsigned char*buff,unsigned int buflen,unsigned int* PRE_COUNT)
 
     tmp_idx++;
     T_TIGER_ID=(buff[tmp_idx]>>3)&0x7;
-    if((buff[tmp_idx]&0x7) != (LOCAL_L1_COUNT & 0x7) )
+    if((buff[tmp_idx] & 0x7) != (LOCAL_L1_COUNT & 0x7) )
     {
-        printf("(buff[tmp_idx]&0x7) != (LOCAL_L1_COUNT & 0x7) ,error.\n");
+        printf("buff[tmp_idx]&0x7= %d , ",buff[tmp_idx] & 0x7);
+        printf("LOCAL_L1_COUNT & 0x7= %d , error.\n",LOCAL_L1_COUNT & 0x7);
         /*
  *         return -1;
  *                 */
@@ -165,9 +169,8 @@ int data_check(unsigned char*buff,unsigned int buflen,unsigned int* PRE_COUNT)
  *         return -1;
  *                 */
     }
-    /*data part ²»¼ì*/
-    /*´ò½¿ØÆ¨*/
-    if(1)
+
+    if(print_enable)
     {
         printf("Header:\n");
         printf( "STATUS_BITS= %01X,  LOCAL_L1_COUNT= %08X,  HIT_COUNT= %d,   Timestamp= %04X\n",STATUS_BITS,LOCAL_L1_COUNT,HIT_COUNT,Timestamp);
@@ -212,8 +215,6 @@ int data_check(unsigned char*buff,unsigned int buflen,unsigned int* PRE_COUNT)
 
     return 0;
 }
-/*20180928,12:36,to test git push if works*/
-
 
 
 
@@ -223,9 +224,9 @@ int main(int argc, char** argv)
    int port=58914;
    int sin_len;
    int socket_descriptor;
-	int bufflen;
-	int ii;
+	int recv_len;
 	unsigned int PRE_COUNT=0;
+	int print_enable;
    struct sockaddr_in sin,cliaddr;
    bzero(&sin,sizeof(sin));
    sin.sin_family=AF_INET;
@@ -240,10 +241,11 @@ int main(int argc, char** argv)
    sin_len=sizeof(sin);
    socket_descriptor=socket(AF_INET,SOCK_DGRAM,0);
    bind(socket_descriptor,(struct sockaddr *)&sin,sizeof(sin));
-   for(ii=0;ii<100;ii++)
+   print_enable=1;
+   while(1)
    {
-       bufflen=recvfrom(socket_descriptor,buff,BUFFSIZE,0,(struct sockaddr *)&cliaddr,&sin_len);
-       data_check(buff,bufflen,&PRE_COUNT);
+       recv_len=recvfrom(socket_descriptor,buff,BUFFSIZE,0,(struct sockaddr *)&cliaddr,&sin_len);
+       data_check(buff,recv_len,&PRE_COUNT,print_enable);
    }
     printf("  finish.\n");
   close(socket_descriptor);
