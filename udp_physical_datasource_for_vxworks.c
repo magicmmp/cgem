@@ -118,9 +118,22 @@ int main(int argc, char** argv)
     
     while(1)  
     {
-	  change_para(&PARA,data,M,buff,BUFFSIZE);
-      sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
-      sleep(10);
+	change_para(&PARA,data,M,buff,BUFFSIZE);
+        sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
+
+	change_para(&PARA,data,M,buff,BUFFSIZE);
+        sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
+
+	change_para(&PARA,data,M,buff,BUFFSIZE);
+        sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
+
+	change_para(&PARA,data,M,buff,BUFFSIZE);
+        sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
+
+	change_para(&PARA,data,M,buff,BUFFSIZE);
+        sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
+
+        usleep(300);
     }   
     close(socket_descriptor);  
     printf("Messages Sent\n");    
