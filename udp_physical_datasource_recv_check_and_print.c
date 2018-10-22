@@ -230,20 +230,17 @@ int main(int argc, char** argv)
    struct sockaddr_in sin,cliaddr;
    bzero(&sin,sizeof(sin));
    sin.sin_family=AF_INET;
-
-    printf("Input para =0 ,bind 127.0.0.1,else bind 192.168.1.200.\n");
-    if(argc==2 && atoi(argv[1])==0)
-        sin.sin_addr.s_addr=inet_addr("127.0.0.1");
-    else
-        sin.sin_addr.s_addr=inet_addr("192.168.1.200");
+   sin.sin_addr.s_addr=htonl(INADDR_ANY);
 
    sin.sin_port=htons(port);
    sin_len=sizeof(sin);
    socket_descriptor=socket(AF_INET,SOCK_DGRAM,0);
    bind(socket_descriptor,(struct sockaddr *)&sin,sizeof(sin));
    print_enable=1;
-   while(1)
+   int n=0;
+   while(n<50)
    {
+	n++;
        recv_len=recvfrom(socket_descriptor,buff,BUFFSIZE,0,(struct sockaddr *)&cliaddr,&sin_len);
        data_check(buff,recv_len,&PRE_COUNT,print_enable);
    }
