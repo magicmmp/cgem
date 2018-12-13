@@ -119,9 +119,6 @@ int main(int argc, char** argv)
     int i;
     while(1)  
     {
-/*
-	change_para(&PARA,data,M,buff,BUFFSIZE);
-        sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
 
 	change_para(&PARA,data,M,buff,BUFFSIZE);
         sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
@@ -134,11 +131,16 @@ int main(int argc, char** argv)
 
 	change_para(&PARA,data,M,buff,BUFFSIZE);
         sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
-*/	
+
+	change_para(&PARA,data,M,buff,BUFFSIZE);
+        sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
+
+/*	
 	for(i=0;i<BUFFSIZE;i++)
 		buff[i]=CN;
 	sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
 	CN++;
+*/
         sleep(1);
     }   
     close(socket_descriptor);  
