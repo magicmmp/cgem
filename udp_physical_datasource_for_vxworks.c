@@ -115,9 +115,11 @@ int main(int argc, char** argv)
  
     address.sin_port=htons(58914);  
     socket_descriptor=socket(AF_INET,SOCK_DGRAM,0);
-    
+    char CN=0;
+    int i;
     while(1)  
     {
+/*
 	change_para(&PARA,data,M,buff,BUFFSIZE);
         sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
 
@@ -132,8 +134,12 @@ int main(int argc, char** argv)
 
 	change_para(&PARA,data,M,buff,BUFFSIZE);
         sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
-
-        usleep(300);
+*/	
+	for(i=0;i<BUFFSIZE;i++)
+		buff[i]=CN;
+	sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
+	CN++;
+        sleep(1);
     }   
     close(socket_descriptor);  
     printf("Messages Sent\n");    
