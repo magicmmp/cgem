@@ -115,11 +115,15 @@ int main(int argc, char** argv)
  
     address.sin_port=htons(58914);  
     socket_descriptor=socket(AF_INET,SOCK_DGRAM,0);
-    char CN=0;
-    int i;
+    unsigned int  CN=0;
+    unsigned char tmp;
+    int i,j;
+    unsigned int *p;
+	printf("BUFFSIZE    = %d\n",BUFFSIZE);
+	printf("sizeof(buff)= %d\n",sizeof(buff));
     while(1)  
     {
-
+/*
 	change_para(&PARA,data,M,buff,BUFFSIZE);
         sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
 
@@ -134,14 +138,28 @@ int main(int argc, char** argv)
 
 	change_para(&PARA,data,M,buff,BUFFSIZE);
         sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
-
-/*	
-	for(i=0;i<BUFFSIZE;i++)
-		buff[i]=CN;
-	sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
-	CN++;
 */
-        sleep(1);
+	
+	for(i=0;i<BUFFSIZE;i=i+4)
+	{
+		p=(unsigned int*)(buff+i);
+		*p=CN++;
+		 
+	}
+
+	for(i=0;i<BUFFSIZE;i=i+4)
+	{
+		tmp=buff[i];
+		buff[i]=buff[i+3];
+		buff[i+3]=tmp;
+		tmp=buff[i+1];
+                buff[i+1]=buff[i+2];
+                buff[i+2]=tmp;	
+	}
+	sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
+	
+
+        usleep(500);
     }   
     close(socket_descriptor);  
     printf("Messages Sent\n");    
