@@ -6,11 +6,13 @@
 #include <arpa/inet.h>  
 #include <netdb.h>   
 
-/** hit count=50 **/
-const int N=10;
+/** hit count=10 **/
 /** need 106 of int length **/
-const int M=26;
-const int BUFFSIZE=104;
+#define N     2
+#define M     ((N<<1)+6)
+#define rocNo 6
+const int BUFFSIZE=M<<2;
+
 typedef struct {
     /*Header*/
     unsigned int STATUS_BITS;/*is 0*/
@@ -18,22 +20,24 @@ typedef struct {
     unsigned int HIT_COUNT;
     unsigned int Timestamp;
     /*data*/
-    unsigned int TIGER_ID;
+    unsigned int D_TIGER_ID;
     unsigned int LAST_TIGER_FRAME_NUMBER;
     long long RAW_DATA;
     /*Tailer*/
     unsigned int LOCAL_L1_FRAMENUM;
+    unsigned int T_TIGER_ID; /*tailer TIGER_ID*/
     unsigned int GEMROC_ID;
     unsigned int CH_ID;
     unsigned int LAST_COUNT_WORD_FROM_TIGER_DATA;
     /*UDP Sequence Counter*/
     long long UDP_packet_count;
+    unsigned int S_GEMROC_ID;
 }para;
 
 void change_para(para *p,unsigned int*data,int datalen,unsigned char*buff,int buflen)
 {
-
     int i,tmp;
+    int Va;  /*test if is little end*/
     for(i=0;i<datalen;i++)
         data[i]=0;
 
@@ -43,21 +47,18 @@ void change_para(para *p,unsigned int*data,int datalen,unsigned char*buff,int bu
     p->Timestamp++;
     for(i=2;i<2*(p->HIT_COUNT)+1;i=i+2)
     {
-        data[i]=((p->TIGER_ID & 0x7)<<27 )+( (p->LAST_TIGER_FRAME_NUMBER&0x7) <<24)+((p->RAW_DATA>>30) & 0xffffff);
-        data[i+1]=p->RAW_DATA & 0x3fffffff;
-
         p->RAW_DATA++;
+        data[i]=((p->D_TIGER_ID & 0x7)<<27 )+( (p->LAST_TIGER_FRAME_NUMBER&0x7) <<24)+((p->RAW_DATA>>30) & 0xffffff);
+        data[i+1]=p->RAW_DATA & 0x3fffffff;
     }
     p->LAST_TIGER_FRAME_NUMBER++;
-
     /*tailer*/
     i=datalen-4;
     data[i]=(0x7<<29)+((p->LOCAL_L1_FRAMENUM &0xffffff)<<5) + (p->GEMROC_ID&0x1f);
     p->LOCAL_L1_FRAMENUM++;
     i++;
-    data[i]=((p->TIGER_ID &0x7)<<27)+ ((p->LOCAL_L1_COUNT&0x7)<<24)+((p->CH_ID&0x3f)<<18)+ (p->LAST_COUNT_WORD_FROM_TIGER_DATA&0x3ffff);
+    data[i]=((p->D_TIGER_ID &0x7)<<27)+ ((p->LOCAL_L1_COUNT&0x7)<<24)+((p->CH_ID&0x3f)<<18)+ (p->LAST_COUNT_WORD_FROM_TIGER_DATA&0x3ffff);
     p->LAST_COUNT_WORD_FROM_TIGER_DATA++;
-    p->LOCAL_L1_COUNT++;
     /*sequence*/
     i++;
     data[i]=(0x1<<30) + ((p->GEMROC_ID&0x1f)<<20)+ ((p->UDP_packet_count>>28)&0xfffff);
@@ -65,7 +66,8 @@ void change_para(para *p,unsigned int*data,int datalen,unsigned char*buff,int bu
     data[i]=(0x1<<30) + (p->UDP_packet_count & 0xfffffff);
     p->UDP_packet_count++;
     memcpy(buff,(char*)data,buflen);
-
+    Va=1;
+    if (*(char*)&Va == 1)
     for(i=0;i<buflen;i=i+4)
     {
         tmp=buff[i];
@@ -86,14 +88,14 @@ int main(int argc, char** argv)
     para PARA;
     unsigned int data[M];
     unsigned char buff[BUFFSIZE];
+	int x,y;
 
-
-    PARA.STATUS_BITS=2;     /*²»±ä³õ¯*/
+	PARA.STATUS_BITS=2;     /*²»±ä³õ¯*/
     PARA.LOCAL_L1_COUNT=0;  /*µÝöõ¯*/
     PARA.HIT_COUNT=N;       /*²»±ä³õ¯*/
     PARA.Timestamp=0;       /*µÝöõ¯*/
 
-    PARA.TIGER_ID=2;        /*²»±ä³õ¯*/
+    PARA.D_TIGER_ID=2;        /*²»±ä³õ¯*/
     PARA.LAST_TIGER_FRAME_NUMBER=0;  /*µÝöõ¯*/
     PARA.RAW_DATA=0x123456876543;    /*µÝöõ¯*/
 
@@ -102,7 +104,6 @@ int main(int argc, char** argv)
     PARA.CH_ID=8;          /*²»±ä³õ¯*/
     PARA.LAST_COUNT_WORD_FROM_TIGER_DATA=0x5678;  /*µÝöõ¯*/
     PARA.UDP_packet_count=0;
-
 
 
     bzero(&address,sizeof(address));  
@@ -119,27 +120,12 @@ int main(int argc, char** argv)
     unsigned char tmp;
     int i,j;
     unsigned int *p;
+	printf("gemroc_Numbers = %d, HIT_COUNT = %d\n",rocNo,N);
 	printf("BUFFSIZE    = %d\n",BUFFSIZE);
-	printf("sizeof(buff)= %d\n",sizeof(buff));
+	
     while(1)  
     {
-/*
-	change_para(&PARA,data,M,buff,BUFFSIZE);
-        sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
-
-	change_para(&PARA,data,M,buff,BUFFSIZE);
-        sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
-
-	change_para(&PARA,data,M,buff,BUFFSIZE);
-        sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
-
-	change_para(&PARA,data,M,buff,BUFFSIZE);
-        sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
-
-	change_para(&PARA,data,M,buff,BUFFSIZE);
-        sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
-*/
-	
+/*	
 	for(i=0;i<BUFFSIZE;i=i+4)
 	{
 		p=(unsigned int*)(buff+i);
@@ -157,8 +143,15 @@ int main(int argc, char** argv)
                 buff[i+2]=tmp;	
 	}
 	sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
-	
+*/
 
+	for(i=0;i<rocNo;i++)
+	{
+		PARA.GEMROC_ID=i;
+		change_para(&PARA,data,M,buff,BUFFSIZE);
+		sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
+	}
+	
         usleep(500);
     }   
     close(socket_descriptor);  
