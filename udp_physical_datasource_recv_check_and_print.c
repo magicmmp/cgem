@@ -7,8 +7,8 @@
 #include <netdb.h>
 #include <sys/time.h>
 
-#define rocNo 32 /*on recv end must be 32*/
-const unsigned int rocFLAG=((long long)0x1<<(rocNo-1))-1;
+#define rocNo 6 /*  1<=rocNo<=32 , on  receiving end  must be less*/
+const unsigned int rocFLAG=((long long)0x1<<rocNo)-1;
 const int BUFFSIZE=10240;
 
 const int eventNo=256;
@@ -46,15 +46,22 @@ UDPBUFF_INFO **udpInfo=NULL;
 int rocBuff_init() 
 {
     int i,j;
+	
+	udpInfo=(UDPBUFF_INFO**)malloc(sizeof(UDPBUFF_INFO*)*eventNo);
+    if (udpInfo == NULL)
+    {
+    	printf("Couldn't allocate memory for UDPBUFF_INFO !\n");
+        return -1;
+    }
 	for(i=0;i<eventNo;i++)
-	{
-		udpInfo[i]=(UDPBUFF_INFO*)malloc(sizeof(UDPBUFF_INFO));
+    {
+        udpInfo[i]=(UDPBUFF_INFO*)malloc(sizeof(UDPBUFF_INFO));
         if (udpInfo[i] == NULL)
         {
-            printf("Couldn't allocate memory for UDPBUFF_INFO !\n");
+            printf("Couldn't allocate memory for udpInfo[%d] !\n",i);
             return -1;
         }
-	}
+    }
 
     for(i=0;i<eventNo;i++)
     {
@@ -369,6 +376,7 @@ int main(int argc, char** argv)
 	int a,b,trg;
     rocBuff_init();
 	b=0;
+/*
    while(b++<100)
    {
 		udpLoop=1;
@@ -388,6 +396,7 @@ int main(int argc, char** argv)
         }
        
    }
+*/
 	rocBuff_delete();
     printf("  finish.\n");
   close(socket_descriptor);
