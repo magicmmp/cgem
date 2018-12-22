@@ -8,9 +8,10 @@
 
 /** hit count=10 **/
 /** need 106 of int length **/
-#define N     2
+#define N     20  /*HIT_COUNT*/
 #define M     ((N<<1)+6)
-#define rocNo 6
+#define rocNo 32
+
 const int BUFFSIZE=M<<2;
 
 typedef struct {
@@ -19,7 +20,7 @@ typedef struct {
     unsigned int LOCAL_L1_COUNT; /*Increment by 1*/
     unsigned int HIT_COUNT;
     unsigned int Timestamp;
-    /*data*/
+    /*1¸öµÄata*/
     unsigned int D_TIGER_ID;
     unsigned int LAST_TIGER_FRAME_NUMBER;
     long long RAW_DATA;
@@ -36,6 +37,7 @@ typedef struct {
 
 void change_para(para *p,unsigned int*data,int datalen,unsigned char*buff,int buflen)
 {
+
     int i,tmp;
     int Va;  /*test if is little end*/
     for(i=0;i<datalen;i++)
@@ -52,6 +54,7 @@ void change_para(para *p,unsigned int*data,int datalen,unsigned char*buff,int bu
         data[i+1]=p->RAW_DATA & 0x3fffffff;
     }
     p->LAST_TIGER_FRAME_NUMBER++;
+
     /*tailer*/
     i=datalen-4;
     data[i]=(0x7<<29)+((p->LOCAL_L1_FRAMENUM &0xffffff)<<5) + (p->GEMROC_ID&0x1f);
@@ -59,6 +62,7 @@ void change_para(para *p,unsigned int*data,int datalen,unsigned char*buff,int bu
     i++;
     data[i]=((p->D_TIGER_ID &0x7)<<27)+ ((p->LOCAL_L1_COUNT&0x7)<<24)+((p->CH_ID&0x3f)<<18)+ (p->LAST_COUNT_WORD_FROM_TIGER_DATA&0x3ffff);
     p->LAST_COUNT_WORD_FROM_TIGER_DATA++;
+
     /*sequence*/
     i++;
     data[i]=(0x1<<30) + ((p->GEMROC_ID&0x1f)<<20)+ ((p->UDP_packet_count>>28)&0xfffff);
@@ -78,6 +82,7 @@ void change_para(para *p,unsigned int*data,int datalen,unsigned char*buff,int bu
         buff[i+2]=tmp;
     }
 }
+
   
 int main(int argc, char** argv) 
 {
@@ -125,25 +130,6 @@ int main(int argc, char** argv)
 	
     while(1)  
     {
-/*	
-	for(i=0;i<BUFFSIZE;i=i+4)
-	{
-		p=(unsigned int*)(buff+i);
-		*p=CN++;
-		 
-	}
-
-	for(i=0;i<BUFFSIZE;i=i+4)
-	{
-		tmp=buff[i];
-		buff[i]=buff[i+3];
-		buff[i+3]=tmp;
-		tmp=buff[i+1];
-                buff[i+1]=buff[i+2];
-                buff[i+2]=tmp;	
-	}
-	sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
-*/
 
 	for(i=0;i<rocNo;i++)
 	{
@@ -153,7 +139,7 @@ int main(int argc, char** argv)
 	}
 	PARA.LOCAL_L1_COUNT++;
 	
-        sleep(1);
+        usleep(500);
     }   
     close(socket_descriptor);  
     printf("Messages Sent\n");    

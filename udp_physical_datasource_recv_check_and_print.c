@@ -7,19 +7,20 @@
 #include <netdb.h>
 #include <sys/time.h>
 
-#define rocNo 6 /*  1<=rocNo<=32 , on  receiving end  must be less*/
-const unsigned int rocFLAG=((long long)0x1<<rocNo)-1;
-const int BUFFSIZE=10240;
-
-const int eventNo=256;
-
+#define eventNo 1024
+const int maxPacketLen=2096;
+const int eventBUFFSIZE=66816;
+const int rocBUFFSIZE=2128;
+const int rocID_List[33]={7,1,4,30,13,20,26,31};
+int       rocID_enable[32];
+unsigned int rocFLAG;
 typedef struct {
     /*Header*/
     unsigned int STATUS_BITS;/*is 0*/
     unsigned int LOCAL_L1_COUNT; /*Increment by 1*/
     unsigned int HIT_COUNT;
     unsigned int Timestamp;
-    /*data*/
+    /*1¸öµÄata*/
     unsigned int D_TIGER_ID;
     unsigned int LAST_TIGER_FRAME_NUMBER;
     long long RAW_DATA;
@@ -34,143 +35,181 @@ typedef struct {
     unsigned int S_GEMROC_ID;
 }para;
 
-typedef struct
+typedef struct  
 {
-    unsigned int trigNo; 
-    unsigned int flag; /*to mark data of GEMROC if is valid*/ 
-    unsigned char**rocBuff;  /*buff of GEMROC in a event*/
+    unsigned int trigNo;
+    unsigned int flag;  
+    unsigned char**rocBuff;
 }UDPBUFF_INFO;
 
-UDPBUFF_INFO **udpInfo=NULL;
+
+UDPBUFF_INFO udpInfo[eventNo];
 
 int rocBuff_init() 
 {
     int i,j;
-	
-	udpInfo=(UDPBUFF_INFO**)malloc(sizeof(UDPBUFF_INFO*)*eventNo);
-    if (udpInfo == NULL)
+    for(i=0;i<32;i++)
+        rocID_enable[i]=0;
+
+    if(rocID_List[0]>=32)
     {
-    	printf("Couldn't allocate memory for UDPBUFF_INFO !\n");
-        return -1;
+        for(i=0;i<32;i++)
+            rocID_enable[i]=1;
+        rocFLAG=0xffffffff;
     }
-	for(i=0;i<eventNo;i++)
+    else
     {
-        udpInfo[i]=(UDPBUFF_INFO*)malloc(sizeof(UDPBUFF_INFO));
-        if (udpInfo[i] == NULL)
+        rocFLAG=0;
+        for(i=1;i<=rocID_List[0];i++)
         {
-            printf("Couldn't allocate memory for udpInfo[%d] !\n",i);
+            rocID_enable[rocID_List[i]-1]=1;
+            rocFLAG=rocFLAG|(0x1<<rocID_List[i]-1);
+        }
+        j=0;
+        for(i=0;i<32;i++)
+            if(rocID_enable[i])
+                j++;
+        if(j!=rocID_List[0])
+        {
+            printf("Error,number of ROC enabled is not right.\n");
             return -1;
         }
     }
-
     for(i=0;i<eventNo;i++)
     {
-        udpInfo[i]->rocBuff=(unsigned char**)malloc(sizeof(unsigned char*)*rocNo);
-        if (udpInfo[i]->rocBuff == NULL)
+        udpInfo[i].rocBuff=(unsigned char**)malloc(sizeof(unsigned char*)*32);
+        if (udpInfo[i].rocBuff == NULL)
         {
-            printf("Couldn't allocate memory for rocBuff !\n");
+            printf("Couldn't allocate memory for udpInfo[%d].rocBuff !\n",i);
             return -1;
         }
-        for(j=0;j<rocNo;j++)
-            udpInfo[i]->rocBuff[j]=NULL;
-        udpInfo[i]->trigNo=0;
-        udpInfo[i]->flag=rocFLAG;
+        for(j=0;j<32;j++)
+        {
+            udpInfo[i].rocBuff[j]=NULL;
+            if(rocID_enable[j])
+                udpInfo[i].rocBuff[j]=(unsigned char*)malloc(maxPacketLen);
+            else
+                udpInfo[i].rocBuff[j]=(unsigned char*)malloc(4);
+            if (udpInfo[i].rocBuff[j] == NULL)
+            {
+                printf("Couldn't allocate memory for udpInfo[%d].rocBuff[%d] !\n",i,j);
+                return -1;
+            }
+            *(unsigned int*)udpInfo[i].rocBuff[j]=0;
+        }
+        udpInfo[i].trigNo=0;
+        udpInfo[i].flag=rocFLAG;
     }
+    printf("rocFLAG=%08X\n",rocFLAG);
+    printf("Receive rocID enable:\n");
+    for(i=0;i<32;i++)
+    {
+        printf("rocID %d : ",i);
+        if(rocID_enable[i])
+            printf("yes\n");
+        else
+            printf("no\n");
+    }
+    for(i=0;i<32;i++)
+        if(rocID_enable[i])
+            printf("ROC %d is receive enable.\n",i);
+
     return 0;
 }
 
-int copy_to_Rng(unsigned char*udpRecvBuff,unsigned int buffLen,
+int copy_to_rocBuff(unsigned char*udpRecvBuff,unsigned int buffLen,
                 unsigned int  trgNo,unsigned int  rocID)
 {
+    if(rocID_enable[rocID]==0)
+    {
+     /*   printf("Recv an extra packet,triggerID=%d, rocID=%d\n",trgNo,rocID); */
+        return 0;
+    }
     unsigned int idx=trgNo%eventNo;
     int i;
-    unsigned char* bfp=0;
-    if(trgNo==udpInfo[idx]->trigNo)
+    if(trgNo==udpInfo[idx].trigNo)
     {
-        if((udpInfo[idx]->flag>>rocID)&0x1)
+        if((udpInfo[idx].flag>>rocID)&0x1)
         {
-            bfp=(unsigned char*)malloc(buffLen+4);
-            if (bfp== NULL)
-            {
-                printf("Couldn't allocate memory for rocBuff !\n");
-                return -1;
-            }
-            *(unsigned int*)bfp=buffLen;
-            memcpy(bfp+4,udpRecvBuff,buffLen);
-            if(udpInfo[idx]->rocBuff[rocID]!=NULL)
-                free(udpInfo[idx]->rocBuff[rocID]);
-            udpInfo[idx]->rocBuff[rocID]=bfp;
+            *(unsigned int*)udpInfo[idx].rocBuff[rocID] =buffLen;
+            memcpy(udpInfo[idx].rocBuff[rocID]+4,udpRecvBuff,buffLen);
 
-            udpInfo[idx]->flag=udpInfo[idx]->flag&(0xffffffff^(0x1<<rocID));
-            if(udpInfo[idx]->flag==0)  /*Ï¸öµÄÜڻá·ÅâÄ´æ*/
+            udpInfo[idx].flag=udpInfo[idx].flag&(0xffffffff^(0x1<<rocID));
+            if(udpInfo[idx].flag==0)  /*·¢ËÍÕbuffºóØÃlag*/
                 return 1;
             else
                 return 0;
         }
         else  /*if receive a duplicate packet*/
         {
-            printf("Error! Receive a duplicate packet :\n");
-            printf("packet 1, length= %d: ",*(unsigned int*)udpInfo[idx]->rocBuff[rocID]);
-            for(i=0;i<*(unsigned int*)udpInfo[idx]->rocBuff[rocID];i++)
+            printf("Error! Receive a duplicate packet,TrigerID=%d, rocID=%d .\n",trgNo,rocID);
+            printf("packet 1, length= %d: ,",*(unsigned int*)udpInfo[idx].rocBuff[rocID]);
+            for(i=0;i<*(unsigned int*)udpInfo[idx].rocBuff[rocID] && i<32;i++)
             {
                 if(i&0x11==0)
-                    printf("  ");
-                printf("%02X",udpInfo[idx]->rocBuff[rocID][i]);
+                    printf(" ");
+                printf("%02X",udpInfo[idx].rocBuff[rocID][i+4]);
             }
-            printf("\npacket 2,length= %d: ",buffLen);
-            for(i=0;i<buffLen;i++)
+            printf("\npacket 2, length= %d: ,",buffLen);
+            for(i=0;i<buffLen && i<32;i++)
             {
                 if(i&0x11==0)
-                    printf("  ");
-                printf("%02X",udpInfo[idx]->rocBuff[rocID][i]);
+                    printf(" ");
+                printf("%02X",udpInfo[idx].rocBuff[rocID][i]);
             }
+			printf("\n");
             return 0;
         }
     }
-    else if(trgNo>udpInfo[idx]->trigNo)
+    else if(trgNo>udpInfo[idx].trigNo)
     {
-        for(i=0;i<rocNo;i++)
-        if(udpInfo[idx]->rocBuff[i])
-        {
-            free(udpInfo[idx]->rocBuff[i]);
-            udpInfo[idx]->rocBuff[i]=0;
-        }
-        if(udpInfo[idx]->flag)
-            printf("Miss a udp packet,triggerNo=%d\n",udpInfo[idx]->trigNo);
-        bfp=(unsigned char*)malloc(buffLen+4);
-        if(bfp== NULL)
-        {
-            printf("Couldn't allocate memory for rocBuff !\n");
-            return -1;
-        }
-        *(unsigned int*)bfp=buffLen;
-        memcpy(bfp+4,udpRecvBuff,buffLen);
-        udpInfo[idx]->rocBuff[rocID]=bfp; 
-        udpInfo[idx]->flag=rocFLAG&(0xffffffff^(0x1<<rocID));
-        udpInfo[idx]->trigNo=trgNo;
-        if(udpInfo[idx]->flag==0) 
+        if(udpInfo[idx].flag!=rocFLAG)
+            printf("Found a udp packet missed,its triggerNo=%d.\n",udpInfo[idx].trigNo);
+        *(unsigned int*)udpInfo[idx].rocBuff[rocID] =buffLen;
+        memcpy(udpInfo[idx].rocBuff[rocID]+4,udpRecvBuff,buffLen);
+        udpInfo[idx].flag=rocFLAG&(0xffffffff^(0x1<<rocID)); /*¸ügÓЧ±ê*/
+        udpInfo[idx].trigNo=trgNo;
+        if(udpInfo[idx].flag==0) 
             return 1;
         else
             return 0;
     }
     else
     {
-        printf("Recv a expired udp packet,triggerNo of packet=%d\n",trgNo);
+        printf("Recv a expired udp packet,triggerNo packet=%d, rocID=%d.\n",trgNo,rocID);
         return 0;
     }
 }
+void copy_to_sendBuff(unsigned int trgID,unsigned char*outputBuff)
+{
+    trgID=trgID%eventNo;
+   unsigned int sndLen=0;
+   int i,j;
+   int idx=4;
+   unsigned int rocTmplen;
+   for(i=0;i<32;i++)
+   if(rocID_enable[i])
+   {
+       rocTmplen=*(unsigned int*)udpInfo[trgID].rocBuff[i];
+       memcpy(outputBuff+idx,udpInfo[trgID].rocBuff[i]+4,rocTmplen);
+       idx=idx+rocTmplen;
+       sndLen=sndLen+rocTmplen;
+   }
+   *(unsigned int*)outputBuff=sndLen;
+   udpInfo[trgID].flag=rocFLAG;
+}
+
 void rocBuff_delete()
 {
     int i,j;
     for(i=0;i<eventNo;i++)
-    for(j=0;j<rocNo;j++)
-        if (udpInfo[i]->rocBuff[j])
-            free(udpInfo[i]->rocBuff[j]);
-    free(udpInfo[i]->rocBuff);
-	for(i=0;i<eventNo;i++)
-    {
-        free(udpInfo[i]);
-    }
+    for(j=0;j<32;j++)
+        if (udpInfo[i].rocBuff[j])
+        {
+            free(udpInfo[i].rocBuff[j]);
+            udpInfo[i].rocBuff[j]=NULL;
+        }
+    free(udpInfo[i].rocBuff);
 }
 
 int extract_or_print_udp_para(unsigned char*buff,unsigned int buflen,para* p,int print_enable)
@@ -340,21 +379,13 @@ int extract_or_print_udp_para(unsigned char*buff,unsigned int buflen,para* p,int
     return 0;
 }
 
-
-
-
-
 int main(int argc, char** argv)
-{  
-   unsigned char buff[BUFFSIZE];
-	int print_enable;
+{
+
+	unsigned char eventBuff[eventBUFFSIZE];  
+	unsigned char rocBuff[rocBUFFSIZE];
 	int tmp;
 	para tmp_para;
-		
-
-
-
-
 
    int port=58914;
    int sin_len;
@@ -371,32 +402,33 @@ int main(int argc, char** argv)
    socket_descriptor=socket(AF_INET,SOCK_DGRAM,0);
    bind(socket_descriptor,(struct sockaddr *)&sin,sizeof(sin));
 
-   print_enable=1;
     int udpLoop;
 	int a,b,trg;
     rocBuff_init();
 	b=0;
-/*
-   while(b++<100)
+
+   while(1)
    {
 		udpLoop=1;
 		while(udpLoop)
 		{
 			
-       		recv_len=recvfrom(socket_descriptor,buff,BUFFSIZE,0,(struct sockaddr *)&cliaddr,&sin_len);
-			extract_or_print_udp_para(buff,recv_len,&tmp_para,0);
-			tmp=copy_to_Rng(buff,recv_len,tmp_para.LOCAL_L1_COUNT,tmp_para.GEMROC_ID);
+       		recv_len=recvfrom(socket_descriptor,rocBuff,rocBUFFSIZE,0,(struct sockaddr *)&cliaddr,&sin_len);
+			extract_or_print_udp_para(rocBuff,recv_len,&tmp_para,0);
+			tmp=copy_to_rocBuff(rocBuff,recv_len,tmp_para.LOCAL_L1_COUNT,tmp_para.GEMROC_ID);
 			if(tmp==1)
 				udpLoop=0;
 		}
+		copy_to_sendBuff(tmp_para.LOCAL_L1_COUNT,eventBuff);
 		trg=tmp_para.LOCAL_L1_COUNT % eventNo;
-        for(a=0;a<rocNo;a++)
+        for(a=0;a<32;a++)
         {
-            extract_or_print_udp_para(udpInfo[trg]->rocBuff[a]+4,*(unsigned int*)udpInfo[trg]->rocBuff[a],&tmp_para,1);
+			if(rocID_enable[a]);
+            //	extract_or_print_udp_para(udpInfo[trg].rocBuff[a]+4,*(unsigned int*)udpInfo[trg].rocBuff[a],&tmp_para,1);
         }
        
    }
-*/
+
 	rocBuff_delete();
     printf("  finish.\n");
   close(socket_descriptor);
