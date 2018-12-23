@@ -406,7 +406,7 @@ int main(int argc, char** argv)
 	int a,b,trg;
     rocBuff_init();
 	b=0;
-
+	unsigned int nCount=0;
    while(1)
    {
 		udpLoop=1;
@@ -426,6 +426,9 @@ int main(int argc, char** argv)
 			if(rocID_enable[a]);
             //	extract_or_print_udp_para(udpInfo[trg].rocBuff[a]+4,*(unsigned int*)udpInfo[trg].rocBuff[a],&tmp_para,1);
         }
+	nCount++;
+	if(nCount%1000==0)
+		printf("Receive packet,triggerID = %d\n",tmp_para.LOCAL_L1_COUNT);
        
    }
 

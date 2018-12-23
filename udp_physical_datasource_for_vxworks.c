@@ -113,11 +113,13 @@ int main(int argc, char** argv)
 
     bzero(&address,sizeof(address));  
     address.sin_family=AF_INET; 
-    printf("Input para =0 ,send to 127.0.0.1,else to vxWorks.\n");
+    printf("Input para =0 ,send to 127.0.0.1,para=1,send to baiduYun,else to vxWorks.\n");
     if(argc==2 && atoi(argv[1])==0)
         address.sin_addr.s_addr=inet_addr("127.0.0.1");
+    else if(argc==2 && atoi(argv[1])==1)
+        address.sin_addr.s_addr=inet_addr("182.61.26.154");
     else
-        address.sin_addr.s_addr=inet_addr("192.168.1.201");
+	address.sin_addr.s_addr=inet_addr("192.168.1.201");
  
     address.sin_port=htons(58914);  
     socket_descriptor=socket(AF_INET,SOCK_DGRAM,0);
@@ -139,7 +141,7 @@ int main(int argc, char** argv)
 	}
 	PARA.LOCAL_L1_COUNT++;
 	
-        usleep(500);
+        usleep(50000);
     }   
     close(socket_descriptor);  
     printf("Messages Sent\n");    
