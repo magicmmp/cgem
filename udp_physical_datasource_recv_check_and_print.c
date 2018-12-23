@@ -418,7 +418,7 @@ int main(int argc, char** argv)
             //	extract_or_print_udp_para(udpInfo[trg].rocBuff[a]+4,*(unsigned int*)udpInfo[trg].rocBuff[a],&tmp_para,1);
         }
 	nCount++;
-	if(nCount%100==0)
+	if(nCount%10000==0)
 		printf("Event sent,triggerID = %d\n",tmp_para.LOCAL_L1_COUNT);
        
    }
