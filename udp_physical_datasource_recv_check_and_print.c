@@ -113,7 +113,7 @@ int copy_to_rocBuff(unsigned char*udpRecvBuff,unsigned int buffLen,
 {
     if(rocID_enable[rocID]==0)
     {
-     /*   printf("Recv an extra packet,triggerID=%d, rocID=%d\n",trgNo,rocID); */
+        printf("Recv an extra packet,triggerID=%d, rocID=%d\n",trgNo,rocID); 
         return 0;
     }
     unsigned int idx=trgNo%eventNo;
@@ -154,8 +154,8 @@ int copy_to_rocBuff(unsigned char*udpRecvBuff,unsigned int buffLen,
     }
     else if(trgNo>udpInfo[idx].trigNo)
     {
-        if(udpInfo[idx].flag!=rocFLAG);
-        //    printf("Found an event data missed,its triggerNo=%d.\n",udpInfo[idx].trigNo);
+        if(udpInfo[idx].flag!=rocFLAG)
+            printf("Found an event data missed,its triggerNo=%d.\n",udpInfo[idx].trigNo);
         *(unsigned int*)udpInfo[idx].rocBuff[rocID] =buffLen;
         memcpy(udpInfo[idx].rocBuff[rocID]+4,udpRecvBuff,buffLen);
         udpInfo[idx].flag=rocFLAG&(0xffffffff^(0x1<<rocID)); /*¸ügÓЧ±ê*/
@@ -418,7 +418,7 @@ int main(int argc, char** argv)
             //	extract_or_print_udp_para(udpInfo[trg].rocBuff[a]+4,*(unsigned int*)udpInfo[trg].rocBuff[a],&tmp_para,1);
         }
 	nCount++;
-	if(nCount%10000==0)
+	if(nCount%1000==0)
 		printf("Event sent,triggerID = %d\n",tmp_para.LOCAL_L1_COUNT);
        
    }
