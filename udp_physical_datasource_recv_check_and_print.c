@@ -11,7 +11,7 @@
 const int maxPacketLen=2096;
 const int eventBUFFSIZE=66816;
 const int rocBUFFSIZE=2128;
-const int rocID_List[33]={7,1,4,30,13,20,26,31};
+const int rocID_List[33]={32,1,4,30,13,20,26,31};
 int       rocID_enable[32];
 unsigned int rocFLAG;
 typedef struct {

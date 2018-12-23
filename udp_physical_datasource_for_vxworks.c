@@ -8,7 +8,7 @@
 
 /** hit count=10 **/
 /** need 106 of int length **/
-#define N     20  /*HIT_COUNT*/
+#define N     6  /*HIT_COUNT*/
 #define M     ((N<<1)+6)
 #define rocNo 32
 
@@ -141,7 +141,7 @@ int main(int argc, char** argv)
 	}
 	PARA.LOCAL_L1_COUNT++;
 	
-        usleep(80000);
+        usleep(30000);
     }   
     close(socket_descriptor);  
     printf("Messages Sent\n");    
