@@ -428,7 +428,7 @@ int main(int argc, char** argv)
         }
 	nCount++;
 	if(nCount%100==0)
-		printf("Receive packet,triggerID = %d\n",tmp_para.LOCAL_L1_COUNT);
+		printf("Event sent,triggerID = %d\n",tmp_para.LOCAL_L1_COUNT);
        
    }
 
