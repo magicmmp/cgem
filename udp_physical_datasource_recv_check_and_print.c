@@ -101,15 +101,6 @@ int rocBuff_init()
         udpInfo[i].flag=rocFLAG;
     }
     printf("rocFLAG=%08X\n",rocFLAG);
-    printf("Receive rocID enable:\n");
-    for(i=0;i<32;i++)
-    {
-        printf("rocID %d : ",i);
-        if(rocID_enable[i])
-            printf("yes\n");
-        else
-            printf("no\n");
-    }
     for(i=0;i<32;i++)
         if(rocID_enable[i])
             printf("ROC %d is receive enable.\n",i);
