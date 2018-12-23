@@ -154,8 +154,8 @@ int copy_to_rocBuff(unsigned char*udpRecvBuff,unsigned int buffLen,
     }
     else if(trgNo>udpInfo[idx].trigNo)
     {
-        if(udpInfo[idx].flag!=rocFLAG)
-            printf("Found an event data missed,its triggerNo=%d.\n",udpInfo[idx].trigNo);
+        if(udpInfo[idx].flag!=rocFLAG);
+        //    printf("Found an event data missed,its triggerNo=%d.\n",udpInfo[idx].trigNo);
         *(unsigned int*)udpInfo[idx].rocBuff[rocID] =buffLen;
         memcpy(udpInfo[idx].rocBuff[rocID]+4,udpRecvBuff,buffLen);
         udpInfo[idx].flag=rocFLAG&(0xffffffff^(0x1<<rocID)); /*¸ügÓЧ±ê*/
