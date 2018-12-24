@@ -8,7 +8,7 @@
 
 /** hit count=10 **/
 /** need 106 of int length **/
-#define N     6  /*HIT_COUNT*/
+#define N     2  /*HIT_COUNT*/
 #define M     ((N<<1)+6)
 #define rocNo 32
 

@@ -113,7 +113,7 @@ int copy_to_rocBuff(unsigned char*udpRecvBuff,unsigned int buffLen,
 {
     if(rocID_enable[rocID]==0)
     {
-        printf("Recv an extra packet,triggerID=%d, rocID=%d\n",trgNo,rocID); 
+      //  printf("Recv an extra packet,triggerID=%d, rocID=%d\n",trgNo,rocID); 
         return 0;
     }
     unsigned int idx=trgNo%eventNo;
@@ -383,15 +383,19 @@ int main(int argc, char** argv)
    int socket_descriptor;
 	int recv_len;
 
-   struct sockaddr_in sin,cliaddr;
+   struct sockaddr_in sin,Vxaddr;
    bzero(&sin,sizeof(sin));
    sin.sin_family=AF_INET;
    sin.sin_addr.s_addr=htonl(INADDR_ANY);
-
    sin.sin_port=htons(port);
    sin_len=sizeof(sin);
    socket_descriptor=socket(AF_INET,SOCK_DGRAM,0);
    bind(socket_descriptor,(struct sockaddr *)&sin,sizeof(sin));
+
+	bzero(&Vxaddr,sizeof(Vxaddr));
+        Vxaddr.sin_family=AF_INET;
+        Vxaddr.sin_addr.s_addr=inet_addr("192.168.1.201");
+        Vxaddr.sin_port=htons(58914);
 
     int udpLoop;
 	int a,b,trg;
@@ -404,13 +408,14 @@ int main(int argc, char** argv)
 		while(udpLoop)
 		{
 			
-       		recv_len=recvfrom(socket_descriptor,rocBuff,rocBUFFSIZE,0,(struct sockaddr *)&cliaddr,&sin_len);
+       		recv_len=recvfrom(socket_descriptor,rocBuff,rocBUFFSIZE,0,NULL,NULL);
 			extract_or_print_udp_para(rocBuff,recv_len,&tmp_para,0);
 			tmp=copy_to_rocBuff(rocBuff,recv_len,tmp_para.LOCAL_L1_COUNT,tmp_para.GEMROC_ID);
 			if(tmp==1)
 				udpLoop=0;
 		}
 		copy_to_sendBuff(tmp_para.LOCAL_L1_COUNT,eventBuff);
+		sendto(socket_descriptor,eventBuff,*(unsigned int*)eventBuff,0,(struct sockaddr *)&Vxaddr,sizeof(Vxaddr));
 		trg=tmp_para.LOCAL_L1_COUNT % eventNo;
         for(a=0;a<32;a++)
         {
