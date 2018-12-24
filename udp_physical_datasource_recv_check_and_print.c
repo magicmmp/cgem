@@ -415,7 +415,7 @@ int main(int argc, char** argv)
 				udpLoop=0;
 		}
 		copy_to_sendBuff(tmp_para.LOCAL_L1_COUNT,eventBuff);
-		sendto(socket_descriptor,eventBuff,*(unsigned int*)eventBuff,0,(struct sockaddr *)&Vxaddr,sizeof(Vxaddr));
+		sendto(socket_descriptor,eventBuff+4,*(unsigned int*)eventBuff,0,(struct sockaddr *)&Vxaddr,sizeof(Vxaddr));
 		trg=tmp_para.LOCAL_L1_COUNT % eventNo;
         for(a=0;a<32;a++)
         {
