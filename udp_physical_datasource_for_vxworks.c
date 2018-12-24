@@ -123,13 +123,14 @@ int main(int argc, char** argv)
  
     address.sin_port=htons(58914);  
     socket_descriptor=socket(AF_INET,SOCK_DGRAM,0);
-    unsigned int  CN=0;
+    
     unsigned char tmp;
     int i,j;
     unsigned int *p;
 	printf("gemroc_Numbers = %d, HIT_COUNT = %d\n",rocNo,N);
 	printf("BUFFSIZE    = %d\n",BUFFSIZE);
-	
+    
+
     while(1)  
     {
 
@@ -142,7 +143,7 @@ int main(int argc, char** argv)
 	PARA.LOCAL_L1_COUNT++;
 	
         usleep(30000);
-    }   
+    }
     close(socket_descriptor);  
     printf("Messages Sent\n");    
 }  

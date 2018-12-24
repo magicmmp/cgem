@@ -11,7 +11,7 @@
 const int maxPacketLen=2096;
 const int eventBUFFSIZE=66816;
 const int rocBUFFSIZE=2128;
-const int rocID_List[33]={32,1,4,30,13,20,26,31};
+const int rocID_List[33]={6,1,4,30,13,20,26,31};
 int       rocID_enable[32];
 unsigned int rocFLAG;
 typedef struct {
@@ -397,12 +397,16 @@ int main(int argc, char** argv)
         Vxaddr.sin_addr.s_addr=inet_addr("192.168.1.201");
         Vxaddr.sin_port=htons(58914);
 
-    int udpLoop;
+    	int udpLoop;
 	int a,b,trg;
-    rocBuff_init();
+    	rocBuff_init();
 	b=0;
 	unsigned int nCount=0;
-   while(1)
+
+	FILE *fp = NULL;
+        fp = fopen("UDP22.bin", "wb");
+
+   while(nCount<100)
    {
 		udpLoop=1;
 		while(udpLoop)
@@ -415,6 +419,7 @@ int main(int argc, char** argv)
 				udpLoop=0;
 		}
 		copy_to_sendBuff(tmp_para.LOCAL_L1_COUNT,eventBuff);
+		fwrite(eventBuff+4,sizeof(unsigned char),*(unsigned int*)eventBuff,fp);
 		sendto(socket_descriptor,eventBuff+4,*(unsigned int*)eventBuff,0,(struct sockaddr *)&Vxaddr,sizeof(Vxaddr));
 		trg=tmp_para.LOCAL_L1_COUNT % eventNo;
         for(a=0;a<32;a++)
@@ -427,7 +432,7 @@ int main(int argc, char** argv)
 		printf("Event sent,triggerID = %d\n",tmp_para.LOCAL_L1_COUNT);
        
    }
-
+	fclose(fp);
 	rocBuff_delete();
     printf("  finish.\n");
   close(socket_descriptor);
