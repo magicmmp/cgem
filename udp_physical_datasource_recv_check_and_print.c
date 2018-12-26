@@ -403,10 +403,10 @@ int main(int argc, char** argv)
 	b=0;
 	unsigned int nCount=0;
 
-	FILE *fp = NULL;
-        fp = fopen("UDP22.bin", "wb");
+//	FILE *fp = NULL;
+  //      fp = fopen("UDP22.bin", "wb");
 
-   while(nCount<100)
+   while(1)
    {
 		udpLoop=1;
 		while(udpLoop)
@@ -419,7 +419,7 @@ int main(int argc, char** argv)
 				udpLoop=0;
 		}
 		copy_to_sendBuff(tmp_para.LOCAL_L1_COUNT,eventBuff);
-		fwrite(eventBuff+4,sizeof(unsigned char),*(unsigned int*)eventBuff,fp);
+	//	fwrite(eventBuff+4,sizeof(unsigned char),*(unsigned int*)eventBuff,fp);
 		sendto(socket_descriptor,eventBuff+4,*(unsigned int*)eventBuff,0,(struct sockaddr *)&Vxaddr,sizeof(Vxaddr));
 		trg=tmp_para.LOCAL_L1_COUNT % eventNo;
         for(a=0;a<32;a++)
@@ -428,11 +428,11 @@ int main(int argc, char** argv)
             //	extract_or_print_udp_para(udpInfo[trg].rocBuff[a]+4,*(unsigned int*)udpInfo[trg].rocBuff[a],&tmp_para,1);
         }
 	nCount++;
-	if(nCount%1000==0)
+	if(nCount%10000==0)
 		printf("Event sent,triggerID = %d\n",tmp_para.LOCAL_L1_COUNT);
        
    }
-	fclose(fp);
+//	fclose(fp);
 	rocBuff_delete();
     printf("  finish.\n");
   close(socket_descriptor);
