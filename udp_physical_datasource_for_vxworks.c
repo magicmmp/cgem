@@ -142,7 +142,7 @@ int main(int argc, char** argv)
 	}
 	PARA.LOCAL_L1_COUNT++;
 	
-        usleep(1000);
+        usleep(5000);
     }
     close(socket_descriptor);  
     printf("Messages Sent\n");    
