@@ -264,14 +264,17 @@ private:
 
 
 
-int main()
+int main(int argc, char** argv)
 {
-    cout << "BinFileRead,input a file name:" << endl;
+	cout << "if input para =1 ,bin file to hex, else to txt." << endl;
+    cout << "BinFileRead,now input a file name:" << endl;
     string fname;
     cin>>fname;
     BinFileRead b(fname);
-  //  b.BinToHex();
-    b.BinToText();
+	if(argc==2 && atoi(argv[1])==1)
+    	b.BinToHex();
+	else
+    	b.BinToText();
 
     return 0;
 }
