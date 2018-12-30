@@ -15,6 +15,7 @@
 #include<string>
 using namespace std;
 int dataLoop;
+int mainLoop;
 int cmd_fd;
 int txt_fd;
 int data_fd;
@@ -23,7 +24,7 @@ int data_fd;
 const int maxPacketLen=2096;
 const int eventBUFFSIZE=66816;
 const int rocBUFFSIZE=2128;
-const int rocID_List[33]={6,1,4,30,13,20,26,31};
+const int rocID_List[33]={32,1,4,30,13,20,26,31};
 int       rocID_enable[32];
 unsigned int rocFLAG;
 typedef struct {
@@ -413,29 +414,27 @@ int TCPsend(int sockfd,unsigned char *psndbuf,int nsndlen)
 void* cmd_recv(void* args)
 {
     char cmdBuff[256];
-    memset(cmdBuff, 0, sizeof(cmdBuff));
-    recv(cmd_fd,cmdBuff,256,0) ;
-    printf("cmd_recv thread receive: %s",cmdBuff);
-
-    while(dataLoop)
+    while(mainLoop)
     {
+		memset(cmdBuff, 0, sizeof(cmdBuff));
         recv(cmd_fd,cmdBuff,256,0);
+		printf("cmd_recv thread receive: %s\n",cmdBuff);
         string ss(cmdBuff,4);
         if(ss=="stop")
-        {
-            dataLoop=0;
-            cout<<"exit cmd thread."<<endl;
-        }
+		{
+			mainLoop=0;
+		}
     }
     close(cmd_fd);
+	cout<<"exit cmd thread."<<endl;
 }
 
 void* read_txt(void* args)
 {
     char txtBuff[256];
     memset(txtBuff, 0, sizeof(txtBuff));
-    recv(cmd_fd,txtBuff,256,0) ;
-    printf("cmd_recv thread receive: %s",txtBuff);
+    recv(txt_fd,txtBuff,256,0) ;
+    printf("txt_recv thread receive: %s\n",txtBuff);
     close(txt_fd);
     cout<<"exit txt thread."<<endl;
 }
@@ -456,35 +455,63 @@ void* udpPacketSort(void* args)
     sin.sin_addr.s_addr=htonl(INADDR_ANY);
     sin.sin_port=htons(58914);
     udp_fd=socket(AF_INET,SOCK_DGRAM,0);
+
+	struct timeval timeout;
+    timeout.tv_sec = 10;
+    timeout.tv_usec = 0;
+    if (setsockopt(udp_fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) == -1) 
+	{
+        printf("set UDP recv fd nonblock failed:");
+    }
+
     bind(udp_fd,(struct sockaddr *)&sin,sizeof(sin));
 
     int udpLoop;
     int trg;
     unsigned int nCount=0;
    rocBuff_init();
-   while(dataLoop)
+   while(mainLoop)
    {
         udpLoop=1;
         while(udpLoop)
         {
             recv_len=recvfrom(udp_fd,rocBuff,rocBUFFSIZE,0,NULL,NULL);
-            extract_or_print_udp_para(rocBuff,recv_len,&tmp_para,0);
-            tmp=copy_to_rocBuff(rocBuff,recv_len,tmp_para.LOCAL_L1_COUNT,tmp_para.GEMROC_ID);
-            if(tmp==1)
-                udpLoop=0;
+			if(mainLoop)
+			{
+				if(recv_len>0)
+				{
+            		extract_or_print_udp_para(rocBuff,recv_len,&tmp_para,0);
+            		tmp=copy_to_rocBuff(rocBuff,recv_len,tmp_para.LOCAL_L1_COUNT,tmp_para.GEMROC_ID);
+            		if(tmp==1)
+                		udpLoop=0;
+				}
+				else
+				{
+					printf("UDP recv len=%d\n",recv_len);
+				}
+
+			}
+			else
+			{
+				udpLoop=0;
+			}
         }
-        copy_to_sendBuff(tmp_para.LOCAL_L1_COUNT,eventBuff);
-        tcpSendLen=*(unsigned int*)eventBuff;
-        TCPsend(data_fd,eventBuff,tcpSendLen+4);
-        trg=tmp_para.LOCAL_L1_COUNT % eventNo;
-        nCount++;
-        if(nCount%10000==0)
-            printf("Event sent,triggerID = %d\n",tmp_para.LOCAL_L1_COUNT);
+		if(mainLoop)
+		{
+        	copy_to_sendBuff(tmp_para.LOCAL_L1_COUNT,eventBuff);
+        	tcpSendLen=*(unsigned int*)eventBuff;
+        	TCPsend(data_fd,eventBuff,tcpSendLen+4);
+			*(unsigned int*)eventBuff=0;
+        	trg=tmp_para.LOCAL_L1_COUNT % eventNo;
+        	nCount++;
+        	if(nCount%10000==0)
+            	printf("Event sent,triggerID = %d\n",tmp_para.LOCAL_L1_COUNT);
+		}
     }
     rocBuff_delete();
-    printf("TCP data send thread exit.\n");
     close(udp_fd);
     close(data_fd);
+	printf("TCP data send thread exit.\n");
 }
 
 
@@ -502,7 +529,7 @@ int main(int argc, char** argv)
     memset(&servaddr, 0, sizeof(servaddr));
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    servaddr.sin_port = htons(8000);
+    servaddr.sin_port = htons(56898);
 
     if( bind(listen_fd, (struct sockaddr*)&servaddr, sizeof(servaddr)) == -1)
     {
@@ -517,7 +544,7 @@ int main(int argc, char** argv)
     printf("\n======waiting for VxWorks request======\n");
     while(1)
     {
-        cout<<"main loop restart."<<endl;
+        cout<<"main Loop restart."<<endl;
 
         if( (cmd_fd = accept(listen_fd, (struct sockaddr*)&cliaddr1, &cli_len)) == -1)
         {
@@ -543,6 +570,7 @@ int main(int argc, char** argv)
 
 
         dataLoop=1;
+		mainLoop=1;
         pthread_t cmd_tid;
         pthread_t readTxt_tid;
         pthread_t udpSort_tid;
