@@ -24,7 +24,7 @@ using namespace std;
 void* cmd_send(void* args)
 {
 	send(cmd_fd,"I am cmd send thread.",22,MSG_DONTWAIT);
-	sleep(30);
+	sleep(60);
 	send(cmd_fd,"stop",4,MSG_DONTWAIT);
 //	sleep(1);
 	tcpLoop=0;
@@ -43,13 +43,13 @@ void* get_txt(void* args)
 void* dataRecv(void* args)
 {
 	int dataLen=0;
-	//struct timeval timeout = {2,0}; 
-//	setsockopt(data_fd,SOL_SOCKET,SO_RCVTIMEO,(char*)&timeout,sizeof(struct timeval));
+	FILE *fp = NULL;
+	fp = fopen("tcp.bin", "wb");
 	while(tcpLoop)
 	{
 		recv(data_fd,buff,4,0) ;
 		dataLen=*(int*)buff;
-		printf("Have to receive %d bytes  : ",dataLen);
+//		printf("Have to receive %d bytes  : ",dataLen);
 		int len;
 		int idx=4;
 		int recvLen=0;
@@ -70,9 +70,12 @@ void* dataRecv(void* args)
                 recvLen=dataLen+1;
 			}
 		}
-		printf("received  %d bytes.\n",recvLen);
+//		printf("received  %d bytes.\n",recvLen);
+		if(recvLen>0)
+			fwrite(buff+4,sizeof(unsigned char),recvLen,fp);
 		*(int*)buff=0;
 	}
+	fclose(fp);
 	close(data_fd);
 	printf("exit data recv thread.\n");
 }
