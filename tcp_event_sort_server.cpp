@@ -457,7 +457,7 @@ void* udpPacketSort(void* args)
     udp_fd=socket(AF_INET,SOCK_DGRAM,0);
 
 	struct timeval timeout;
-    timeout.tv_sec = 10;
+    timeout.tv_sec = 5;
     timeout.tv_usec = 0;
     if (setsockopt(udp_fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) == -1) 
 	{
@@ -489,15 +489,15 @@ void* udpPacketSort(void* args)
 				{
 					printf("UDP recv len=%d\n",recv_len);
 				}
-
 			}
 			else
 			{
 				udpLoop=0;
 			}
         }
-		if(mainLoop)
+		if(mainLoop&&tmp==1)
 		{
+			tmp=0;
         	copy_to_sendBuff(tmp_para.LOCAL_L1_COUNT,eventBuff);
         	tcpSendLen=*(unsigned int*)eventBuff;
         	TCPsend(data_fd,eventBuff,tcpSendLen+4);
@@ -511,6 +511,7 @@ void* udpPacketSort(void* args)
     rocBuff_delete();
     close(udp_fd);
     close(data_fd);
+	printf("Total events = %u ,last triggerID = %d\n",nCount,tmp_para.LOCAL_L1_COUNT);
 	printf("TCP data send thread exit.\n");
 }
 

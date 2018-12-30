@@ -26,7 +26,7 @@ void* cmd_send(void* args)
 	send(cmd_fd,"I am cmd send thread.",22,MSG_DONTWAIT);
 	sleep(60);
 	send(cmd_fd,"stop",4,MSG_DONTWAIT);
-//	sleep(1);
+	sleep(1);
 	tcpLoop=0;
     close(cmd_fd);
 	printf("exit cmd send thread.\n");
@@ -42,41 +42,59 @@ void* get_txt(void* args)
 
 void* dataRecv(void* args)
 {
-	int dataLen=0;
+	int len;
+	int nPacket=0;
+	int tmpLen;
+	unsigned int eventLen;
 	FILE *fp = NULL;
 	fp = fopen("../tcp.bin", "wb");
+	*(unsigned int*)buff=0;
 	while(tcpLoop)
 	{
-		recv(data_fd,buff,4,0) ;
-		dataLen=*(int*)buff;
-//		printf("Have to receive %d bytes  : ",dataLen);
-		int len;
-		int idx=4;
-		int recvLen=0;
-		while(tcpLoop && recvLen<dataLen)
+		len=recv(data_fd,buff,4,0) ;
+		if(len>0)
 		{
-			len=recv(data_fd,buff+idx,sizeof(buff)-dataLen,0);
-			if(len>0)
-            {
-                recvLen=recvLen+len;
-                idx=idx+len;
-            }
-			else if( (len<0) && (errno == EAGAIN||errno == EWOULDBLOCK||errno == EINTR))
+			eventLen=*(unsigned int*)buff;
+			*(unsigned int*)buff=0;
+			tmpLen=0;
+			while(tmpLen<eventLen && tcpLoop)
 			{
+				len=recv(data_fd,buff+tmpLen+4,eventLen-tmpLen,0) ;
+				if(len>0)
+				{
+					tmpLen=tmpLen+len;
+				}
+				else if(len==0)
+				{
+            		tcpLoop=0;
+            		printf("tcp socket closed by remote end.\n");
+        		}
+				else
+				{
+					printf("tcp socket return len =-1.\n");
+				}			
 			}
-			else
-			{
-				printf("tcp socket closed by remote end,exit.\n");
-                recvLen=dataLen+1;
-			}
+
 		}
-//		printf("received  %d bytes.\n",recvLen);
-		if(recvLen>0)
-			fwrite(buff+4,sizeof(unsigned char),recvLen,fp);
-		*(int*)buff=0;
+		else if(len==0)
+		{
+			tcpLoop=0;
+			printf("tcp socket closed by remote end.\n");
+		}
+		else
+        {
+        	printf("tcp socket return len =-1.\n");
+        }
+		if(tmpLen==eventLen && tmpLen>20)
+		{
+			fwrite(buff+4,sizeof(unsigned char),tmpLen,fp);
+			nPacket++;
+			tmpLen=0;
+		}
 	}
 	fclose(fp);
 	close(data_fd);
+	printf("%d events have been written to bin-file.\n",nPacket);
 	printf("exit data recv thread.\n");
 }
 
