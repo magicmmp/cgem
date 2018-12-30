@@ -44,7 +44,7 @@ void* dataRecv(void* args)
 {
 	int dataLen=0;
 	FILE *fp = NULL;
-	fp = fopen("tcp.bin", "wb");
+	fp = fopen("../tcp.bin", "wb");
 	while(tcpLoop)
 	{
 		recv(data_fd,buff,4,0) ;
