@@ -8,7 +8,7 @@
 
 /** hit count=10 **/
 /** need 106 of int length **/
-#define N     32  /*HIT_COUNT*/
+#define N     2  /*HIT_COUNT*/
 #define M     ((N<<1)+6)
 #define rocNo 32
 
@@ -140,26 +140,30 @@ int main(int argc, char** argv)
     address.sin_port=htons(58914);  
     socket_descriptor=socket(AF_INET,SOCK_DGRAM,0);
     
-    unsigned char tmp;
+    unsigned int trgNo=0;
     int i,j;
+	int idx;
     unsigned int *p;
 	printf("gemroc_Numbers = %d, HIT_COUNT = %d\n",rocNo,N);
 	printf("BUFFSIZE    = %d\n",BUFFSIZE);
-    
+    unsigned int GG=8;
 
     while(1)  
     {
-
-	for(i=0;i<rocNo;i++)
-	{
-		PARA.GEMROC_ID=i;
-		change_para(&PARA,data,M,buff,BUFFSIZE);
-		sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
-	}
-	PARA.LOCAL_L1_COUNT++;
+		for(idx=GG-1;idx>=0;idx--)
+		{
+			PARA.LOCAL_L1_COUNT=idx+trgNo;
+			for(i=0;i<rocNo;i++)
+			{
+				PARA.GEMROC_ID=i;
+				change_para(&PARA,data,M,buff,BUFFSIZE);
+				sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
+			}
 	
-        usleep(5000);
-    }
+        	usleep(5000);
+    	}
+		trgNo=trgNo+GG;
+	}
     close(socket_descriptor);  
     printf("Messages Sent\n");    
 }  
