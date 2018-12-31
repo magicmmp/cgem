@@ -35,6 +35,21 @@ typedef struct {
     unsigned int S_GEMROC_ID;
 }para;
 
+void ChangeByteOrder(unsigned char*buff,int buffLen)
+{
+    int i,j;
+    unsigned char ch;
+    for(i=0;i<buffLen;i=i+8)
+    {
+        for(j=0;j<4;j++)
+        {
+            ch=buff[i+j];
+            buff[i+j]=buff[i+7-j];
+            buff[i+7-j]=ch;
+        }
+    }
+}
+
 void change_para(para *p,unsigned int*data,int datalen,unsigned char*buff,int buflen)
 {
 
@@ -67,7 +82,7 @@ void change_para(para *p,unsigned int*data,int datalen,unsigned char*buff,int bu
     i++;
     data[i]=(0x1<<30) + ((p->GEMROC_ID&0x1f)<<20)+ ((p->UDP_packet_count>>28)&0xfffff);
     i++;
-    data[i]=(0x1<<30) + (p->UDP_packet_count & 0xfffffff);
+    data[i]=p->UDP_packet_count & 0xfffffff;
     p->UDP_packet_count++;
     memcpy(buff,(char*)data,buflen);
     Va=1;
@@ -81,6 +96,7 @@ void change_para(para *p,unsigned int*data,int datalen,unsigned char*buff,int bu
         buff[i+1]=buff[i+2];
         buff[i+2]=tmp;
     }
+	ChangeByteOrder(buff,buflen);
 }
 
   
@@ -142,7 +158,7 @@ int main(int argc, char** argv)
 	}
 	PARA.LOCAL_L1_COUNT++;
 	
-        usleep(1000);
+        usleep(5000);
     }
     close(socket_descriptor);  
     printf("Messages Sent\n");    

@@ -4,7 +4,20 @@
 #include<string>
 
 using namespace std;
-
+void ChangeByteOrder(unsigned char*buff,int buffLen)
+{
+    int i,j;
+    unsigned char ch;
+    for(i=0;i<buffLen;i=i+8)
+    {
+        for(j=0;j<4;j++)
+        {
+            ch=buff[i+j];
+            buff[i+j]=buff[i+7-j];
+            buff[i+7-j]=ch;
+        }
+    }
+}
 struct para
 {
     /*Header*/
@@ -62,6 +75,7 @@ public:
     int CheckAndExtractPara()
     {
         infile.read((char*)buff,8);
+		ChangeByteOrder(buff,8);
         if(infile.fail())
         {
             cerr<<"cannot read udp header,"<<" Number of packet read = "<<nUdpPacket<<endl;
@@ -113,6 +127,7 @@ public:
 
         nBytes=(tmp_para.HIT_COUNT<<3)+16;
         infile.read((char*)(buff+8),nBytes);
+		ChangeByteOrder(buff+8,nBytes);
         if(infile.fail())
         {
             cerr<<"cannot read udp data and tailer,"<<" packet number = "<<nUdpPacket<<endl;
@@ -152,15 +167,15 @@ public:
         idx++;
         if(intbuff[idx]>>28 !=4)
         {
-            cout<<"packet number = "<<nUdpPacket<<", udp sequence flag error."<<endl;
+            cout<<"packet number = "<<nUdpPacket<<", udp sequence flag1 error."<<endl;
             return -1;
         }
         tmp_para.S_GEMROC_ID=intbuff[idx]>>20&0x1f;
         tmp_para.UDP_packet_count=intbuff[idx]&0xfffff;
         idx++;
-        if(intbuff[idx]>>28 !=4)
+        if(intbuff[idx]>>28)
         {
-            cout<<"packet number = "<<nUdpPacket<<", udp sequence flag error."<<endl;
+            cout<<"packet number = "<<nUdpPacket<<", udp sequence flag2 error."<<endl;
             return -1;
         }
         tmp_para.UDP_packet_count=tmp_para.UDP_packet_count<<28;
@@ -196,7 +211,7 @@ public:
     {
         infile.open(inFileName,ifstream::binary);
         hexfile.open(inFileName+"_bin2hex.txt");
-        hexfile<<left;
+        hexfile<<right;
         if(!infile)
         {
             cerr<<"cannot open file."<<endl;
@@ -223,11 +238,11 @@ public:
                 intbuff[i>>2]=tmp;
             }
              hexfile<<hex;
-             hexfile<<setfill('0')<<setw(8)<<intbuff[0]<<setfill(' ');
+             hexfile<<setw(8)<<intbuff[0];
              hexfile<<dec<<" : "<<intbuff[0]<<endl;
 
              hexfile<<hex;
-             hexfile<<setfill('0')<<setw(8)<<intbuff[1]<<setfill(' ');
+             hexfile<<setw(8)<<intbuff[1];
              hexfile<<dec<<" : "<<intbuff[1]<<endl;
         }
         hexfile.close();

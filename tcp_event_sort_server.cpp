@@ -316,9 +316,9 @@ int extract_or_print_udp_para(unsigned char*buff,unsigned int buflen,para* p,int
     p->UDP_packet_count=p->UDP_packet_count+buff[tmp_idx];
     tmp_idx++;
 
-    if((buff[tmp_idx]>>4)!=4)
+    if(buff[tmp_idx]>>4)
     {
-        printf(" sequence_falg2 = %d, sequence_falg2!=4 ,error.\n",buff[tmp_idx]>>4);
+        printf(" sequence_falg2 = %d, sequence_falg2!=0,error.\n",buff[tmp_idx]>>4);
         return -1;
     }
 
@@ -439,6 +439,21 @@ void* read_txt(void* args)
     cout<<"exit txt thread."<<endl;
 }
 
+void ChangeByteOrder(unsigned char*buff,int buffLen)
+{
+    int i,j;
+    unsigned char ch;
+    for(i=0;i<buffLen;i=i+8)
+    {
+        for(j=0;j<4;j++)
+        {
+            ch=buff[i+j];
+            buff[i+j]=buff[i+7-j];
+            buff[i+7-j]=ch;
+        }
+    }
+}
+
 void* udpPacketSort(void* args)
 {
     unsigned char eventBuff[eventBUFFSIZE];
@@ -480,7 +495,9 @@ void* udpPacketSort(void* args)
 			{
 				if(recv_len>0)
 				{
+					ChangeByteOrder(rocBuff,recv_len);
             		extract_or_print_udp_para(rocBuff,recv_len,&tmp_para,0);
+					ChangeByteOrder(rocBuff,recv_len);
             		tmp=copy_to_rocBuff(rocBuff,recv_len,tmp_para.LOCAL_L1_COUNT,tmp_para.GEMROC_ID);
             		if(tmp==1)
                 		udpLoop=0;
