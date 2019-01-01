@@ -282,9 +282,9 @@ private:
 int main(int argc, char** argv)
 {
 	cout << "if input para =1 ,bin file to hex, else to txt." << endl;
-    cout << "BinFileRead,now input a file name:" << endl;
-    string fname;
-    cin>>fname;
+    string fname("tcp.bin");
+ //   cin>>fname;
+	cout << "This file name: "<< fname<<", BinFileRead..."<< endl;
     BinFileRead b(fname);
 	if(argc==2 && atoi(argv[1])==1)
     	b.BinToHex();

@@ -8,7 +8,7 @@
 
 /** hit count=10 **/
 /** need 106 of int length **/
-#define N     2  /*HIT_COUNT*/
+#define N     20  /*HIT_COUNT*/
 #define M     ((N<<1)+6)
 #define rocNo 32
 
@@ -146,7 +146,7 @@ int main(int argc, char** argv)
     unsigned int *p;
 	printf("gemroc_Numbers = %d, HIT_COUNT = %d\n",rocNo,N);
 	printf("BUFFSIZE    = %d\n",BUFFSIZE);
-    unsigned int GG=8;
+    unsigned int GG=3;
 
     while(1)  
     {
@@ -160,7 +160,7 @@ int main(int argc, char** argv)
 				sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
 			}
 	
-        	usleep(5000);
+        	usleep(100);
     	}
 		trgNo=trgNo+GG;
 	}

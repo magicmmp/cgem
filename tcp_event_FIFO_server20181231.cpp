@@ -14,15 +14,17 @@
 #include<iostream>
 #include<string>
 using namespace std;
+int dataLoop;
 int mainLoop;
 int cmd_fd;
 int txt_fd;
 int data_fd;
 
-#define eventNo 256
-const int eventBUFFSIZE=66064;
-const int rocBUFFSIZE=2072;
-const int rocID_List[32]={32,1,2,3,4,13,20,26,31};
+#define eventNo 1024
+const int maxPacketLen=2096;
+const int eventBUFFSIZE=66816;
+const int rocBUFFSIZE=2128;
+const int rocID_List[33]={32,1,4,30,13,20,26,31};
 int       rocID_enable[32];
 unsigned int rocFLAG;
 typedef struct {
@@ -97,7 +99,7 @@ int rocBuff_init()
         {
             udpInfo[i].rocBuff[j]=NULL;
             if(rocID_enable[j])
-                udpInfo[i].rocBuff[j]=(unsigned char*)malloc(rocBUFFSIZE);
+                udpInfo[i].rocBuff[j]=(unsigned char*)malloc(maxPacketLen);
             else
                 udpInfo[i].rocBuff[j]=(unsigned char*)malloc(4);
             if (udpInfo[i].rocBuff[j] == NULL)
@@ -316,7 +318,7 @@ int extract_or_print_udp_para(unsigned char*buff,unsigned int buflen,para* p,int
 
     if(buff[tmp_idx]>>4)
     {
-        printf(" sequence_falg2 = %d, sequence_falg2!=0,error.\n",buff[tmp_idx]>>4);
+        printf(" sequence_falg2 = %d, sequence_falg2!=0 ,error.\n",buff[tmp_idx]>>4);
         return -1;
     }
 
@@ -452,14 +454,11 @@ void ChangeByteOrder(unsigned char*buff,int buffLen)
     }
 }
 
+
 void* udpPacketSort(void* args)
 {
     unsigned char eventBuff[eventBUFFSIZE];
     unsigned char rocBuff[rocBUFFSIZE];
-	bool 		  sendFlag;
-	unsigned int  trgToSend=0;/*trigger No waiting to send*/
-	unsigned int  trgMinReady=0xffffffff;
-	int nReady=0; /*how many events ready ahead*/
     int tmp;
     para tmp_para;
     /*UDP receive socket setting*/
@@ -517,53 +516,20 @@ void* udpPacketSort(void* args)
 		if(mainLoop&&tmp==1)
 		{
 			tmp=0;
-			sendFlag=false;
-			if(tmp_para.LOCAL_L1_COUNT==trgToSend)
-			{
-				sendFlag=true;
-			}
-			else if(nReady<8)
-			{
-				if(tmp_para.LOCAL_L1_COUNT<trgMinReady)
-					trgMinReady=tmp_para.LOCAL_L1_COUNT;
-				nReady++;
-			}
-			else
-			{
-				trgToSend=trgMinReady;
-				sendFlag=true;
-			}
-			if(sendFlag)
-			{
-				int buffTmpIdx;
-				while(sendFlag)
-				{
-					buffTmpIdx=trgToSend%eventNo;
-					if(udpInfo[buffTmpIdx].flag || udpInfo[buffTmpIdx].trigNo != trgToSend)
-					{
-						sendFlag=false;
-					}
-					else
-					{
-        				copy_to_sendBuff(trgToSend,eventBuff);
-        				tcpSendLen=*(unsigned int*)eventBuff;
-        				TCPsend(data_fd,eventBuff,tcpSendLen+4);
-						*(unsigned int*)eventBuff=0;
-        				nCount++;
-        				if(nCount%10000==0)
-            				printf("Event sent,triggerID = %d\n",trgToSend);
-						trgToSend++;
-					}
-				}
-				trgMinReady=0xffffffff;
-                nReady=0;
-			}
+        	copy_to_sendBuff(tmp_para.LOCAL_L1_COUNT,eventBuff);
+        	tcpSendLen=*(unsigned int*)eventBuff;
+        	TCPsend(data_fd,eventBuff,tcpSendLen+4);
+			*(unsigned int*)eventBuff=0;
+        	trg=tmp_para.LOCAL_L1_COUNT % eventNo;
+        	nCount++;
+        	if(nCount%10000==0)
+            	printf("Event sent,triggerID = %d\n",tmp_para.LOCAL_L1_COUNT);
 		}
     }
     rocBuff_delete();
     close(udp_fd);
     close(data_fd);
-	printf("Total events = %u ,last triggerID = %d\n",nCount,trgToSend-1);
+	printf("Total events = %u ,last triggerID = %d\n",nCount,tmp_para.LOCAL_L1_COUNT);
 	printf("TCP data send thread exit.\n");
 }
 
@@ -622,6 +588,7 @@ int main(int argc, char** argv)
             printf("accept data_fd connect: %s,port:%d\n",inet_ntoa(cliaddr3.sin_addr),cliaddr3.sin_port);
 
 
+        dataLoop=1;
 		mainLoop=1;
         pthread_t cmd_tid;
         pthread_t readTxt_tid;
