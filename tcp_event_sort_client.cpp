@@ -35,6 +35,12 @@ void* cmd_send(void* args)
 
 void* get_txt(void* args)
 {
+	unsigned int Len;
+    unsigned char tcpBuffHeader[4]; 
+	recv(txt_fd,tcpBuffHeader,4,0) ;
+    Len=*(unsigned int*)tcpBuffHeader;
+    printf("*(unsigned int*)tcpBuffHeader= %X\n",Len);
+
 	send(txt_fd,"I am txt get thread.",21,MSG_DONTWAIT);
     close(txt_fd);
 	printf("exit get txt thread.\n");
