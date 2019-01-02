@@ -32,10 +32,11 @@ struct para
 class besFileRead
 {
 public:
-    besFileRead(string fname):inFileName(fname)
+    besFileRead(string fname,bool print_para):inFileName(fname)
     {
-
+		printFlag=print_para;
         eventCount=0;
+		nUdpPacket=0;
     }
     int fileRead()
     {
@@ -158,7 +159,7 @@ public:
         outfile<<"beam_energy: "<<setw(16)<<intbuff[8]<<endl;
 
 
-        while(! infile.eof() && eventCount<100000)
+        while(! infile.eof())
         {
             infile.read((char*)buff,8);
             if(infile.fail())
@@ -200,12 +201,14 @@ public:
                         tmp=tmp|buff[i];
                         intbuff[i>>2]=tmp;
                     }
+				if(printFlag)
+				{
                     outfile<<setw(8)<<" "<<"DATA SEPARATOR RECORD:"<<endl;
                     outfile<<showbase<<hex<<setw(8)<<" "<<"marker: "<<setw(16)<<intbuff[0]<<noshowbase<<dec<<endl;
                     outfile<<setw(8)<<" "<<"record size: "<<setw(16)<<intbuff[1]<<" word"<<endl;
                     outfile<<setw(8)<<" "<<"data_block_number: "<<setw(16)<<intbuff[2]<<endl;
                     outfile<<setw(8)<<" "<<"data_block_size: "<<setw(16)<<intbuff[3]<<endl;
-
+				}
                     infile.read((char*)buff,12);
                     if(infile.fail())
                     {
@@ -240,6 +243,8 @@ public:
                                 tmp=tmp|buff[i];
                                 intbuff[i>>2]=tmp;
                             }
+						if(printFlag)
+						{
                             outfile<<setw(16)<<" "<<"FULL EVENT "<<eventCount<<endl;
                             outfile<<showbase<<hex<<setw(16)<<" "<<setw(48)<<"Header marker: "<<setw(16)<<intbuff[0]<<noshowbase<<dec<<endl;
                             outfile<<setw(16)<<" "<<setw(48)<<"total Fragment size: "<<setw(16)<<intbuff[1]<<" word"<<endl;
@@ -265,7 +270,7 @@ public:
                             outfile<<setw(16)<<" "<<setw(48)<<"event mark2: "<<setw(16)<<intbuff[++eidx]<<endl;
                             outfile<<setw(16)<<" "<<setw(48)<<"event mark3: "<<setw(16)<<intbuff[++eidx]<<endl;
                             outfile<<setw(16)<<" "<<setw(48)<<"event mark4: "<<setw(16)<<intbuff[++eidx]<<endl;
-
+						}
                             subDectector();
 			    eventCount++;
 
@@ -311,6 +316,7 @@ public:
                     outfile<<"data_in_run: "<<setw(16)<<intbuff[1]<<" word"<<endl;
                     outfile<<"status: "<<setw(16)<<intbuff[2]<<endl;
                     outfile<<"end_marker: "<<setw(16)<<intbuff[3]<<endl;
+					cout<<endl<<"Total UDP packets = "<<nUdpPacket<<endl;
 
 
 
@@ -370,6 +376,8 @@ protected:
                     tmp=tmp|buff[i];
                     intbuff[i>>2]=tmp;
                 }
+			if(printFlag)
+			{
                 outfile<<setw(24)<<" "<<"Sub-Dectector:"<<endl;
                 outfile<<showbase<<hex<<setw(24)<<" "<<setw(48)<<"Header marker: "<<setw(16)<<intbuff[0]<<noshowbase<<dec<<endl;
                 outfile<<setw(24)<<" "<<setw(48)<<"Sub-detector Fragment size: "<<setw(16)<<intbuff[1]<<" word"<<endl;
@@ -384,8 +392,8 @@ protected:
                     outfile<<setw(24)<<" "<<setw(24)<<"status elements "<<idx-6<<" : "<<setw(16)<<intbuff[idx]<<endl;
                 outfile<<setw(24)<<" "<<setw(48)<<"Number of specific elements: "<<setw(16)<<intbuff[idx]<<endl;
                 outfile<<setw(24)<<" "<<setw(48)<<"HV status: "<<setw(16)<<intbuff[++idx]<<endl;
+			}
                 ROS();
-
 
             }
             else  /*is not sub-dectector header*/
@@ -430,6 +438,8 @@ protected:
                     tmp=tmp|buff[i];
                     intbuff[i>>2]=tmp;
                 }
+			if(printFlag)
+			{
                 outfile<<setw(32)<<" "<<"ROS-ROS:"<<endl;
                 outfile<<showbase<<hex<<setw(32)<<" "<<setw(48)<<"Header marker: "<<setw(16)<<intbuff[0]<<noshowbase<<dec<<endl;
                 outfile<<setw(32)<<" "<<setw(48)<<"ROS Fragment size: "<<setw(16)<<intbuff[1]<<" word"<<endl;
@@ -446,6 +456,7 @@ protected:
                 outfile<<setw(32)<<" "<<setw(48)<<"run number: "<<setw(16)<<intbuff[++idx]<<endl;
                 outfile<<setw(32)<<" "<<setw(48)<<"default: "<<setw(16)<<intbuff[++idx]<<endl;
                 outfile<<setw(32)<<" "<<setw(48)<<"trigger number: "<<setw(16)<<intbuff[++idx]<<endl;
+			}
                 ROB();
 
 
@@ -492,6 +503,8 @@ protected:
                     tmp=tmp|buff[i];
                     intbuff[i>>2]=tmp;
                 }
+			if(printFlag)
+			{
                 outfile<<setw(40)<<" "<<"ROB-ROB:"<<endl;
                 outfile<<showbase<<hex<<setw(40)<<" "<<setw(48)<<"Header marker: "<<setw(16)<<intbuff[0]<<noshowbase<<dec<<endl;
                 outfile<<setw(40)<<" "<<setw(48)<<"ROB Fragment size: "<<setw(16)<<intbuff[1]<<" word"<<endl;
@@ -505,6 +518,7 @@ protected:
                 for(idx=6;idx<6+intbuff[5];idx++)
                     outfile<<setw(40)<<" "<<setw(24)<<"status elements "<<idx-6<<" : "<<setw(16)<<intbuff[idx]<<endl;
                 outfile<<setw(40)<<" "<<setw(48)<<"Number of specific elements: "<<setw(16)<<intbuff[idx]<<endl;
+			}
                 ROD(intbuff[1]-intbuff[2]);
 
 
@@ -564,7 +578,8 @@ protected:
                     intbuff[i>>2]=tmp;
                 }
                 auto endPos=infile.tellg();
-
+			if(printFlag)
+			{
                 outfile<<setw(48)<<" "<<"ROD-ROD:"<<endl;
                 outfile<<showbase<<hex<<setw(48)<<" "<<setw(48)<<"Header marker: "<<setw(16)<<intbuff[0]<<noshowbase<<dec<<endl;
                 outfile<<setw(48)<<" "<<setw(48)<<"ROD header size: "<<setw(16)<<intbuff[1]<<" word"<<endl;
@@ -582,6 +597,7 @@ protected:
                 outfile<<setw(48)<<" "<<setw(48)<<"status elements: "<<setw(16)<<intbuff[10]<<endl;
                 outfile<<setw(48)<<" "<<setw(48)<<"data   elements: "<<setw(16)<<intbuff[11]<<endl;
                 outfile<<setw(48)<<" "<<setw(48)<<"status position: "<<setw(16)<<intbuff[12]<<endl;
+			}
                 infile.seekg(dataPos); /*¿ªÊ¼¶Áudp°ü*/
                 BinToText(udpBytes);
                 infile.seekg(endPos);
@@ -624,6 +640,8 @@ protected:
             cerr<<"cannot read udp header,"<<" Number of packet read = "<<nUdpPacket<<endl;
             return -1;
         }
+		ChangeByteOrder(buff,8);
+
         for(int i=0;i<8;i=i+4)
         {
             tmp=0;
@@ -657,6 +675,7 @@ protected:
             cerr<<"cannot read udp data and tailer,"<<" packet number = "<<nUdpPacket<<endl;
             return -1;
         }
+		ChangeByteOrder(buff+8,nBytes);
         nBytes=nBytes+8;
         for(int i=8;i<nBytes;i=i+4)
         {
@@ -698,7 +717,7 @@ protected:
         tmp_para.S_GEMROC_ID=intbuff[idx]>>20&0x1f;
         tmp_para.UDP_packet_count=intbuff[idx]&0xfffff;
         idx++;
-        if(intbuff[idx]>>28 !=4)
+        if(intbuff[idx]>>28)
         {
             cout<<"packet number = "<<nUdpPacket<<", udp sequence flag2 error."<<endl;
             return -1;
@@ -710,10 +729,16 @@ protected:
 
     void PrintToText()
     {
-        outfile<<setw(56)<<" "<<setfill('*')<<setw(60)<<"*"<<setfill(' ')<<endl;
-        outfile<<setw(56)<<" "<<"STATUS_BITS= "<<setw(12)<<tmp_para.STATUS_BITS<<"LOCAL_L1_COUNT= "<<setw(12)<<tmp_para.LOCAL_L1_COUNT<<endl;
-        outfile<<setw(56)<<" "<<"HIT_COUNT  = "<<setw(12)<<tmp_para.HIT_COUNT<<"Timestamp= "<<setw(12)<<tmp_para.Timestamp<<endl;
-        outfile<<setw(56)<<" "<<"DATA :"<<endl;
+		int setW;
+		if(printFlag)
+			setW=56;
+		else
+			setW=0;
+        outfile<<setw(setW)<<" "<<setfill('*')<<setw(72)<<"*"<<setfill(' ')<<endl;
+		outfile<<setw(setW)<<" "<<"###UDP packet NO.= "<<nUdpPacket<<"###"<<endl;
+        outfile<<setw(setW)<<" "<<"STATUS_BITS= "<<setw(12)<<tmp_para.STATUS_BITS<<"LOCAL_L1_COUNT= "<<setw(12)<<tmp_para.LOCAL_L1_COUNT<<endl;
+        outfile<<setw(setW)<<" "<<"HIT_COUNT  = "<<setw(12)<<tmp_para.HIT_COUNT<<"Timestamp= "<<setw(12)<<tmp_para.Timestamp<<endl;
+        outfile<<setw(setW)<<" "<<"DATA :"<<endl;
         for(int i=2;i<2+tmp_para.HIT_COUNT*2;i=i+2)
         {
             tmp_para.D_TIGER_ID=intbuff[i]>>27&0x7;
@@ -721,17 +746,18 @@ protected:
             tmp_para.RAW_DATA=intbuff[i]&0xffffff;
             tmp_para.RAW_DATA=tmp_para.RAW_DATA<<30;
             tmp_para.RAW_DATA=tmp_para.RAW_DATA|(intbuff[i+1]&0x3fffffff);
-            outfile<<setw(56)<<" "<<"TIGER ID= "<<setw(6)<<tmp_para.D_TIGER_ID<<" LAST_TIGER_FRAME_NUMBER= "
+            outfile<<setw(setW+2)<<" "<<"TIGER ID= "<<setw(6)<<tmp_para.D_TIGER_ID<<" LAST_TIGER_FRAME_NUMBER= "
             <<setw(6)<<tmp_para.LAST_TIGER_FRAME_NUMBER<<"RAW DATA= "
             <<hex<<setfill('0')<<setw(14)<<tmp_para.RAW_DATA<<setfill(' ')<<dec<<endl;
         }
-        outfile<<setw(56)<<" "<<"LOCAL_L1_FRAMENUM="<<setw(8)<<tmp_para.LOCAL_L1_FRAMENUM<<"GEMROC ID= "<<setw(12)<<tmp_para.GEMROC_ID<<endl;
-        outfile<<setw(56)<<" "<<"TIGER ID         ="<<setw(8)<<tmp_para.T_TIGER_ID<<"CH_ID= "<<setw(12)<<tmp_para.CH_ID<<endl;
-        outfile<<setw(56)<<" "<<"GEMROC ID        ="<<setw(8)<<tmp_para.S_GEMROC_ID
+        outfile<<setw(setW)<<" "<<"LOCAL_L1_FRAMENUM="<<setw(8)<<tmp_para.LOCAL_L1_FRAMENUM<<"GEMROC ID= "<<setw(12)<<tmp_para.GEMROC_ID<<endl;
+        outfile<<setw(setW)<<" "<<"TIGER ID         ="<<setw(8)<<tmp_para.T_TIGER_ID<<"CH_ID= "<<setw(12)<<tmp_para.CH_ID<<endl;
+        outfile<<setw(setW)<<" "<<"GEMROC ID        ="<<setw(8)<<tmp_para.S_GEMROC_ID
         <<"UDP_packet_count= "<<setw(15)<<tmp_para.UDP_packet_count<<endl;
         outfile<<endl;
     }
-
+	
+	
 
     void udpData(unsigned int idx1,unsigned int idx2)
     {
@@ -743,7 +769,20 @@ protected:
         }
     }
 
-
+	void ChangeByteOrder(unsigned char*buff,int buffLen)
+	{
+    	int i,j;
+    	unsigned char ch;
+    	for(i=0;i<buffLen;i=i+8)
+    	{
+        	for(j=0;j<4;j++)
+        	{
+            	ch=buff[i+j];
+            	buff[i+j]=buff[i+7-j];
+            	buff[i+7-j]=ch;
+        	}
+    	}
+	}
 
 
 private:
@@ -754,21 +793,29 @@ private:
     int           idx;  /*index of inbuff*/
     unsigned char buff[10240];
     unsigned int  intbuff[2560];
+	bool 		  printFlag;
     string        inFileName;
     ifstream      infile;
     ofstream      outfile;
 
 };
 
-int main()
+int main(int argc, char** argv)
 {
+	cout << "if input para =1 ,print more,else UDP packet only." << endl;
+	bool print_para;
+	if(argc==2 && atoi(argv[1])==1)
+        print_para=true;
+    else
+        print_para=false;
+
     string inFileName;
     cout<<"Input a file name:"<<endl;
     cin>>inFileName;
 
   //  besFileRead b("bes.raw");
  //   besFileRead b("run_0010013_FakePhysics_SFO-1.raw");
-    besFileRead b(inFileName);
+    besFileRead b(inFileName,print_para);
     b.fileRead();
     return 0;
 }
