@@ -204,13 +204,19 @@ void rocBuff_delete()
 {
     int i,j;
     for(i=0;i<eventNo;i++)
-    for(j=0;j<32;j++)
+	{
+    	for(j=0;j<32;j++)
         if (udpInfo[i].rocBuff[j])
         {
             free(udpInfo[i].rocBuff[j]);
             udpInfo[i].rocBuff[j]=NULL;
         }
-    free(udpInfo[i].rocBuff);
+		if (udpInfo[i].rocBuff)
+        {
+            free(udpInfo[i].rocBuff);
+            udpInfo[i].rocBuff=NULL;
+        }
+	}
 }
 
 int extract_or_print_udp_para(unsigned char*buff,unsigned int buflen,para* p,int print_enable)
