@@ -432,6 +432,10 @@ void* cmd_recv(void* args)
 void* read_txt(void* args)
 {
     char txtBuff[256];
+	unsigned int Lentest=0x12345678;
+    *(unsigned int*)txtBuff=Lentest;
+    send(txt_fd,txtBuff,4,0);
+
     memset(txtBuff, 0, sizeof(txtBuff));
     recv(txt_fd,txtBuff,256,0) ;
     printf("txt_recv thread receive: %s\n",txtBuff);

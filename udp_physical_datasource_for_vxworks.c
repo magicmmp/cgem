@@ -146,7 +146,7 @@ int main(int argc, char** argv)
     unsigned int *p;
 	printf("gemroc_Numbers = %d, HIT_COUNT = %d\n",rocNo,N);
 	printf("BUFFSIZE    = %d\n",BUFFSIZE);
-    unsigned int GG=1;
+    unsigned int GG=3;
 
     while(1)  
     {
@@ -160,7 +160,7 @@ int main(int argc, char** argv)
 				sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
 			}
 	
-        	usleep(500);
+        	usleep(300);
     	}
 		trgNo=trgNo+GG;
 	}

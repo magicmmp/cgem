@@ -19,7 +19,7 @@ int cmd_fd;
 int txt_fd;
 int data_fd;
 
-#define eventNo 256
+#define eventNo 1024
 const int eventBUFFSIZE=66064;
 const int rocBUFFSIZE=2072;
 const int rocID_List[32]={32,1,2,3,4,13,20,26,31};
@@ -95,7 +95,6 @@ int rocBuff_init()
         }
         for(j=0;j<32;j++)
         {
-            udpInfo[i].rocBuff[j]=NULL;
             if(rocID_enable[j])
                 udpInfo[i].rocBuff[j]=(unsigned char*)malloc(rocBUFFSIZE);
             else
@@ -469,7 +468,7 @@ void* udpPacketSort(void* args)
     unsigned char rocBuff[rocBUFFSIZE];
 	bool 		  sendFlag;
 	unsigned int  trgToSend=0;/*trigger No waiting to send*/
-	unsigned int  trgMinReady=0xffffffff;
+	unsigned int  trgMinReady=0;
 	int nReady=0; /*how many events ready ahead*/
     int tmp;
     para tmp_para;
@@ -533,9 +532,9 @@ void* udpPacketSort(void* args)
 			{
 				sendFlag=true;
 			}
-			else if(nReady<8)
+			else if(nReady<16)
 			{
-				if(tmp_para.LOCAL_L1_COUNT<trgMinReady)
+				if(tmp_para.LOCAL_L1_COUNT>trgMinReady)
 					trgMinReady=tmp_para.LOCAL_L1_COUNT;
 				nReady++;
 			}
@@ -561,12 +560,12 @@ void* udpPacketSort(void* args)
         				TCPsend(data_fd,eventBuff,tcpSendLen+4);
 						*(unsigned int*)eventBuff=0;
         				nCount++;
-        				if(nCount%10000==0)
+        				if(nCount%100000==0)
             				printf("Event sent,triggerID = %d\n",trgToSend);
 						trgToSend++;
 					}
 				}
-				trgMinReady=0xffffffff;
+				trgMinReady=0;
                 nReady=0;
 			}
 		}
@@ -650,6 +649,7 @@ int main(int argc, char** argv)
            cout << "pthread cmd_recv() create error: error_code=" << ret << endl;
            exit(0);
         }
+		sleep(1);
         ret = pthread_create(&udpSort_tid, NULL, udpPacketSort, NULL);
         if (ret != 0)
         {
