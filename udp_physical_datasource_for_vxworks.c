@@ -160,7 +160,7 @@ int main(int argc, char** argv)
 				sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
 			}
 	
-        	usleep(300);
+        	usleep(2000);
     	}
 		trgNo=trgNo+GG;
 	}
