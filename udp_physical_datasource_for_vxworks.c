@@ -146,7 +146,7 @@ int main(int argc, char** argv)
     unsigned int *p;
 	printf("gemroc_Numbers = %d, HIT_COUNT = %d\n",rocNo,N);
 	printf("BUFFSIZE    = %d\n",BUFFSIZE);
-    unsigned int GG=3;
+    unsigned int GG=1;
 
     while(1)  
     {

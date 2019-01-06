@@ -22,6 +22,7 @@ def swap_order_N_bits( Hex_data, N_bits ):
         if (Hex_data >> i) & 1: temp |= 1 << (N_bits - 1 - i)
     return temp
 
+#to see what parameter read from txt in a class
 def print_array(info,filename,array):
     fx = open(arr, 'a')
     msg= '\n%s, file name:%s,  arrar_len=%d\n'%(info,filename,len(array))
