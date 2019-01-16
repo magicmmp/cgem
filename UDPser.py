@@ -19,7 +19,10 @@ receiveSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 ##clientSock.bind((HOST_IP, HOST_PORT))
 n=1
 num=1
-out_file = open("my_UDPser_log.txt", 'w')
+txt_name="check_cmd_from_localhost.txt"
+if (len(sys.argv)==2 and (int(sys.argv[1])==1)):
+    txt_name="check_cmd_from_vxworks.txt"
+out_file = open(txt_name, 'w')
 out_file.close()
 receiveSock.bind((HOST_IP, HOST_PORT_RECEIVE))
 while 1:
@@ -28,7 +31,7 @@ while 1:
       print 'receive data from ' + str(addr) + '\n'
       n=0
     clientSock.sendto(data, (DEST_IP, 58916))
-    out_file = open("my_UDPser_log.txt", 'a')
+    out_file = open(txt_name, 'a')
     out_file.write("\nnum=%d,my_UDPser_log,send:\n"%num)
     out_file.write(binascii.b2a_hex(data))
     out_file.write("\nnum=%d,my_UDPser_log,echo:\n"%num)
