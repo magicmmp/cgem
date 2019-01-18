@@ -20,7 +20,6 @@ int main(int argc, char** argv)
     int    socket_fd, connect_fd;
     struct sockaddr_in   cliaddr,  servaddr;
     socklen_t cli_len = sizeof(cliaddr);
-    fd_read_para=fopen("auto_input_para.txt","r");
     if( (socket_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1 )
     {
       printf("create socket error: %s(errno: %d)\n",strerror(errno),errno);
@@ -46,12 +45,16 @@ int main(int argc, char** argv)
       exit(0);
     }
     printf("\n======waiting for client's request======\n");
+
+while(1)
+{
     if( (connect_fd = accept(socket_fd, (struct sockaddr*)&cliaddr, &cli_len)) == -1)
     {
       printf("accept socket error: %s(errno: %d)",strerror(errno),errno);
     }
     else
       printf("accept connect: %s,port:%d\n",inet_ntoa(cliaddr.sin_addr),cliaddr.sin_port);
+	fd_read_para=fopen("auto_input_para.txt","r");
     while(1)
     {
       memset(line,0, sizeof(line));
@@ -72,5 +75,6 @@ int main(int argc, char** argv)
     }
     fclose(fd_read_para);
     close(connect_fd);
+}
     close(socket_fd);
 }

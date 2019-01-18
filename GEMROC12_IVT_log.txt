@@ -1,5 +1,5 @@
 
-2019-01-18-17-51-18
+2019-01-18-17-48-01
 FEB3_T[degC]: -290; FEB3_VD[mV]: 0; FEB3_ID[mA]: 0; FEB3_VA[mV]: 0; FEB3_IA[mA]: 0; 
 FEB2_T[degC]: -290; FEB2_VD[mV]: 0; FEB2_ID[mA]: 0; FEB2_VA[mV]: 0; FEB2_IA[mA]: 0; 
 FEB1_T[degC]: -290; FEB1_VD[mV]: 0; FEB1_ID[mA]: 0; FEB1_VA[mV]: 0; FEB1_IA[mA]: 0; 

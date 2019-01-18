@@ -432,7 +432,6 @@ def ResetTgtGEMROC_ALL_TIGER_GCfgReg (GEMROC_ID_param, gemroc_DAQ_inst_param):
     COMMAND_STRING = 'CMD_GEMROC_DAQ_TIGER_GCFGREG_RESET'
     command_echo = send_GEMROC_DAQ_CMD(GEMROC_ID_param, gemroc_DAQ_inst_param, COMMAND_STRING)
     print'\n CMD_GEMROC_DAQ_TIGER_GCFGREG_RESET'
-    time.sleep(5)
     
 def WriteTgtGEMROC_TIGER_GCfgReg_fromfile (GCFGReg_setting_inst, GEMROC_ID_param, TIGER_ID_param, GCFGReg_def_fname_param, log_fname_param):
     GCFGReg_setting_inst.reload_gcfg_settings_from_file(GCFGReg_def_fname_param) ## acr 2018-02-23 new method to reaload from a default file
@@ -952,8 +951,10 @@ IVT_log_file = open(IVT_log_fname, 'w')
 #HOST_IP = "192.168.1.200" # FOR  GEMROC 1 - 11
 HOST_IP = "127.0.0.1" # uncomment for test only
 
-HOST_PORT = 54816+1+GEMROC_ID
-HOST_PORT_RECEIVE = 58912+1+GEMROC_ID
+HOST_PORT = 54816+1+3
+HOST_PORT_RECEIVE = 58912+1+3
+#@HOST_PORT = 54816+1+GEMROC_ID
+#HOST_PORT_RECEIVE = 58912+1+GEMROC_ID
 DEST_IP_ADDRESS = "127.0.0.1"
 #DEST_IP_ADDRESS = "192.168.1.%d" %(GEMROC_ID+16) # offset 16 is determined by Stefano's MAC
 DEST_PORT_NO = 58912+1 # STEFANO CHIOZZI - 2018-03-08 offset 0 is reserved by the MAC for a custom protocol; offset 3 is also a special debug port
@@ -972,7 +973,6 @@ receiveSock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 receiveSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 ##receiveSock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
 receiveSock.bind((HOST_IP, HOST_PORT_RECEIVE))
-remote_IP_Address = '192.168.1.%d'%(GEMROC_ID+16)
 ##receiveSock.connect( (remote_IP_Address, 54817,) )
 ##print '\nnew socket handling'
 
@@ -981,7 +981,8 @@ remote_IP_Address = '192.168.1.%d'%(GEMROC_ID+16)
 ##  TARGET_GEMROC_ID_param = 0, # acr 2017-09-22              
 ##  command_string_param = 'NONE',
 ##  number_of_repetitions_param = 1,
-cfg_filename = 'GEMROC_%d_def_cfg_LV_2018.txt' %GEMROC_ID
+cfg_filename = 'GEMROC_%d_def_cfg_LV_2018.txt' %3
+#cfg_filename = 'GEMROC_%d_def_cfg_LV_2018.txt' %GEMROC_ID
 gemroc_LV_XX = GEMconf_classes_2018v3.gemroc_cmd_LV_settings(GEMROC_ID,'NONE',1,cfg_filename)
 gemroc_LV_XX.set_FEB_PWR_EN_pattern(FEB_PWR_EN_pattern)
 COMMAND_STRING = 'CMD_GEMROC_LV_CFG_WR'
@@ -1000,7 +1001,8 @@ print 'CMD_GEMROC_LV_CFG_WR'
 ##  TCAM_ID_param = 1,              
 ##  number_of_repetitions_param = 1,
 ##  to_ALL_TCAM_enable_param = 0,
-cfg_filename = 'GEMROC_%d_def_cfg_DAQ_2018v3.txt' %GEMROC_ID
+cfg_filename = 'GEMROC_%d_def_cfg_DAQ_2018v3.txt' %3
+#cfg_filename = 'GEMROC_%d_def_cfg_DAQ_2018v3.txt' %GEMROC_ID
 gemroc_DAQ_XX = GEMconf_classes_2018v3.gemroc_cmd_DAQ_settings(GEMROC_ID,'NONE',0,1,0,cfg_filename)
 gemroc_DAQ_XX.extract_parameters_from_UDP_packet()
 COMMAND_STRING = 'CMD_GEMROC_DAQ_CFG_WR'
@@ -1053,7 +1055,6 @@ DONE = False
 def add_input(input_queue):
     for line in open('auto_input_para.txt','r'):
       input_queue.put(line)
-      time.sleep(1)
    # while True:
    #     input_queue.put(sys.stdin.readline())
 
@@ -1213,7 +1214,6 @@ def Menu_and_prompt():
                             print '\nGWdef command_reply: %s' %binascii.b2a_hex(command_reply)
                             command_reply = ReadTgtGEMROC_TIGER_GCfgReg( g_inst, GEMROC_ID, int(input_array[1]), log_file )
                             print '\nGRd   command_reply: %s' %binascii.b2a_hex(command_reply)
-                            time.sleep(4)
                             os.system('cls')
                             sys.stdout.write(menu_string)                
                     elif ((input_array[0] == 'GRd') or (input_array[0] == 'GR')):
@@ -1235,7 +1235,6 @@ def Menu_and_prompt():
                             #command_reply = ReadTgtGEMROC_TIGER_ChCfgReg (c_inst, GEMROC_ID, int(input_array[1]), int(input_array[2]), 0 ) 
                             command_reply = ReadTgtGEMROC_TIGER_ChCfgReg (c_inst, GEMROC_ID, int(input_array[1]), int(input_array[2]), 0, log_file ) 
                             print '\nCRd   command_reply: %s' %binascii.b2a_hex(command_reply)
-                            time.sleep(4)
                             os.system('cls')
                             sys.stdout.write(menu_string)                
                     elif ((input_array[0] == 'CRd') or (input_array[0] == 'CR')):
@@ -1254,7 +1253,6 @@ def Menu_and_prompt():
                             FE_TPEnable_PARAM = int(input_array[2])
                             set_FE_TPEnable(g_inst, GEMROC_ID, int(input_array[1]), FE_TPEnable_PARAM, log_file)  
                             print '\nTo TIGER %d on GEMROC %d: GCreg FE_TPEnable bit set to %d' %(int(input_array[1]), GEMROC_ID, int(input_array[2]) )
-                            time.sleep(2)
                             os.system('cls')
                             sys.stdout.write(menu_string)                
                     elif ( (input_array[0] == 'TPEW_ch') or (input_array[0] == 'TP') ):
@@ -1263,20 +1261,17 @@ def Menu_and_prompt():
                             TriggerMode_param = int(input_array[4])
                             Set_GEMROC_TIGER_ch_TPEn (c_inst, GEMROC_ID, int(input_array[1]), int(input_array[2]), TP_disable_FE_param, TriggerMode_param, log_file )
                             print '\nTo TIGER %d on GEMROC %d: TP_disable_FE bit set to %d and TriggerMode bit set to %d for channel %d' %(int(input_array[1]), GEMROC_ID, int(input_array[3]), int(input_array[4]),int(input_array[2]) )
-                            time.sleep(2)
                             os.system('cls')
                             sys.stdout.write(menu_string)                
                     elif ( (input_array[0] == 'VT1_ch') or (input_array[0] == 'VT1') ):
                         if (len(input_array) == 4):
                             Set_Vth_T1(c_inst, GEMROC_ID, int(input_array[1]), int(input_array[2]), int(input_array[3]), log_file)
                             print '\nTo TIGER %d on GEMROC %d: Vth_T1 set to %d for channel %d' %(int(input_array[1]), GEMROC_ID, int(input_array[3]), int(input_array[2]) )
-                            time.sleep(2)
                             os.system('cls')
                             sys.stdout.write(menu_string)
                     elif ( (input_array[0] == 'AVCaspGset') or (input_array[0] == 'AV') ):
                         if (len(input_array) == 3):
                             set_AVcasp_global(g_inst, GEMROC_ID, int(input_array[1]), int(input_array[2]), log_file)
-                            time.sleep(2)
                             os.system('cls')
                             sys.stdout.write(menu_string)
                     elif (input_array[0] == 'SRst'):
@@ -1288,7 +1283,6 @@ def Menu_and_prompt():
                             TargetFEB = int(input_array[1]) & 0x3
                             SynchReset_to_TgtFEB(gemroc_DAQ_XX, GEMROC_ID, TargetFEB, To_ALL_FEB_enable )
                             print '\nTo FEB %d or ToALL_FEB: %d on GEMROC %d: sent synchronous reset' %( TargetFEB, To_ALL_FEB_enable, GEMROC_ID )
-                            time.sleep(2)
                             os.system('cls')
                             sys.stdout.write(menu_string)                
                     elif (input_array[0] == 'DRst'):
@@ -1300,7 +1294,6 @@ def Menu_and_prompt():
                             TargetTCAM = int(input_array[1]) & 0x3
                             SynchReset_to_TgtTCAM(gemroc_DAQ_XX, GEMROC_ID, TargetTCAM, To_ALL_TCAM_enable )
                             print '\nTo TCAM %d or ToALL_TCAM: %d on GEMROC %d: sent synchronous reset' %( TargetTCAM, To_ALL_TCAM_enable, GEMROC_ID )
-                            time.sleep(2)
                             os.system('cls')
                             sys.stdout.write(menu_string)                
                     elif (input_array[0] == 'DSTART'):
@@ -1309,12 +1302,10 @@ def Menu_and_prompt():
                             Periodic_FEB_TP_Enable_pattern = int(input_array[2],0) & 0xF
                             DAQ_set_and_TL_start(gemroc_DAQ_XX, GEMROC_ID, TCAM_Enable_pattern, Periodic_FEB_TP_Enable_pattern)
                             print '\nStart TL DAQ from enable TCAM pattern: %d on GEMROC %d' %( TCAM_Enable_pattern, GEMROC_ID )
-                            time.sleep(2)
                             os.system('cls')
                             sys.stdout.write(menu_string)                
                     else:
                         print('\n bad command')
-                        time.sleep(2)
                         os.system('cls')
                         sys.stdout.write(menu_string)                
                 else:
