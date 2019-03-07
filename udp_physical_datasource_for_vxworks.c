@@ -8,9 +8,9 @@
 
 /** hit count=10 **/
 /** need 106 of int length **/
-#define N     10  /*HIT_COUNT*/
+#define N     5  /*HIT_COUNT*/
 #define M     ((N<<1)+6)
-#define rocNo 32
+#define rocNo 20
 
 const int BUFFSIZE=M<<2;
 
@@ -160,7 +160,7 @@ int main(int argc, char** argv)
 				sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
 			}
 	
-        	usleep(2000);
+        	usleep(130);
     	}
 		trgNo=trgNo+GG;
 	}

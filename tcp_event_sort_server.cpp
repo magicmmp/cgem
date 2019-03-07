@@ -22,7 +22,7 @@ int data_fd;
 #define eventNo 1024
 const int eventBUFFSIZE=66064;
 const int rocBUFFSIZE=2072;
-const int rocID_List[32]={32,1,2,3,4,13,20,26,31};
+const int rocID_List[32]={20,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
 int       rocID_enable[32];
 unsigned int rocFLAG;
 typedef struct {
