@@ -508,7 +508,7 @@ void* udpPacketSort(void* args)
 				if(recv_len>0)
 				{
 					ChangeByteOrder(rocBuff,recv_len);
-            		extract_or_print_udp_para(rocBuff,recv_len,&tmp_para,1);
+            		extract_or_print_udp_para(rocBuff,recv_len,&tmp_para,0);
 					ChangeByteOrder(rocBuff,recv_len);
             		tmp=copy_to_rocBuff(rocBuff,recv_len,tmp_para.LOCAL_L1_COUNT,tmp_para.GEMROC_ID);
             		if(tmp==1)
