@@ -111,7 +111,7 @@ int main(int argc, char** argv)
     unsigned char buff[BUFFSIZE];
 	int x,y;
 
-	PARA.STATUS_BITS=2;     /*²»±ä³õ¯*/
+	PARA.STATUS_BITS=0;     /*²»±ä³õ¯*/
     PARA.LOCAL_L1_COUNT=0;  /*µÝöõ¯*/
     PARA.HIT_COUNT=N;       /*²»±ä³õ¯*/
     PARA.Timestamp=0;       /*µÝöõ¯*/
@@ -137,7 +137,7 @@ int main(int argc, char** argv)
     else
 	address.sin_addr.s_addr=inet_addr("192.168.1.201");
  
-    address.sin_port=htons(58914);  
+    address.sin_port=htons(58880);  
     socket_descriptor=socket(AF_INET,SOCK_DGRAM,0);
     
     unsigned int trgNo=0;

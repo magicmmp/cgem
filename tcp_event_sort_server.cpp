@@ -22,7 +22,7 @@ int data_fd;
 #define eventNo 1024
 const int eventBUFFSIZE=66064;
 const int rocBUFFSIZE=2072;
-const int rocID_List[32]={20,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+const int rocID_List[32]={1,11,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
 int       rocID_enable[32];
 unsigned int rocFLAG;
 typedef struct {
@@ -480,7 +480,7 @@ void* udpPacketSort(void* args)
     bzero(&sin,sizeof(sin));
     sin.sin_family=AF_INET;
     sin.sin_addr.s_addr=htonl(INADDR_ANY);
-    sin.sin_port=htons(58914);
+    sin.sin_port=htons(58880);
     udp_fd=socket(AF_INET,SOCK_DGRAM,0);
 
 	struct timeval timeout;
@@ -508,7 +508,7 @@ void* udpPacketSort(void* args)
 				if(recv_len>0)
 				{
 					ChangeByteOrder(rocBuff,recv_len);
-            		extract_or_print_udp_para(rocBuff,recv_len,&tmp_para,0);
+            		extract_or_print_udp_para(rocBuff,recv_len,&tmp_para,1);
 					ChangeByteOrder(rocBuff,recv_len);
             		tmp=copy_to_rocBuff(rocBuff,recv_len,tmp_para.LOCAL_L1_COUNT,tmp_para.GEMROC_ID);
             		if(tmp==1)
