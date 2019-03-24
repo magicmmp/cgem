@@ -6,7 +6,7 @@
 #include <arpa/inet.h>  
 #include <netdb.h>   
 
-const int BUFFSIZE=25600;
+const int BUFFSIZE=256000;
 
   
 int main(int argc, char** argv) 
@@ -55,7 +55,8 @@ int main(int argc, char** argv)
 		i=i+EventLen;
 	}
 	else
-		i=0;
+	//	i=0;
+	break;
         usleep(1300);
     }
 

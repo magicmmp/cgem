@@ -120,7 +120,7 @@ int rocBuff_init()
     printf("rocFLAG=%08X\n",rocFLAG);
     for(i=0;i<32;i++)
         if(rocID_enable[i])
-            printf("ROC %d is receive enable.\n",i);
+            printf("Receive UDP packet from ROC %d.\n",i);
 
     return 0;
 }
