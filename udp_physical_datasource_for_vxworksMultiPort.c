@@ -10,7 +10,7 @@
 /** need 106 of int length **/
 #define N     5  /*HIT_COUNT*/
 #define M     ((N<<1)+6)
-#define rocNo 20
+#define rocNo 22
 
 const int BUFFSIZE=M<<2;
 
