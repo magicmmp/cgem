@@ -22,7 +22,7 @@ int data_fd;
 #define eventNo 1024
 const int eventBUFFSIZE=66064;
 const int rocBUFFSIZE=2072;
-const int rocID_List[32]={1,11,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+const int rocID_List[32]={5,11,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
 int       rocID_enable[32];
 unsigned int rocFLAG;
 
@@ -460,114 +460,142 @@ void ChangeByteOrder(unsigned char*buff,int buffLen)
 
 void* udpPacketSort(void* args)
 {
+    int i;
     unsigned char eventBuff[eventBUFFSIZE];
     unsigned char rocBuff[rocBUFFSIZE];
 	bool 		  sendFlag;
-	unsigned int  trgToSend=0;/*trigger No waiting to send*/
+	unsigned int  trgToSend=0;/*trigger Number waiting to send*/
 	unsigned int  trgMinReady=0;
 	int nReady=0; /*how many events ready ahead*/
     int tmp;
     para tmp_para;
     /*UDP receive socket setting*/
-    int udp_fd;
     int recv_len;
     int tcpSendLen;
-    struct sockaddr_in sin;
-    bzero(&sin,sizeof(sin));
-    sin.sin_family=AF_INET;
-    sin.sin_addr.s_addr=htonl(INADDR_ANY);
-    sin.sin_port=htons(58880);
-    udp_fd=socket(AF_INET,SOCK_DGRAM,0);
-
-	struct timeval timeout;
-    timeout.tv_sec = 5;
-    timeout.tv_usec = 0;
-    if (setsockopt(udp_fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) == -1) 
-	{
-        printf("set UDP recv fd nonblock failed:");
+    int udp_fd[22];
+    int maxFd=-1;
+    struct sockaddr_in sin[22];
+    if(rocID_List[0]>=22)
+    for(i=0;i<22;i++)
+    {
+        bzero(&sin[i],sizeof(struct sockaddr_in));
+        sin[i].sin_family=AF_INET;
+        sin[i].sin_addr.s_addr=htonl(INADDR_ANY);
+        sin[i].sin_port=htons(58880+i);
+        udp_fd[i]=socket(AF_INET,SOCK_DGRAM,0);
+        if(udp_fd[i]>maxFd)
+            maxFd=udp_fd[i];
+        bind(udp_fd[i],(struct sockaddr *)&sin[i],sizeof(struct sockaddr_in));
     }
+    else
+    for(i=0;i<rocID_List[0];i++)
+    {
+        bzero(&sin[i],sizeof(sin[i]));
+        sin[i].sin_family=AF_INET;
+        sin[i].sin_addr.s_addr=htonl(INADDR_ANY);
+        sin[i].sin_port=htons(58880+rocID_List[i+1]-1);
+        udp_fd[i]=socket(AF_INET,SOCK_DGRAM,0);
+        if(udp_fd[i]>maxFd)
+            maxFd=udp_fd[i];
+        bind(udp_fd[i],(struct sockaddr *)&sin[i],sizeof(struct sockaddr_in));
+    }
+    maxFd=maxFd+1;
 
-    bind(udp_fd,(struct sockaddr *)&sin,sizeof(sin));
+    fd_set 	ReadSet;
+	struct timeval tv;
 
-    int udpLoop;
     int trg;
     unsigned int nCount=0;
    rocBuff_init();
    while(mainLoop)
    {
-        udpLoop=1;
-        while(udpLoop)
-        {
-            recv_len=recvfrom(udp_fd,rocBuff,rocBUFFSIZE,0,NULL,NULL);
-			if(mainLoop)
+        FD_ZERO(&ReadSet);
+        for(i=0;i<rocID_List[0];i++)
+		    FD_SET(udp_fd[i],&ReadSet);
+		tv.tv_sec = 10;
+		tv.tv_usec = 0;
+		
+		switch (select(maxFd, &ReadSet, NULL,NULL, &tv)) 
+		{  
+			case -1:  
+				printf("select =-1,error\n");
+				break;  
+			case 0:
+                printf("No data.\n");  
+				break;
+			default:
 			{
-				if(recv_len>0)
+                for(i=0;i<rocID_List[0];i++)
+                if (FD_ISSET(udp_fd[i],&ReadSet))
 				{
-					ChangeByteOrder(rocBuff,recv_len);
-            		extract_or_print_udp_para(rocBuff,recv_len,&tmp_para,0);
-					ChangeByteOrder(rocBuff,recv_len);
-            		tmp=copy_to_rocBuff(rocBuff,recv_len,tmp_para.LOCAL_L1_COUNT,tmp_para.GEMROC_ID);
-            		if(tmp==1)
-                		udpLoop=0;
+                    recv_len=recvfrom(udp_fd[i],rocBuff,rocBUFFSIZE,0,NULL,NULL);
+                    if(recv_len>0)
+                    {
+                        ChangeByteOrder(rocBuff,recv_len);
+            		    extract_or_print_udp_para(rocBuff,recv_len,&tmp_para,0);
+					    ChangeByteOrder(rocBuff,recv_len);
+            		    tmp=copy_to_rocBuff(rocBuff,recv_len,tmp_para.LOCAL_L1_COUNT,tmp_para.GEMROC_ID); 
+                        if(tmp==1 && mainLoop)
+		                {
+			                tmp=0;
+			                sendFlag=false;
+			                if(tmp_para.LOCAL_L1_COUNT==trgToSend)
+			                {
+				                sendFlag=true;
+			                }
+			                else if(nReady<8)
+			                {
+				                if(tmp_para.LOCAL_L1_COUNT>trgMinReady)
+					                trgMinReady=tmp_para.LOCAL_L1_COUNT;
+				                nReady++;
+			                }
+			                else
+			                {
+				                trgToSend=trgMinReady;
+				                sendFlag=true;
+			                }
+			                if(sendFlag)
+			                {
+				                int buffTmpIdx;
+				                while(sendFlag)
+				                {
+					                buffTmpIdx=trgToSend%eventNo;
+					                if(udpInfo[buffTmpIdx].flag || udpInfo[buffTmpIdx].trigNo != trgToSend)
+					                {
+						                sendFlag=false;
+					                }
+					                else
+					                {
+        				                copy_to_sendBuff(trgToSend,eventBuff);
+        				                tcpSendLen=*(unsigned int*)eventBuff;
+        				                TCPsend(data_fd,eventBuff,tcpSendLen+4);
+						                *(unsigned int*)eventBuff=0;
+        				                nCount++;
+        				                if(nCount%100000==0)
+            				                printf("Event sent,triggerID = %d\n",trgToSend);
+						                trgToSend++;
+					                }
+				                }
+				                trgMinReady=0;
+                                nReady=0;
+			                }
+		                }
+                        
+                    }
+                    else
+                    {
+					    printf("UDP recv len=%d\n",recv_len);
+				    }
+					
 				}
-				else
-				{
-					printf("UDP recv len=%d\n",recv_len);
-				}
+				break;
 			}
-			else
-			{
-				udpLoop=0;
-			}
-        }
-		if(mainLoop&&tmp==1)
-		{
-			tmp=0;
-			sendFlag=false;
-			if(tmp_para.LOCAL_L1_COUNT==trgToSend)
-			{
-				sendFlag=true;
-			}
-			else if(nReady<16)
-			{
-				if(tmp_para.LOCAL_L1_COUNT>trgMinReady)
-					trgMinReady=tmp_para.LOCAL_L1_COUNT;
-				nReady++;
-			}
-			else
-			{
-				trgToSend=trgMinReady;
-				sendFlag=true;
-			}
-			if(sendFlag)
-			{
-				int buffTmpIdx;
-				while(sendFlag)
-				{
-					buffTmpIdx=trgToSend%eventNo;
-					if(udpInfo[buffTmpIdx].flag || udpInfo[buffTmpIdx].trigNo != trgToSend)
-					{
-						sendFlag=false;
-					}
-					else
-					{
-        				copy_to_sendBuff(trgToSend,eventBuff);
-        				tcpSendLen=*(unsigned int*)eventBuff;
-        				TCPsend(data_fd,eventBuff,tcpSendLen+4);
-						*(unsigned int*)eventBuff=0;
-        				nCount++;
-        				if(nCount%100000==0)
-            				printf("Event sent,triggerID = %d\n",trgToSend);
-						trgToSend++;
-					}
-				}
-				trgMinReady=0;
-                nReady=0;
-			}
-		}
+		} 
+		
     }
     rocBuff_delete();
-    close(udp_fd);
+    for(i=0;i<rocID_List[0];i++)
+        close(udp_fd[i]);
     close(data_fd);
 	printf("Total events = %u ,last triggerID = %d\n",nCount,trgToSend-1);
 	printf("TCP data send thread exit.\n");
