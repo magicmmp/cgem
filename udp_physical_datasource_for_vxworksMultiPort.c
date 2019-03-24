@@ -157,6 +157,7 @@ int main(int argc, char** argv)
 			{
 				PARA.GEMROC_ID=i;
 				change_para(&PARA,data,M,buff,BUFFSIZE);
+				address.sin_port=htons(58880+i);
 				sendto(socket_descriptor,buff,sizeof(buff),0,(struct sockaddr *)&address,sizeof(address));
 			}
 	
