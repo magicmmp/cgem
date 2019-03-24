@@ -25,6 +25,14 @@ const int rocBUFFSIZE=2072;
 const int rocID_List[32]={1,11,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
 int       rocID_enable[32];
 unsigned int rocFLAG;
+
+
+/**
+ * g++ -lpthread -o tcp_event_sort_server tcp_event_sort_server.cpp
+**/
+
+
+
 typedef struct {
     /*Header*/
     unsigned int STATUS_BITS;/*is 0*/
@@ -279,12 +287,6 @@ int extract_or_print_udp_para(unsigned char*buff,unsigned int buflen,para* p,int
     p->GEMROC_ID=buff[tmp_idx]&0x1f;
     tmp_idx++;
     p->T_TIGER_ID=(buff[tmp_idx]>>3)&0x7;
-    if((buff[tmp_idx] & 0x7) != (p->LOCAL_L1_COUNT & 0x7) )
-    {
-        printf("buff[tmp_idx]&0x7= %d , ",buff[tmp_idx] & 0x7);
-        printf("LOCAL_L1_COUNT & 0x7= %d , error.\n",p->LOCAL_L1_COUNT & 0x7);
-        return -1;
-    }
     tmp_idx++;
     p->CH_ID=buff[tmp_idx]>>2;
 
@@ -318,12 +320,6 @@ int extract_or_print_udp_para(unsigned char*buff,unsigned int buflen,para* p,int
     tmp_idx++;
     p->UDP_packet_count=p->UDP_packet_count+buff[tmp_idx];
     tmp_idx++;
-
-    if(buff[tmp_idx]>>4)
-    {
-        printf(" sequence_falg2 = %d, sequence_falg2!=0,error.\n",buff[tmp_idx]>>4);
-        return -1;
-    }
 
     p->UDP_packet_count=p->UDP_packet_count<<4;
     p->UDP_packet_count=p->UDP_packet_count+(buff[tmp_idx]&0xf);

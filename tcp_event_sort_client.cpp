@@ -53,7 +53,7 @@ void* dataRecv(void* args)
 	int tmpLen;
 	unsigned int eventLen;
 	FILE *fp = NULL;
-	fp = fopen("../tcp.bin", "wb");
+	fp = fopen("../cgem_TM_UdpPacket.dat", "wb");
 	*(unsigned int*)buff=0;
 	while(tcpLoop)
 	{
