@@ -1,0 +1,23 @@
+python main.py 0 0: to access to the GEMROC 0, with all the FEB powered off
+
+CKEXT 0: set the clock to internal mode
+
+P 0x1: to power on the FEB (pattern 0 0 0 1)
+P 0xF: to power on all the FEBs (pattern 1 1 1 1)
+
+GW 0: to configure global configuration of TIGER 0
+GW 1: to configure global configuration of TIGER 1
+GW 2: to configure global configuration of TIGER 2
+GW 8: to configure global configuration of all TIGERs (REMEMBER: there are 8 TIGERs for each GEMROC)
+
+GR 2: to read the global configuration for TIGER 2
+
+CW 0 64: to configure the channel configuration for all the channel of TIGER 0 (REMEMBER: there are 64 channels for each TIGER)
+CW 0 23: to configure the channel configuration for only channel 23 of TIGER 0 
+CW 8 64: to configure the channel configuration for all the channel of all the TIGERs in one GEMROC
+
+CR 2 34: to read the channel configuration for only channel 34 of TIGER 2
+
+q: close the menu
+
+
