@@ -1,3 +1,0 @@
-1.  python UDPser.py  1  as a echo server for cgem commands.
-2.  ./tcp_server 1       to send cgem config command to vxworks.
-3.  udp_datasource_for_vxworks to generate data.
